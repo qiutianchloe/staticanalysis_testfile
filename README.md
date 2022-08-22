@@ -51,4 +51,4 @@ The metrics might change as research progresses.
 |File|Underflow State|Pulse-X State|
 |--|--|--|
 |array_out_of_bound.c|`1 issue found`|`No issues found`|
-|null_dereference.c|`1 contract err found`|`1 issue found`|
+|null_dereference.c|`1 memory err found`|`1 issue found`|
