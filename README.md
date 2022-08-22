@@ -28,7 +28,7 @@ The metrics might change as research progresses.
 |ct_select.c|`No issues found`|
 |ct_sort.c|`No issues found`|
 |ct_ssl3_cbc_remove_padding.c|`Not work`|
-|cttk_hex.c|`Not work`|
+|cttk_hex.c|`No issues found`|
 |cttk_inner.c|`No issues found`|
 |cttk_int31_pp.c|`Not work`|
 |cttk_oram1.c|`Not work`|
