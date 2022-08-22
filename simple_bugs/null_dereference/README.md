@@ -1,10 +1,6 @@
-## Some Updates
-
- - 19/8 We modified tls1_cbc_remove_padding_lucky13.c executable for Pulse-x
-
 ## Results
 
 |Tool|command Line|exec time  |issues found                         |
 |----------------|-------------------------------|-----------------------------|---------------------------|
-|Underflow|`command Line`            |          ||
-|Pulse-x|`infer --pulse-model-skip-pattern "LOW"  --pulse-model-alloc-pattern "alloc"  --pulse-widen-threshold 128 --pulse-max-disjuncts 128  --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/tls1_cbc_remove_padding_lucky13.c`         |140ms       |0|
+|Underflow|`./Underflow.sh examples/null_dereference.c `|171ms|1 contracts|
+|Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c ./examples/null_dereference.c`|24.424ms|1 issue found|
