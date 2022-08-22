@@ -17,6 +17,7 @@ The metrics might change as research progresses.
 
 ### Here are all the examples we are currently working on and its process states
 ### Command run under the rootpath of underflow
+### Experiments were run on a 2017 MacBook Pro(2.3GHz Dual-Core Intel Core i5, 8GB 2133MHz LPDDR3)
 ## Underflow Examples
 |Underflow Example File|Current State(Pulse-X)|
 |----------------|-------------------------------|
