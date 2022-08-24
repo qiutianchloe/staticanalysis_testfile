@@ -1,6 +1,6 @@
 ## Some Updates
-2. change #include<stdio.h> to #define NULL ((void*)0)
-1. Add #include<stdio.h> to handle use of undeclared identifier 'NULL' error warning
+2.change #include<stdio.h> to #define NULL ((void*)0)
+1.Add #include<stdio.h> to handle use of undeclared identifier 'NULL' error warning
 
 ## Results
 
