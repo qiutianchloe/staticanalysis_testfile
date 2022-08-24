@@ -22,7 +22,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include <stdio.h>
+#define NULL ((void*)0)
 typedef unsigned int uint32_t;
 typedef unsigned long size_t;
 
