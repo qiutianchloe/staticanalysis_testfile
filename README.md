@@ -37,7 +37,7 @@ The metrics might change as research progresses.
 |Hacl_Policies.c|`No issues found`|
 |insec.c|`3 issues found`|
 |kremlib_base.c|`No issues found`|
-|libsodium_binhex.c|`Not work`|
+|libsodium_binhex.c|`No issues found`|
 |libsodium_memcmp.c|`No issues found`|
 |location-server.c|`No issues found`|
 |pd.c|`Not work`|
