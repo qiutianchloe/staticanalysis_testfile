@@ -28,7 +28,7 @@ The metrics might change as research progresses.
 |ct_openssl_utility.c|`No issues found`|
 |ct_select.c|`No issues found`|
 |ct_sort.c|`No issues found`|
-|ct_ssl3_cbc_remove_padding.c|`Not work`|
+|ct_ssl3_cbc_remove_padding.c|`No issues found`|
 |cttk_hex.c|`No issues found`|
 |cttk_inner.c|`No issues found`|
 |cttk_int31_pp.c|`No issues found`|
