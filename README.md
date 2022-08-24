@@ -21,7 +21,7 @@ The metrics might change as research progresses.
 ## Underflow Examples
 |Underflow Example File|Current State(Pulse-X)|
 |----------------|-------------------------------|
-|ackermann.c|`Not work`|
+|ackermann.c|`No issues found`|
 |arrays.c|`Not work`|
 |auction.c|`No issues found`|
 |break_continue.c|`No issues found`|
@@ -31,7 +31,7 @@ The metrics might change as research progresses.
 |ct_ssl3_cbc_remove_padding.c|`Not work`|
 |cttk_hex.c|`No issues found`|
 |cttk_inner.c|`No issues found`|
-|cttk_int31_pp.c|`Not work`|
+|cttk_int31_pp.c|`No issues found`|
 |cttk_oram1.c|`Not work`|
 |db.c|`No issues found`|
 |Hacl_Policies.c|`No issues found`|
