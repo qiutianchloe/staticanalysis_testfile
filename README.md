@@ -22,7 +22,7 @@ The metrics might change as research progresses.
 |Underflow Example File|Current State(Pulse-X)|
 |----------------|-------------------------------|
 |ackermann.c|`No issues found`|
-|arrays.c|`Not work`|
+|arrays.c|`No issues found`|
 |auction.c|`No issues found`|
 |break_continue.c|`No issues found`|
 |ct_openssl_utility.c|`No issues found`|
