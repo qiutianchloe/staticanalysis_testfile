@@ -32,7 +32,7 @@ The metrics might change as research progresses.
 |cttk_hex.c|`No issues found`|
 |cttk_inner.c|`No issues found`|
 |cttk_int31_pp.c|`No issues found`|
-|cttk_oram1.c|`Not work`|
+|cttk_oram1.c|`No issues found`|
 |db.c|`No issues found`|
 |Hacl_Policies.c|`No issues found`|
 |insec.c|`3 issues found`|
