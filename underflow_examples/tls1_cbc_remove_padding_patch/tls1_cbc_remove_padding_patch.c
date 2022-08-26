@@ -218,7 +218,7 @@ typedef struct ssl3_record_st {
 
 typedef struct ssl3_state_st {
     long flags;
-    unsigned char read_sequence[8];
+    unsigned char *read_sequence;
 } SSL3_STATE;
 
 typedef struct evp_cipher_st {
