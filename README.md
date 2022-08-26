@@ -44,9 +44,9 @@ The metrics might change as research progresses.
 |stack_addr.c|`No issues found`|
 |tea.c|`No issues found`|
 |tls_cbc_remove_padding_luck13.c(version we modified at 19/5)|`No issues found`|
-|tls_cbc_remove_padding_patch.c|`Not work`|
+|tls_cbc_remove_padding_patch.c|`No issues found`|
 |unreachable.c|`No issues found`|
-|words_casts.c|`Not work`|
+|words_casts.c|`No issues found`|
 
 
 ## Simple_Bugs
