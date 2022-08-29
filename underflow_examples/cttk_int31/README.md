@@ -12,15 +12,16 @@
 |----------------|-------------------------------|-----------------------------|---------------------------|
 |Underflow|`./Underflow.sh ./examples/cttk_int31_ppp.c `|???s|???|
 |Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|1.959s|No issues found|
-|Infer bufferoverrun|`infer --bufferoverrun -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|7.07s|257 issues found|
+|Infer default mode and enable bufferoverrun|`infer --bufferoverrun -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|7.07s|257 issues found|
+|Infer with only bufferoverrun|`infer --bufferoverrun --bufferoverrun-only -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|371ms|175 issues found|
 
 
 
 
 
 
+## Infer with only bufferoverrun report
 
-Infer bufferoverrun
 examples/cttk_int31_ppp.c:88: error: Integer Overflow L2
   ([0, min(31, `h`)] - 1):unsigned32.
   86. top_index(uint32_t h)
@@ -67,10 +68,9 @@ examples/cttk_int31_ppp.c:163: error: Buffer Overrun L2
   165. }
 
 
-Found 257 issues (console output truncated to 5, see '/Users/tianqiu/Desktop/research_project/underflow/underflow/infer-out/report.txt' for the full list)
+Found 175 issues (console output truncated to 5, see '/Users/tianqiu/Desktop/research_project/underflow/underflow/infer-out/report.txt' for the full list)
                           Issue Type(ISSUED_TYPE_ID): #
                 Buffer Overrun L2(BUFFER_OVERRUN_L2): 120
-            Uninitialized Value(UNINITIALIZED_VALUE): 82
             Integer Overflow L2(INTEGER_OVERFLOW_L2): 36
                 Buffer Overrun L1(BUFFER_OVERRUN_L1): 12
                 Buffer Overrun L3(BUFFER_OVERRUN_L3): 5
