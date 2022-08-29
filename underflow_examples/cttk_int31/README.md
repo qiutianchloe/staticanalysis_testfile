@@ -8,12 +8,12 @@
 
 ## Results
 
-|Tool|Command Line|exec time|issues found                         |
+|Tool|Command Line|exec time|issues found|error message|
 |----------------|-------------------------------|-----------------------------|---------------------------|
-|Underflow|`./Underflow.sh ./examples/cttk_int31_ppp.c `|???s|???|
-|Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|1.959s|No issues found|
-|Infer default mode and enable bufferoverrun|`infer --bufferoverrun -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|7.07s|257 issues found|
-|Infer with only bufferoverrun|`infer --bufferoverrun --bufferoverrun-only -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|371ms|175 issues found|
+|Underflow|`./Underflow.sh ./examples/cttk_int31_ppp.c `|???s|???||
+|Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|1.959s|No issues found||
+|Infer default mode and enable bufferoverrun|`infer --bufferoverrun -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|7.07s|257 issues found||
+|Infer with only bufferoverrun|`infer --bufferoverrun --bufferoverrun-only -- gcc -c -I./include/ ./examples/cttk_int31_ppp.c`|371ms|175 issues found||
 
 
 
