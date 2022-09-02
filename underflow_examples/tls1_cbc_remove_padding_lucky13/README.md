@@ -1,4 +1,10 @@
 ## Some Updates
+ 
+ - 2/9 test the file with bug at different place
+    - Infer works on the loop as we expected
+    - Infer can't work out with some statement(s->options&0x00000200, s->s3->flags & 0x0008, rec->data = data)
+
+ - 29/8 try to workout with bufferoverflow
 
  - 19/8 We modified tls1_cbc_remove_padding_lucky13.c executable for Pulse-x
 
