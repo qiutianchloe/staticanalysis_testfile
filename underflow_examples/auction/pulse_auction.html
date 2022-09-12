@@ -1,0 +1,589 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/auction.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">enum auction_status </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">  Ready, </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">  Ongoing, </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">  Closed </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">typedef enum auction_status database_status; </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">struct idqt </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">  int id; </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">  int qt; </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">enum ret_code </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">  Failure, </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">  Success </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">typedef enum ret_code status_code; </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">enum auc_code </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">  Running, </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">  Finished </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">typedef enum auc_code event_code; </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">/* external functions to log events in the auction */ </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">void log_current_max(int id, int qt); </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">_(presumes true covers true) </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">void log_closed(); </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">_(presumes true covers true) </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">status_code start_auction(struct idqt *s, database_status *d) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/start_auction.b5087573db7b73f875add120753ce44a_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:4 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/start_auction.b5087573db7b73f875add120753ce44a.html">summary for start_auction</a></td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">  *d = Ready; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/start_auction.b5087573db7b73f875add120753ce44a_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:1 succs:3 exn: Instructions
+n$0=*&amp;d:int* [line 36, column 4];
+*n$0:int=0 [line 36, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">  return Success; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/start_auction.b5087573db7b73f875add120753ce44a_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+*&amp;return:int=1 [line 37, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/start_auction.b5087573db7b73f875add120753ce44a_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">/* constant-time computation of maximum of two bids. max is put into a */ </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">void idqt_max_ct(struct idqt *a, struct idqt *b) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:19 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/idqt_max_ct.7113739fabed1c6f462be448b2fb9992.html">summary for idqt_max_ct</a></td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">  int aid = a-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:1 succs:18 exn: Instructions
+VARIABLE_DECLARED(aid:int); [line 43, column 3];
+n$26=*&amp;a:idqt* [line 43, column 13];
+n$27=*n$26.id:int [line 43, column 13];
+*&amp;aid:int=n$27 [line 43, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">  int aqt = a-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+VARIABLE_DECLARED(aqt:int); [line 44, column 3];
+n$24=*&amp;a:idqt* [line 44, column 13];
+n$25=*n$24.qt:int [line 44, column 13];
+*&amp;aqt:int=n$25 [line 44, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">  int bid = b-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(bid:int); [line 45, column 3];
+n$22=*&amp;b:idqt* [line 45, column 13];
+n$23=*n$22.id:int [line 45, column 13];
+*&amp;bid:int=n$23 [line 45, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">  int bqt = b-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+VARIABLE_DECLARED(bqt:int); [line 46, column 3];
+n$20=*&amp;b:idqt* [line 46, column 13];
+n$21=*n$20.qt:int [line 46, column 13];
+*&amp;bqt:int=n$21 [line 46, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">  int t = (aqt &gt;= bqt); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:10 exn: Instructions
+VARIABLE_DECLARED(t:int); [line 48, column 3];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:15 succs:11 12 exn: Instructions
+n$18=*&amp;aqt:int [line 48, column 12];
+n$19=*&amp;bqt:int [line 48, column 19];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:10 succs:13 exn: Conditional true Branch
+PRUNE((n$18  &gt;=  n$19), true); [line 48, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:11 succs:9 exn: Instructions
+*&amp;t:int=1 [line 48, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:10 succs:14 exn: Conditional false Branch
+PRUNE(!(n$18  &gt;=  n$19), false); [line 48, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:12 succs:9 exn: Instructions
+*&amp;t:int=0 [line 48, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds:14 13 succs:8 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">  int rid = t * aid + (1 - t) * bid;  <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+VARIABLE_DECLARED(rid:int); [line 49, column 3];
+n$14=*&amp;t:int [line 49, column 13];
+n$15=*&amp;aid:int [line 49, column 17];
+n$16=*&amp;t:int [line 49, column 28];
+n$17=*&amp;bid:int [line 49, column 33];
+*&amp;rid:int=((n$14 * n$15) + ((1 - n$16) * n$17)) [line 49, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">  int rqt = t * aqt + (1 - t) * bqt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+VARIABLE_DECLARED(rqt:int); [line 50, column 3];
+n$10=*&amp;t:int [line 50, column 13];
+n$11=*&amp;aqt:int [line 50, column 17];
+n$12=*&amp;t:int [line 50, column 28];
+n$13=*&amp;bqt:int [line 50, column 33];
+*&amp;rqt:int=((n$10 * n$11) + ((1 - n$12) * n$13)) [line 50, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">  a-&gt;id = rid;  <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$8=*&amp;a:idqt* [line 51, column 3];
+n$9=*&amp;rid:int [line 51, column 11];
+*n$8.id:int=n$9 [line 51, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">  a-&gt;qt = rqt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+n$6=*&amp;a:idqt* [line 52, column 3];
+n$7=*&amp;rqt:int [line 52, column 11];
+*n$6.qt:int=n$7 [line 52, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  log_current_max(a-&gt;id, a-&gt;qt); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$1=*&amp;a:idqt* [line 53, column 19];
+n$2=*n$1.id:int [line 53, column 19];
+n$3=*&amp;a:idqt* [line 53, column 26];
+n$4=*n$3.qt:int [line 53, column 26];
+n$5=_fun_log_current_max(n$2:int,n$4:int) [line 53, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">  return;   <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max_ct.7113739fabed1c6f462be448b2fb9992_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">/* computation of max of two bids. The current maximum is stored in a. </td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">   The new bid is stored in b. We update the current max with the new one </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">   if it is larger */ </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">void idqt_max(struct idqt *a, struct idqt *b) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/idqt_max.fef1dc4879310731793a1c3038f8f476.html">summary for idqt_max</a></td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">  if (b-&gt;qt &gt; a-&gt;qt){ <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$1=*&amp;b:idqt* [line 62, column 7];
+n$2=*n$1.qt:int [line 62, column 7];
+n$3=*&amp;a:idqt* [line 62, column 15];
+n$4=*n$3.qt:int [line 62, column 15];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:10 exn: Conditional true Branch
+PRUNE((n$2  &gt;  n$4), true); [line 62, column 7];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:4 exn: Conditional false Branch
+PRUNE(!(n$2  &gt;  n$4), false); [line 62, column 7];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node4.html"><span class='visited with_tooltip'>J_4<span class='tooltip'>node4 preds:7 8 succs:3 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">    a-&gt;id = b-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:6 succs:9 exn: Instructions
+n$13=*&amp;a:idqt* [line 63, column 5];
+n$14=*&amp;b:idqt* [line 63, column 13];
+n$15=*n$14.id:int [line 63, column 13];
+*n$13.id:int=n$15 [line 63, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">    a-&gt;qt = b-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+n$10=*&amp;a:idqt* [line 64, column 5];
+n$11=*&amp;b:idqt* [line 64, column 13];
+n$12=*n$11.qt:int [line 64, column 13];
+*n$10.qt:int=n$12 [line 64, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">    // only log the maximum when it changes </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">    log_current_max(a-&gt;id, a-&gt;qt); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:4 exn: Instructions
+n$5=*&amp;a:idqt* [line 66, column 21];
+n$6=*n$5.id:int [line 66, column 21];
+n$7=*&amp;a:idqt* [line 66, column 28];
+n$8=*n$7.qt:int [line 66, column 28];
+n$9=_fun_log_current_max(n$6:int,n$8:int) [line 66, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">  return; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/idqt_max.fef1dc4879310731793a1c3038f8f476_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">/* called to register newly received bids */ </td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">status_code register_bid(struct idqt *s, database_status *d, struct idqt *bid) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:20 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/register_bid.db6953f52efcecb747e001dd92beaa97.html">summary for register_bid</a></td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">    database_status stp = *d; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(stp:int); [line 74, column 5];
+n$19=*&amp;d:int* [line 74, column 28];
+n$20=*n$19:int [line 74, column 27];
+*&amp;stp:int=n$20 [line 74, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">    if (stp == Closed) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:20 succs:6 7 exn: Instructions
+n$0=*&amp;stp:int [line 75, column 9];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE(((unsigned int)n$0 == (unsigned int)2), true); [line 75, column 9];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:10 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$0 == (unsigned int)2), false); [line 75, column 9];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:9 succs:4 exn: Join
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">      return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+*&amp;return:int=0 [line 77, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">    else if(stp == Ready) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:11 12 exn: Instructions
+n$1=*&amp;stp:int [line 79, column 13];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:10 succs:17 exn: Conditional true Branch
+PRUNE(((unsigned int)n$1 == (unsigned int)0), true); [line 79, column 13];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:10 succs:19 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$1 == (unsigned int)0), false); [line 79, column 13];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds: succs:3 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">      s-&gt;id = bid-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:11 succs:16 exn: Instructions
+n$11=*&amp;s:idqt* [line 81, column 7];
+n$12=*&amp;bid:idqt* [line 81, column 15];
+n$13=*n$12.id:int [line 81, column 15];
+*n$11.id:int=n$13 [line 81, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">      s-&gt;qt = bid-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$8=*&amp;s:idqt* [line 82, column 7];
+n$9=*&amp;bid:idqt* [line 82, column 15];
+n$10=*n$9.qt:int [line 82, column 15];
+*n$8.qt:int=n$10 [line 82, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">      *d = Ongoing; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$7=*&amp;d:int* [line 83, column 8];
+*n$7:int=1 [line 83, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">      log_current_max(bid-&gt;id, bid-&gt;qt); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+n$2=*&amp;bid:idqt* [line 84, column 23];
+n$3=*n$2.id:int [line 84, column 23];
+n$4=*&amp;bid:idqt* [line 84, column 32];
+n$5=*n$4.qt:int [line 84, column 32];
+n$6=_fun_log_current_max(n$3:int,n$5:int) [line 84, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">      return Success; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:2 exn: Instructions
+*&amp;return:int=1 [line 85, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">    else </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">      idqt_max(s, bid); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:12 succs:18 exn: Instructions
+n$14=*&amp;s:idqt* [line 89, column 16];
+n$15=*&amp;bid:idqt* [line 89, column 19];
+n$16=_fun_idqt_max(n$14:idqt*,n$15:idqt*) [line 89, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">      return Success; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:2 exn: Instructions
+*&amp;return:int=1 [line 90, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/register_bid.db6953f52efcecb747e001dd92beaa97_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:18 13 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">/* should be used when there is no 'reserve' set */ </td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">status_code close_auction_and_get_winner(struct idqt *s, database_status *d, int *p, int *q) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:19 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f.html">summary for close_auction_and_get_winner</a></td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">    database_status stp = *d; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(stp:int); [line 97, column 5];
+n$12=*&amp;d:int* [line 97, column 28];
+n$13=*n$12:int [line 97, column 27];
+*&amp;stp:int=n$13 [line 97, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">    if(stp == Ready) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:19 succs:6 7 exn: Instructions
+n$0=*&amp;stp:int [line 98, column 8];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE(((unsigned int)n$0 == (unsigned int)0), true); [line 98, column 8];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:10 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$0 == (unsigned int)0), false); [line 98, column 8];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:9 succs:4 exn: Join
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">      return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+*&amp;return:int=0 [line 100, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">    else if (stp == Closed) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:11 12 exn: Instructions
+n$1=*&amp;stp:int [line 102, column 14];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:10 succs:13 exn: Conditional true Branch
+PRUNE(((unsigned int)n$1 == (unsigned int)2), true); [line 102, column 14];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:10 succs:18 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$1 == (unsigned int)2), false); [line 102, column 14];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds: succs:3 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">      return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:11 succs:2 exn: Instructions
+*&amp;return:int=0 [line 104, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">    else </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">      *d = Closed; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:12 succs:17 exn: Instructions
+n$9=*&amp;d:int* [line 108, column 8];
+*n$9:int=2 [line 108, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">      *p = s-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+n$6=*&amp;p:int* [line 109, column 8];
+n$7=*&amp;s:idqt* [line 109, column 12];
+n$8=*n$7.id:int [line 109, column 12];
+*n$6:int=n$8 [line 109, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">      *q = s-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$3=*&amp;q:int* [line 110, column 8];
+n$4=*&amp;s:idqt* [line 110, column 12];
+n$5=*n$4.qt:int [line 110, column 12];
+*n$3:int=n$5 [line 110, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">      log_closed(); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$2=_fun_log_closed() [line 111, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">      return Success; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:2 exn: Instructions
+*&amp;return:int=1 [line 112, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction_and_get_winner.8386a84d8c9f4abf4a7a8091e7d12f1f_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:14 13 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">/* close the auction but do not compute the winner. Should be used only </td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">   with get_winner_with_reserve() below */ </td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">status_code close_auction(struct idqt *s, database_status *d) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:17 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/close_auction.6f6f9f73ff499fda5af651e4b4156b56.html">summary for close_auction</a></td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line">    database_status stp = *d; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(stp:int); [line 120, column 5];
+n$6=*&amp;d:int* [line 120, column 28];
+n$7=*n$6:int [line 120, column 27];
+*&amp;stp:int=n$7 [line 120, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line">    if(stp == Ready) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:17 succs:6 7 exn: Instructions
+n$0=*&amp;stp:int [line 121, column 8];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE(((unsigned int)n$0 == (unsigned int)0), true); [line 121, column 8];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:10 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$0 == (unsigned int)0), false); [line 121, column 8];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:9 succs:4 exn: Join
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line">      return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+*&amp;return:int=0 [line 123, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">    else if (stp == Closed) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:11 12 exn: Instructions
+n$1=*&amp;stp:int [line 125, column 14];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:10 succs:13 exn: Conditional true Branch
+PRUNE(((unsigned int)n$1 == (unsigned int)2), true); [line 125, column 14];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:10 succs:16 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$1 == (unsigned int)2), false); [line 125, column 14];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds: succs:3 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">      return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:11 succs:2 exn: Instructions
+*&amp;return:int=0 [line 127, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line">    else </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line">      *d = Closed; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:12 succs:15 exn: Instructions
+n$3=*&amp;d:int* [line 131, column 8];
+*n$3:int=2 [line 131, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">      log_closed(); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$2=_fun_log_closed() [line 132, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">      return Success; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:2 exn: Instructions
+*&amp;return:int=1 [line 133, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/close_auction.6f6f9f73ff499fda5af651e4b4156b56_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:14 13 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line">/* should be called to get the winner after callling close_auction(), when </td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">   a reserve exists */ </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line">status_code get_winner_with_reserve(struct idqt *s, database_status *d, int reserve, int *p, int *q) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:24 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06.html">summary for get_winner_with_reserve</a></td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line">  database_status stp = *d; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(stp:int); [line 141, column 3];
+n$17=*&amp;d:int* [line 141, column 26];
+n$18=*n$17:int [line 141, column 25];
+*&amp;stp:int=n$18 [line 141, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line">  if(stp == Ready) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:24 succs:6 7 exn: Instructions
+n$0=*&amp;stp:int [line 142, column 6];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE(((unsigned int)n$0 == (unsigned int)0), true); [line 142, column 6];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:10 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$0 == (unsigned int)0), false); [line 142, column 6];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:9 succs:4 exn: Join
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line">    return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+*&amp;return:int=0 [line 144, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">  else if (stp == Ongoing) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:11 12 exn: Instructions
+n$1=*&amp;stp:int [line 146, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:10 succs:13 exn: Conditional true Branch
+PRUNE(((unsigned int)n$1 == (unsigned int)1), true); [line 146, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:10 succs:23 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$1 == (unsigned int)1), false); [line 146, column 12];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds:14 succs:3 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE148">148</td><td class="line">    return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:11 succs:2 exn: Instructions
+*&amp;return:int=0 [line 148, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE149">149</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE150">150</td><td class="line">  else </td></tr>
+<tr><td class="num" id="LINE151">151</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE152">152</td><td class="line">    int sid = s-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:12 succs:22 exn: Instructions
+VARIABLE_DECLARED(sid:int); [line 152, column 5];
+n$13=*&amp;s:idqt* [line 152, column 15];
+n$14=*n$13.id:int [line 152, column 15];
+*&amp;sid:int=n$14 [line 152, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE153">153</td><td class="line">    int sqt = s-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:23 succs:15 exn: Instructions
+VARIABLE_DECLARED(sqt:int); [line 153, column 5];
+n$11=*&amp;s:idqt* [line 153, column 15];
+n$12=*n$11.qt:int [line 153, column 15];
+*&amp;sqt:int=n$12 [line 153, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE154">154</td><td class="line">    if (sqt &gt;= reserve) <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:22 succs:16 17 exn: Instructions
+n$2=*&amp;sqt:int [line 154, column 9];
+n$3=*&amp;reserve:int [line 154, column 16];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node16.html"><span class='visited with_tooltip'>C_16<span class='tooltip'>node16 preds:15 succs:20 exn: Conditional true Branch
+PRUNE((n$2  &gt;=  n$3), true); [line 154, column 9];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node17.html"><span class='visited with_tooltip'>C_17<span class='tooltip'>node17 preds:15 succs:21 exn: Conditional false Branch
+PRUNE(!(n$2  &gt;=  n$3), false); [line 154, column 9];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node14.html"><span class='visited with_tooltip'>J_14<span class='tooltip'>node14 preds: succs:9 exn: Join
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE155">155</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE156">156</td><td class="line">      *p = s-&gt;id; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:16 succs:19 exn: Instructions
+n$7=*&amp;p:int* [line 156, column 8];
+n$8=*&amp;s:idqt* [line 156, column 12];
+n$9=*n$8.id:int [line 156, column 12];
+*n$7:int=n$9 [line 156, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE157">157</td><td class="line">      *q = s-&gt;qt; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+n$4=*&amp;q:int* [line 157, column 8];
+n$5=*&amp;s:idqt* [line 157, column 12];
+n$6=*n$5.qt:int [line 157, column 12];
+*n$4:int=n$6 [line 157, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE158">158</td><td class="line">      return Success; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:2 exn: Instructions
+*&amp;return:int=1 [line 158, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE159">159</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE160">160</td><td class="line">    else </td></tr>
+<tr><td class="num" id="LINE161">161</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE162">162</td><td class="line">      return Failure; <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:17 succs:2 exn: Instructions
+*&amp;return:int=0 [line 162, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE163">163</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE164">164</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE165">165</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/get_winner_with_reserve.779b3d9ac9642f4ba6cfa461cade5a06_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:21 18 13 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE166">166</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE167">167</td><td class="line">/* external allocation functions */ </td></tr>
+<tr><td class="num" id="LINE168">168</td><td class="line">struct idqt * alloc_idqt(); </td></tr>
+<tr><td class="num" id="LINE169">169</td><td class="line">_(presumes true covers exists int _id, int _qt. &amp;result-&gt;id |-&gt; _id &amp;*&amp; &amp;result-&gt;qt |-&gt; _qt &amp;*&amp; result :: low) </td></tr>
+<tr><td class="num" id="LINE170">170</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE171">171</td><td class="line">/* axiomatise current time as being low (public) since bidders can always  </td></tr>
+<tr><td class="num" id="LINE172">172</td><td class="line">   tell when the auction is closed and the server does not try to keep that </td></tr>
+<tr><td class="num" id="LINE173">173</td><td class="line">   a secret (e.g. once enough time has passed new bids cannot be accepted) */ </td></tr>
+<tr><td class="num" id="LINE174">174</td><td class="line">int time(); </td></tr>
+<tr><td class="num" id="LINE175">175</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE176">176</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE177">177</td><td class="line">/* external function that blocks waiting for the next bid to arrive */ </td></tr>
+<tr><td class="num" id="LINE178">178</td><td class="line">void get_bid(int is_sealed, struct idqt *bid); </td></tr>
+<tr><td class="num" id="LINE179">179</td><td class="line">_(presumes exists int _id, int _qt. &amp;bid-&gt;id |-&gt; _id &amp;*&amp; &amp;bid-&gt;qt |-&gt; _qt covers exists int _nid, int _nqt. &amp;bid-&gt;id |-&gt; _nid &amp;*&amp; &amp;bid-&gt;qt |-&gt; _nqt &amp;*&amp; _nqt :: (is_sealed ? high : low)) </td></tr>
+<tr><td class="num" id="LINE180">180</td><td class="line">_(presumes exists int _id. &amp;bid-&gt;id |-&gt; _id &amp;*&amp; &amp;bid-&gt;qt |-\-&gt; fails memory exists int _nid. &amp;bid-&gt;id |-&gt; _nid &amp;*&amp; &amp;bid-&gt;qt |-\-&gt;) </td></tr>
+<tr><td class="num" id="LINE181">181</td><td class="line">_(presumes &amp;bid-&gt;id |-\-&gt; fails memory &amp;bid-&gt;id |-\-&gt;) </td></tr>
+<tr><td class="num" id="LINE182">182</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE183">183</td><td class="line">/* called to print out the winner */ </td></tr>
+<tr><td class="num" id="LINE184">184</td><td class="line">void print_winner(int winid, int winqt); </td></tr>
+<tr><td class="num" id="LINE185">185</td><td class="line">_(presumes true covers true) </td></tr>
+<tr><td class="num" id="LINE186">186</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE187">187</td><td class="line">/* top-level function to run the auction, in the absence of a reserve price. </td></tr>
+<tr><td class="num" id="LINE188">188</td><td class="line">   Insecurity is detected with a loop unrolling bound of at least 2 </td></tr>
+<tr><td class="num" id="LINE189">189</td><td class="line">   since we are only insecure when the second bid comes in and hte &gt;= </td></tr>
+<tr><td class="num" id="LINE190">190</td><td class="line">   comparison is performed insecurely */ </td></tr>
+<tr><td class="num" id="LINE191">191</td><td class="line">void run_auction(int is_sealed){ <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:19 exn: Start
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/run_auction.659bd5cf352dd51620a90bf24065e127.html">summary for run_auction</a></td></tr>
+<tr><td class="num" id="LINE192">192</td><td class="line">  database_status d; </td></tr>
+<tr><td class="num" id="LINE193">193</td><td class="line">  struct idqt *s = alloc_idqt(); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:1 succs:18 exn: Instructions
+VARIABLE_DECLARED(s:idqt*); [line 193, column 3];
+n$21=_fun_alloc_idqt() [line 193, column 20];
+*&amp;s:idqt*=n$21 [line 193, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE194">194</td><td class="line">  struct idqt *bid = alloc_idqt(); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+VARIABLE_DECLARED(bid:idqt*); [line 194, column 3];
+n$20=_fun_alloc_idqt() [line 194, column 22];
+*&amp;bid:idqt*=n$20 [line 194, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE195">195</td><td class="line">  int winid; </td></tr>
+<tr><td class="num" id="LINE196">196</td><td class="line">  int winqt; </td></tr>
+<tr><td class="num" id="LINE197">197</td><td class="line">  start_auction(s,&amp;d); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+n$18=*&amp;s:idqt* [line 197, column 17];
+n$19=_fun_start_auction(n$18:idqt*,&amp;d:int*) [line 197, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE198">198</td><td class="line">  int start = time(); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:10 exn: Instructions
+VARIABLE_DECLARED(start:int); [line 198, column 3];
+n$17=_fun_time() [line 198, column 15];
+*&amp;start:int=n$17 [line 198, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE199">199</td><td class="line">  while (time() - start &lt; 300) { <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node10.html"><span class='visited with_tooltip'>J_10<span class='tooltip'>node10 preds:16 14 succs:11 exn: Join
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:10 succs:12 13 exn: Instructions
+n$8=_fun_time() [line 199, column 10];
+n$9=*&amp;start:int [line 199, column 19];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:11 succs:15 exn: Conditional true Branch
+PRUNE(((n$8 - n$9)  &lt;  300), true); [line 199, column 10];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:11 succs:9 exn: Conditional false Branch
+PRUNE(!((n$8 - n$9)  &lt;  300), false); [line 199, column 10];
+</span></span></a>
+<div class="msg" style="margin-left:9ex">MEMORY_LEAK Pulse found a potential memory leak. Memory dynamically allocated at line 194 by call to `alloc_idqt`, is not freed after the last access at line 199, column 10</div></td></tr>
+<tr><td class="num" id="LINE200">200</td><td class="line">    get_bid(is_sealed,bid); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:12 succs:14 exn: Instructions
+n$13=*&amp;is_sealed:int [line 200, column 13];
+n$14=*&amp;bid:idqt* [line 200, column 23];
+n$15=_fun_get_bid(n$13:int,n$14:idqt*) [line 200, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE201">201</td><td class="line">    register_bid(s,&amp;d,bid); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:10 exn: Instructions
+n$10=*&amp;s:idqt* [line 201, column 18];
+n$11=*&amp;bid:idqt* [line 201, column 23];
+n$12=_fun_register_bid(n$10:idqt*,&amp;d:int*,n$11:idqt*) [line 201, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE202">202</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE203">203</td><td class="line">  status_code res = close_auction_and_get_winner(s,&amp;d,&amp;winid,&amp;winqt); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:13 succs:5 exn: Instructions
+VARIABLE_DECLARED(res:int); [line 203, column 3];
+n$6=*&amp;s:idqt* [line 203, column 50];
+n$7=_fun_close_auction_and_get_winner(n$6:idqt*,&amp;d:int*,&amp;winid:int*,&amp;winqt:int*) [line 203, column 21];
+*&amp;res:int=n$7 [line 203, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE204">204</td><td class="line">  if (res == Success) { <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:9 succs:6 7 exn: Instructions
+n$0=*&amp;res:int [line 204, column 7];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE(((unsigned int)n$0 == (unsigned int)1), true); [line 204, column 7];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:3 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$0 == (unsigned int)1), false); [line 204, column 7];
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:7 8 succs:4 exn: Join
+</span></span></a> <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE205">205</td><td class="line">    print_winner(winid,winqt); <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:3 exn: Instructions
+n$1=*&amp;winid:int [line 205, column 18];
+n$2=*&amp;winqt:int [line 205, column 24];
+n$3=_fun_print_winner(n$1:int,n$2:int) [line 205, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE206">206</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE207">207</td><td class="line">} <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/run_auction.659bd5cf352dd51620a90bf24065e127_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+LIKE DURING FOOTPRINT
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+<br>Memory Leak Pulse found a potential memory leak. Memory dynamically allocated at line 194 by call to `alloc_idqt`, is not freed after the last access at line 199, column 10 <a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/nodes/node0.html">node0</a>(<a href="./auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac/../auction.c.3b69f91f96e7ccc1b3985f12ce9be9ac.html#LINE199">199</a>)</body>
+</html>
