@@ -1,0 +1,29 @@
+args: List(-report:conditional, examples/ct_openssl_utility.c), target: examples/ct_openssl_utility.c
+constant_time_eq
+OK presumes true covers exists unsigned int result812, unsigned int result6. ((result == result6) && ((result6 == result812) && (result812 == (unsigned int)(0 - (int)(((~ (a ^ b)) & ((a ^ b) - (unsigned int)1)) >> (unsigned int)((4 * 8) - 1))))))
+constant_time_select_8
+OK presumes true covers exists unsigned int result61. ((result == (unsigned char)result61) && (result61 == (unsigned int)((mask & a) | ((~ mask) & b))))
+constant_time_lt
+OK presumes true covers exists unsigned int result20. ((result == result20) && (result20 == (unsigned int)(0 - (int)((a ^ ((a ^ b) | ((a - b) ^ b))) >> (unsigned int)((4 * 8) - 1)))))
+constant_time_ge_8
+OK presumes true covers exists unsigned int result5256, unsigned int result51, unsigned int result205355. ((result == (unsigned char)result51) && ((result51 == (~ result5256)) && ((result5256 == result205355) && (result205355 == (unsigned int)(0 - (int)((a ^ ((a ^ b) | ((a - b) ^ b))) >> (unsigned int)((4 * 8) - 1)))))))
+constant_time_select_int
+OK presumes true covers exists unsigned int result44. ((result == (int)result44) && (result44 == ((mask & (unsigned int)a) | ((~ mask) & (unsigned int)b))))
+constant_time_msb
+OK presumes true covers (result == (unsigned int)(0 - (int)(a >> (unsigned int)((4 * 8) - 1))))
+constant_time_eq_int_8
+OK presumes true covers exists unsigned int result8123439, unsigned int result63537, unsigned char result30, unsigned int result3338. ((result == result30) && (((unsigned int)result30 == (unsigned int)(unsigned char)result3338) && ((result3338 == result63537) && ((result63537 == result8123439) && (result8123439 == (unsigned int)(0 - (int)(((~ ((unsigned int)a ^ (unsigned int)b)) & (((unsigned int)a ^ (unsigned int)b) - (unsigned int)1)) >> (unsigned int)((4 * 8) - 1))))))))
+constant_time_is_zero_8
+OK presumes true covers exists unsigned int result25, unsigned int result826. ((result == (unsigned char)result25) && ((result25 == result826) && (result826 == (unsigned int)(0 - (int)(((~ a) & (a - (unsigned int)1)) >> (unsigned int)((4 * 8) - 1))))))
+constant_time_lt_8
+OK presumes true covers exists unsigned int result2022, unsigned int result19. ((result == (unsigned char)result19) && ((result19 == result2022) && (result2022 == (unsigned int)(0 - (int)((a ^ ((a ^ b) | ((a - b) ^ b))) >> (unsigned int)((4 * 8) - 1))))))
+constant_time_ge
+OK presumes true covers exists unsigned int result2053, unsigned int result52. ((result == (~ result52)) && ((result52 == result2053) && (result2053 == (unsigned int)(0 - (int)((a ^ ((a ^ b) | ((a - b) ^ b))) >> (unsigned int)((4 * 8) - 1))))))
+constant_time_eq_int
+OK presumes true covers exists unsigned int result81214, unsigned int result3, unsigned int result615. ((result == result3) && ((result3 == result615) && ((result615 == result81214) && (result81214 == (unsigned int)(0 - (int)(((~ ((unsigned int)a ^ (unsigned int)b)) & (((unsigned int)a ^ (unsigned int)b) - (unsigned int)1)) >> (unsigned int)((4 * 8) - 1)))))))
+constant_time_eq_8
+OK presumes true covers exists unsigned int result635, unsigned int result33, unsigned int result81234. ((result == (unsigned char)result33) && ((result33 == result635) && ((result635 == result81234) && (result81234 == (unsigned int)(0 - (int)(((~ (a ^ b)) & ((a ^ b) - (unsigned int)1)) >> (unsigned int)((4 * 8) - 1)))))))
+constant_time_select
+OK presumes true covers (result == ((mask & a) | ((~ mask) & b)))
+constant_time_is_zero
+OK presumes true covers exists unsigned int result8. ((result == result8) && (result8 == (unsigned int)(0 - (int)(((~ a) & (a - (unsigned int)1)) >> (unsigned int)((4 * 8) - 1)))))
