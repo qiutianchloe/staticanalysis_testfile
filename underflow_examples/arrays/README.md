@@ -6,7 +6,7 @@
 
 |Tool|Command Line|exec time|issues found|debug report|
 |----------------|-------------------------------|-----------------------------|---------------------------|-----------|
-|Underflow|`./Underflow.sh  ./examples/arrays.c `|1117 ms|1 bug and 1 memory and 1 condition error|result-arrays.txt|
+|Underflow|`./Underflow.sh  ./examples/arrays.c `|1117 ms|1 bug and 1 memory|result-arrays.txt|
 |Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/arrays.c`|29.095ms|No issues found|arrays_pulse.html|
 |Pulse-x|`infer --bufferoverrun-only -- gcc -c -I./include/ ./examples/arrays.c `|27.808ms|Buffer Overrun L2|arrays_bufferoverrun.html|
 
