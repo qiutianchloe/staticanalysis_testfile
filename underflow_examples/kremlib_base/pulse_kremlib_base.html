@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/kremlib_base.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// derived from: https://github.com/binsec/rel_bench/blob/main/src/ct/hacl_utility/kremlib_base.h </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">#define NULL ((void *)0);  </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">/* MIT License </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line"> * Copyright (c) 2016-2017 INRIA and Microsoft Corporation </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> * Permission is hereby granted, free of charge, to any person obtaining a copy </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line"> * of this software and associated documentation files (the &quot;Software&quot;), to deal </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line"> * in the Software without restriction, including without limitation the rights </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line"> * copies of the Software, and to permit persons to whom the Software is </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> * furnished to do so, subject to the following conditions: </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line"> * The above copyright notice and this permission notice shall be included in all </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line"> * copies or substantial portions of the Software. </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line"> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line"> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line"> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line"> * SOFTWARE. </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">/******************************************************************************/ </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">/* Implementation of machine integers (possibly of 128-bit integers)          */ </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">/******************************************************************************/ </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">typedef unsigned long uint64_t; </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">typedef long int64_t; </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">typedef unsigned int uint32_t; </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">typedef int int32_t; </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">typedef unsigned short uint16_t; </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">typedef short int16_t; </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">typedef unsigned char uint8_t; </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">typedef char int8_t; </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">static inline uint32_t rotate32_left(uint32_t x, uint32_t n) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_left%23c9d6c124b12b36a4478c1801c1cb62b7.345d3005b8310431506d5595fa8a57b8_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/rotate32_left%23c9d6c124b12b36a4478c1801c1cb62b7.345d3005b8310431506d5595fa8a57b8.html">summary for rotate32_left</a></td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">  /*  assert (n&lt;32); */ </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">//Test 1. Work here </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">  // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">  return (x &lt;&lt; n) | (x &gt;&gt; (32 - n)); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_left%23c9d6c124b12b36a4478c1801c1cb62b7.345d3005b8310431506d5595fa8a57b8_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned int [line 44, column 11];
+n$1=*&amp;n:unsigned int [line 44, column 16];
+n$2=*&amp;x:unsigned int [line 44, column 22];
+n$3=*&amp;n:unsigned int [line 44, column 33];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_left%23c9d6c124b12b36a4478c1801c1cb62b7.345d3005b8310431506d5595fa8a57b8_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=((n$0  &lt;&lt;  n$1) | (n$2  &gt;&gt;  ((unsigned int)32 - n$3))) [line 44, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_left%23c9d6c124b12b36a4478c1801c1cb62b7.345d3005b8310431506d5595fa8a57b8_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">static inline uint32_t rotate32_right(uint32_t x, uint32_t n) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_right%23c9d6c124b12b36a4478c1801c1cb62b7.5cf66971b7fb764304d99156793bbc29_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/rotate32_right%23c9d6c124b12b36a4478c1801c1cb62b7.5cf66971b7fb764304d99156793bbc29.html">summary for rotate32_right</a></td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">  /*  assert (n&lt;32); */ </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">  return (x &gt;&gt; n) | (x &lt;&lt; (32 - n)); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_right%23c9d6c124b12b36a4478c1801c1cb62b7.5cf66971b7fb764304d99156793bbc29_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned int [line 48, column 11];
+n$1=*&amp;n:unsigned int [line 48, column 16];
+n$2=*&amp;x:unsigned int [line 48, column 22];
+n$3=*&amp;n:unsigned int [line 48, column 33];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_right%23c9d6c124b12b36a4478c1801c1cb62b7.5cf66971b7fb764304d99156793bbc29_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=((n$0  &gt;&gt;  n$1) | (n$2  &lt;&lt;  ((unsigned int)32 - n$3))) [line 48, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/rotate32_right%23c9d6c124b12b36a4478c1801c1cb62b7.5cf66971b7fb764304d99156793bbc29_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">/* Constant time comparisons */ </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">static inline uint8_t FStar_UInt8_eq_mask(uint8_t x, uint8_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:8 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2.html">summary for FStar_UInt8_eq_mask</a></td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  x = ~(x ^ y); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:1 succs:7 exn: Instructions
+n$7=*&amp;x:unsigned char [line 53, column 9];
+n$8=*&amp;y:unsigned char [line 53, column 13];
+*&amp;x:unsigned char=(unsigned char)~(n$7 ^ n$8) [line 53, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">  x &amp;= x &lt;&lt; 4; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$5=*&amp;x:unsigned char [line 54, column 8];
+n$6=*&amp;x:unsigned char [line 54, column 3];
+*&amp;x:unsigned char=(n$6 & (n$5  &lt;&lt;  4)) [line 54, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  x &amp;= x &lt;&lt; 2; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$3=*&amp;x:unsigned char [line 55, column 8];
+n$4=*&amp;x:unsigned char [line 55, column 3];
+*&amp;x:unsigned char=(n$4 & (n$3  &lt;&lt;  2)) [line 55, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">  x &amp;= x &lt;&lt; 1; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned char [line 56, column 8];
+n$2=*&amp;x:unsigned char [line 56, column 3];
+*&amp;x:unsigned char=(n$2 & (n$1  &lt;&lt;  1)) [line 56, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">  return (int8_t)x &gt;&gt; 7; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned char [line 57, column 18];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)(n$0  &gt;&gt;  7) [line 57, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.255b731b16b5d39434df0cd037212fd2_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">static inline uint8_t FStar_UInt8_gte_mask(uint8_t x, uint8_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.d534531b01270ff18fa1b1215f48960c_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt8_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.d534531b01270ff18fa1b1215f48960c.html">summary for FStar_UInt8_gte_mask</a></td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">  return ~(uint8_t)(((int32_t)x - y) &gt;&gt; 31); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.d534531b01270ff18fa1b1215f48960c_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned char [line 61, column 31];
+n$1=*&amp;y:unsigned char [line 61, column 35];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.d534531b01270ff18fa1b1215f48960c_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)~(unsigned char)((n$0 - n$1)  &gt;&gt;  31) [line 61, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt8_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.d534531b01270ff18fa1b1215f48960c_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">static inline uint16_t FStar_UInt16_eq_mask(uint16_t x, uint16_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:9 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155.html">summary for FStar_UInt16_eq_mask</a></td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">  x = ~(x ^ y); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:1 succs:8 exn: Instructions
+n$9=*&amp;x:unsigned short [line 65, column 9];
+n$10=*&amp;y:unsigned short [line 65, column 13];
+*&amp;x:unsigned short=(unsigned short)~(n$9 ^ n$10) [line 65, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">  x &amp;= x &lt;&lt; 8; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$7=*&amp;x:unsigned short [line 66, column 8];
+n$8=*&amp;x:unsigned short [line 66, column 3];
+*&amp;x:unsigned short=(n$8 & (n$7  &lt;&lt;  8)) [line 66, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">  x &amp;= x &lt;&lt; 4; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$5=*&amp;x:unsigned short [line 67, column 8];
+n$6=*&amp;x:unsigned short [line 67, column 3];
+*&amp;x:unsigned short=(n$6 & (n$5  &lt;&lt;  4)) [line 67, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">  x &amp;= x &lt;&lt; 2; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$3=*&amp;x:unsigned short [line 68, column 8];
+n$4=*&amp;x:unsigned short [line 68, column 3];
+*&amp;x:unsigned short=(n$4 & (n$3  &lt;&lt;  2)) [line 68, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">  x &amp;= x &lt;&lt; 1; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned short [line 69, column 8];
+n$2=*&amp;x:unsigned short [line 69, column 3];
+*&amp;x:unsigned short=(n$2 & (n$1  &lt;&lt;  1)) [line 69, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">  return (int16_t)x &gt;&gt; 15; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned short [line 70, column 19];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned short=(unsigned short)(n$0  &gt;&gt;  15) [line 70, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.8dfcaaf1c2da76b62bddf0dc51807155_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">static inline uint16_t FStar_UInt16_gte_mask(uint16_t x, uint16_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.4b6dd9211d7df6a70d78db7f42c393fc_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt16_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.4b6dd9211d7df6a70d78db7f42c393fc.html">summary for FStar_UInt16_gte_mask</a></td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">  return ~(uint16_t)(((int32_t)x - y) &gt;&gt; 31); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.4b6dd9211d7df6a70d78db7f42c393fc_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned short [line 74, column 32];
+n$1=*&amp;y:unsigned short [line 74, column 36];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.4b6dd9211d7df6a70d78db7f42c393fc_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned short=(unsigned short)~(unsigned short)((n$0 - n$1)  &gt;&gt;  31) [line 74, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt16_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.4b6dd9211d7df6a70d78db7f42c393fc_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">static inline uint32_t FStar_UInt32_eq_mask(uint32_t x, uint32_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:10 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4.html">summary for FStar_UInt32_eq_mask</a></td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">  x = ~(x ^ y); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:1 succs:9 exn: Instructions
+n$11=*&amp;x:unsigned int [line 78, column 9];
+n$12=*&amp;y:unsigned int [line 78, column 13];
+*&amp;x:unsigned int=~(n$11 ^ n$12) [line 78, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">  x &amp;= x &lt;&lt; 16; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+n$9=*&amp;x:unsigned int [line 79, column 8];
+n$10=*&amp;x:unsigned int [line 79, column 3];
+*&amp;x:unsigned int=(n$10 & (n$9  &lt;&lt;  16)) [line 79, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">  x &amp;= x &lt;&lt; 8; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$7=*&amp;x:unsigned int [line 80, column 8];
+n$8=*&amp;x:unsigned int [line 80, column 3];
+*&amp;x:unsigned int=(n$8 & (n$7  &lt;&lt;  8)) [line 80, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">  x &amp;= x &lt;&lt; 4; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$5=*&amp;x:unsigned int [line 81, column 8];
+n$6=*&amp;x:unsigned int [line 81, column 3];
+*&amp;x:unsigned int=(n$6 & (n$5  &lt;&lt;  4)) [line 81, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">  x &amp;= x &lt;&lt; 2; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$3=*&amp;x:unsigned int [line 82, column 8];
+n$4=*&amp;x:unsigned int [line 82, column 3];
+*&amp;x:unsigned int=(n$4 & (n$3  &lt;&lt;  2)) [line 82, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">  x &amp;= x &lt;&lt; 1; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned int [line 83, column 8];
+n$2=*&amp;x:unsigned int [line 83, column 3];
+*&amp;x:unsigned int=(n$2 & (n$1  &lt;&lt;  1)) [line 83, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">  return ((int32_t)x) &gt;&gt; 31; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned int [line 84, column 20];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=(unsigned int)(n$0  &gt;&gt;  31) [line 84, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.0be6b525880927a5663eebc12e6027e4_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">static inline uint32_t FStar_UInt32_gte_mask(uint32_t x, uint32_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.38f68d99fad34cab8e619555be4ddef6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt32_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.38f68d99fad34cab8e619555be4ddef6.html">summary for FStar_UInt32_gte_mask</a></td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">  return ~((uint32_t)(((int64_t)x - y) &gt;&gt; 63)); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.38f68d99fad34cab8e619555be4ddef6_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned int [line 88, column 33];
+n$1=*&amp;y:unsigned int [line 88, column 37];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.38f68d99fad34cab8e619555be4ddef6_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=~(unsigned int)((n$0 - n$1)  &gt;&gt;  63) [line 88, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt32_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.38f68d99fad34cab8e619555be4ddef6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">static inline uint64_t FStar_UInt64_eq_mask(uint64_t x, uint64_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:11 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210.html">summary for FStar_UInt64_eq_mask</a></td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">  x = ~(x ^ y); <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:1 succs:10 exn: Instructions
+n$13=*&amp;x:unsigned long [line 92, column 9];
+n$14=*&amp;y:unsigned long [line 92, column 13];
+*&amp;x:unsigned long=~(n$13 ^ n$14) [line 92, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line">  x &amp;= x &lt;&lt; 32; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$11=*&amp;x:unsigned long [line 93, column 8];
+n$12=*&amp;x:unsigned long [line 93, column 3];
+*&amp;x:unsigned long=(n$12 & (n$11  &lt;&lt;  32)) [line 93, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">  x &amp;= x &lt;&lt; 16; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+n$9=*&amp;x:unsigned long [line 94, column 8];
+n$10=*&amp;x:unsigned long [line 94, column 3];
+*&amp;x:unsigned long=(n$10 & (n$9  &lt;&lt;  16)) [line 94, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">  x &amp;= x &lt;&lt; 8; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$7=*&amp;x:unsigned long [line 95, column 8];
+n$8=*&amp;x:unsigned long [line 95, column 3];
+*&amp;x:unsigned long=(n$8 & (n$7  &lt;&lt;  8)) [line 95, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">  x &amp;= x &lt;&lt; 4; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$5=*&amp;x:unsigned long [line 96, column 8];
+n$6=*&amp;x:unsigned long [line 96, column 3];
+*&amp;x:unsigned long=(n$6 & (n$5  &lt;&lt;  4)) [line 96, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">  x &amp;= x &lt;&lt; 2; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$3=*&amp;x:unsigned long [line 97, column 8];
+n$4=*&amp;x:unsigned long [line 97, column 3];
+*&amp;x:unsigned long=(n$4 & (n$3  &lt;&lt;  2)) [line 97, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">  x &amp;= x &lt;&lt; 1; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned long [line 98, column 8];
+n$2=*&amp;x:unsigned long [line 98, column 3];
+*&amp;x:unsigned long=(n$2 & (n$1  &lt;&lt;  1)) [line 98, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">  return ((int64_t)x) &gt;&gt; 63; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned long [line 99, column 20];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=(unsigned long)(n$0  &gt;&gt;  63) [line 99, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_eq_mask%23c9d6c124b12b36a4478c1801c1cb62b7.6d45cbcb881be1f3d516569c7ead2210_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">static inline uint64_t FStar_UInt64_gte_mask(uint64_t x, uint64_t y) { <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:6 exn: Start
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c.html">summary for FStar_UInt64_gte_mask</a></td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">  uint64_t low63 = <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(low63:unsigned long); [line 103, column 3];
+n$4=*&amp;x:unsigned long [line 104, column 38];
+n$5=*&amp;y:unsigned long [line 105, column 38];
+*&amp;low63:unsigned long=~(unsigned long)(((n$4 & 9223372036854775807) - (n$5 & 9223372036854775807))  &gt;&gt;  63) [line 103, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">    ~((uint64_t)((int64_t)((int64_t)(x &amp; (0x7fffffffffffffffUL)) - </td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">                           (int64_t)(y &amp; (0x7fffffffffffffffUL))) &gt;&gt; </td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">                   63)); </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">  uint64_t high_bit = <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+VARIABLE_DECLARED(high_bit:unsigned long); [line 107, column 3];
+n$2=*&amp;x:unsigned long [line 108, column 38];
+n$3=*&amp;y:unsigned long [line 109, column 38];
+*&amp;high_bit:unsigned long=~(unsigned long)(((n$2 & 9223372036854775808) - (n$3 & 9223372036854775808))  &gt;&gt;  63) [line 107, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">    ~((uint64_t)((int64_t)((int64_t)(x &amp; (0x8000000000000000UL)) - </td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">                           (int64_t)(y &amp; (0x8000000000000000UL))) &gt;&gt; </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">                   63)); </td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">  return low63 &amp; high_bit; <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;low63:unsigned long [line 111, column 10];
+n$1=*&amp;high_bit:unsigned long [line 111, column 18];
+</span></span></a> <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=(n$0 & n$1) [line 111, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">} <a href="./kremlib_base.c.3ea08cb7cd4cfbd6d42c0fa77465a2c2/nodes/FStar_UInt64_gte_mask%23c9d6c124b12b36a4478c1801c1cb62b7.c8f6e7277412f2b6cd708b4424bf7e4c_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line"> </td></tr>
+</table>
+
+<hr width="100%">
+LIKE DURING FOOTPRINT
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
