@@ -20,25 +20,33 @@ void another_fun(int n, int m){
 // //6. Work: Pointer to that variable 
 //   //int *j = &n;
 // //7. Not Work: loop 
-//   // int j; 
-//   // for (int i = 0; i<n; i++){
+//   // int j=0;
+//   // int i = 0;  
+//   // for (i = 0; i<n; i++){
 //   //   j++;
 //   // }
-// //8. Work: use the parater doing the assignment operation
+// //8. Not Work: issues inside the loop 
+//   // int j; 
+//   // while(j<n){
+// 	 //    int *p = NULL;
+// 	 //    int *q = *p; // null dereference
+// 	 //    j++;
+//   // }
+// //9. Work: use the parater doing the assignment operation
 //   //n = n+1;
-// //9. Not Work: use the parater doing the conditional operation after assignment operation
+// //10. Not Work: use the parater doing the conditional operation after assignment operation
 //   //int j = n>1;
-// //10. Not Work: with the variable that assigned to the parameter
+// //11. Not Work: with the variable that assigned to the parameter
 //   //int j = n;
 //   //int x = j>1;
-// //11. Work: with two paramters' arithmetic operation 
+// //12. Work: with two paramters' arithmetic operation 
 //   //int j = n+m;
-// //12. Not Work: with the two parameters' comparation operation
+// //13. Not Work: with the two parameters' comparation operation
 //   //int j = n<m;
-// //13. Work: use in another function 
+// //14. Work: use in another function 
 //   //another_fun(m, n); 
-//   int *p = NULL;
-//   int *q = *p; // null dereference
+//   // int *p = NULL;
+//   // int *q = *p; // null dereference
 // }
 
 /*Test 2: The fun() will execute when there is a call to it and real number parameter*/
@@ -62,21 +70,28 @@ void another_fun(int n, int m){
 //   // for (int i = 0; i<n; i++){
 //   //   j++;
 //   // }
-// //8. Work: use the parater doing the assignment operation
+// //8. Work: issues inside the loop 
+//   // int j=0; 
+//   // while(j<n){
+// 	 //    int *p = NULL;
+// 	 //    int *q = *p; // null dereference
+// 	 //    j++;
+//   // }
+// //9. Work: use the parater doing the assignment operation
 //   //n = n+1;
-// //9. Work!: use the parater doing the conditional operation after assignment operation
+// //10. Work!: use the parater doing the conditional operation after assignment operation
 //   //int j = n>1;
-// //10. Work!: with the variable that assigned to the parameter
+// //11. Work!: with the variable that assigned to the parameter
 //   // int j = n;
 //   // int x = j>1;
-// //11. Work: with two paramters' arithmetic operation 
+// //12. Work: with two paramters' arithmetic operation 
 //   //int j = n+m;
-// //12. Work!: with the two parameters' comparation operation
+// //13. Work!: with the two parameters' comparation operation
 //   //int j = n<m;
-// //13. Work: use in another function 
+// //14. Work: use in another function 
 //   //another_fun(m, n); 
-//   int *p = NULL;
-//   int *q = *p; // null dereference
+//   // int *p = NULL;
+//   // int *q = *p; // null dereference
 // }
 
 // int main(){
@@ -107,21 +122,28 @@ void another_fun(int n, int m){
 //   // for (int i = 0; i<n; i++){
 //   //   j++;
 //   // }
-// //8. Work: use the parater doing the assignment operation
+// //8. Work: issues inside the loop 
+//   // int j=0; 
+//   // while(j<n){
+// 	 //    int *p = NULL;
+// 	 //    int *q = *p; // null dereference
+// 	 //    j++;
+//   // }
+// //9. Work: use the parater doing the assignment operation
 //   //n = n+1;
-// //9. Work!: use the parater doing the conditional operation after assignment operation
+// //10. Work!: use the parater doing the conditional operation after assignment operation
 //   //int j = n>1;
-// //10. Work: with the variable that assigned to the parameter
+// //11. Work: with the variable that assigned to the parameter
 //   // int j = n;
 //   // int x = j>1;
-// //11. Work: with two paramters' arithmetic operation 
+// //12. Work: with two paramters' arithmetic operation 
 //   //int j = n+m;
-// //12. Work!: with the two parameters' comparation operation
+// //13. Work!: with the two parameters' comparation operation
 //   //int j = n<m;
-// //13. Work: use in another function 
+// //14. Work: use in another function 
 //   //another_fun(m, n); 
-//   int *p = NULL;
-//   int *q = *p; // null dereference
+//   // int *p = NULL;
+//   // int *q = *p; // null dereference
 // }
 
 // int main(){
@@ -147,7 +169,7 @@ void another_fun(int n, int m){
 // //6. Work: Pointer to that variable 
 //   //int *j = &n;
 // //7. Not Work: loop 
-//   // int j; 
+//   // int j=0; 
 //   // for (int i = 0; i<n; i++){
 //   //   j++;
 //   // }
