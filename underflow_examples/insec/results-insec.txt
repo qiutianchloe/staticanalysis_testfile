@@ -1,0 +1,83 @@
+args: List(./examples/insec.c), target: ./examples/insec.c
+error_and_insecure2
+OK presumes exists int v. p |-> v && (x :: low) covers p |-\-> && (x :: low)
+FAILS (location: unknown) memory presumes p |-\-> fails memory p |-\->
+FAILS (location: unknown) insecure presumes exists int v. p |-> v fails insecure (x :!: low) && p |-\->
+run_forever
+OK presumes true covers (x == 0)
+FAILS (location: unknown) insecure presumes true fails insecure ((x == 0) :!: attacker)
+error_and_insecure
+OK presumes exists int v. p |-> v covers p |-\-> && (x :: low)
+FAILS (location: unknown) memory presumes p |-\-> fails memory p |-\->
+FAILS (location: unknown) insecure presumes exists int v. p |-> v fails insecure p |-\-> && (x :!: low)
+do_free_use2
+FAILS (location: unknown) memory presumes exists int v. p |-> v fails memory p |-\->
+double_free
+FAILS (location: unknown) memory presumes exists int v. p |-> v fails memory p |-\->
+test2
+FAILS (location: unknown) insecure presumes true fails insecure ((b > 0) && (((b - 1) > 0) :!: attacker))
+push_back
+OK presumes exists int * p, int v2. v |-> p && p |-> v2 covers exists int * r, int _r. p |-\-> && v |-> r && r |-> _r
+curious
+FAILS (location: unknown) assertion presumes true fails assertion (! ((x > 0) ? ((x > 0) :: low) : ((x > 0) :: low)))
+load_and_branch
+OK presumes exists int x18. (arr + off) |-> x18 covers (! (x18 == 0)) && (arr + off) |-> x18
+OK presumes exists int x18. (arr + off) |-> x18 covers (x18 == 0) && (arr + off) |-> x18
+FAILS (location: line: 528, col: 7) insecure presumes exists int x18. (arr + off) |-> x18 fails insecure ((! (x18 == 0)) :!: attacker) && (arr + off) |-> x18
+FAILS (location: line: 527, col: 11) memory presumes (arr + off) |-\-> fails memory (arr + off) |-\->
+test5
+OK presumes exists int v, int y. p |-> v covers p |-> y && ((result == 0) && (v == y))
+isl_push_back
+FAILS (location: line: 448, col: 5) memory presumes true fails memory exists int * * result4, int * r11, int _r12, int * p5. result4 |-> r11 && r11 |-> _r12 && p5 |-\->
+output_low
+OK presumes true covers (x :: low)
+FAILS (location: unknown) insecure presumes true fails insecure (x :!: low)
+load_and_output_and_zero
+OK presumes exists int v. p |-> v covers p |-> 0 && (v :: low)
+curious_no_violated_assert
+OK presumes true covers (result == (x > 0))
+curious_no_violated_assert2
+OK presumes true covers ((x > 0) && (result == (x > 0)))
+OK presumes true covers ((x <= 0) && (result == (x > 0)))
+do_free
+OK presumes exists int v. p |-> v covers (p + 0) |-\->
+func2
+OK presumes (x >= 0) covers ((x >= 0) && (result == (x + 1)))
+OK presumes true covers ((x < 0) && (result == x))
+test3
+OK presumes true covers ((b > 0) && (result == 1))
+OK presumes true covers ((b <= 0) && (result == 0))
+get_y
+OK presumes true covers (((result :: low) && (n :: low)) && (n > 0))
+func1
+OK presumes true covers ((x > 0) && (result == (x + 1)))
+palloc
+OK presumes true covers exists int * p, int v. result |-> p && p |-> v
+test_conseq
+OK presumes (x > 0) covers (x > 1)
+load_and_output
+OK presumes exists int v2. p |-> v2 covers exists int v. p |-> v && (v :: low)
+example2
+FAILS (location: unknown) insecure presumes true fails insecure ((n == 2000000) && (h :!: low))
+free
+OK presumes exists int v. p |-> v covers p |-\->
+FAILS (location: unknown) memory presumes p |-\-> fails memory p |-\->
+test1
+OK presumes true covers ((b > 0) && (result == 1))
+FAILS (location: unknown) insecure presumes true fails insecure ((b > 0) :!: attacker)
+test4
+OK presumes true covers (result == 0)
+alloc
+OK presumes true covers exists int v. result |-> v
+example2_secure
+OK presumes true covers (n == 2000000)
+nondet
+OK presumes true covers (result :: low)
+test_conseq2
+OK presumes (x > 2) covers (x == 5)
+do_free_use
+FAILS (location: unknown) memory presumes exists int v. p |-> v fails memory p |-\->
+limitedIF
+OK presumes true covers (b > 0)
+run_forever2
+FAILS (location: unknown) insecure presumes true fails insecure ((x == 0) :!: attacker)

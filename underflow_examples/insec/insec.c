@@ -445,6 +445,7 @@ void isl_push_back()
     int **v = palloc();
     int *x = *v;
     push_back(v);
+    //HERE!
     *x = 88;
 }
 
@@ -524,6 +525,8 @@ int test5(int *p)
 
 void load_and_branch(int *arr, int off){
   int *p = arr + off;
+  //HERE! memory error
   int v = *p;
+  //HERE! insec
   if (v);
 }
