@@ -1,7 +1,7 @@
 // from: https://github.com/pornin/CTTK/blob/master/src/inner.h
 // run with -loop 64 to see unfolding of all of these functions
 
-
+#define NULL ((void *)0); 
 /*
  * Copyright (c) 2018 Thomas Pornin <pornin@bolet.org>
  *
@@ -34,7 +34,10 @@ typedef long int64_t;
 /* static */ /* inline */ uint32_t
 mulu32(uint32_t x, uint32_t y)
 {
-  _(loop 32)
+  //_(loop 32)
+  //Test 1. 
+  int *p = NULL;
+  int blah = *p; // null pointer dereference
   int i;
   uint32_t z;
 
