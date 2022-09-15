@@ -1,0 +1,330 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/cttk_inner.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// from: https://github.com/pornin/CTTK/blob/master/src/inner.h </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">// run with -loop 64 to see unfolding of all of these functions </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line"> * Copyright (c) 2018 Thomas Pornin &lt;pornin@bolet.org&gt; </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line"> * Permission is hereby granted, free of charge, to any person obtaining  </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line"> * a copy of this software and associated documentation files (the </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> * &quot;Software&quot;), to deal in the Software without restriction, including </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line"> * without limitation the rights to use, copy, modify, merge, publish, </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> * distribute, sublicense, and/or sell copies of the Software, and to </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line"> * permit persons to whom the Software is furnished to do so, subject to </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line"> * the following conditions: </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line"> * The above copyright notice and this permission notice shall be  </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> * included in all copies or substantial portions of the Software. </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,  </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line"> * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line"> * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line"> * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line"> * SOFTWARE. </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">typedef unsigned int uint32_t; </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">typedef int int32_t; </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">typedef unsigned long uint64_t; </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">typedef long int64_t; </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">static inline uint32_t <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:15 exn: Start
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7.html">summary for mulu32</a></td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">mulu32(uint32_t x, uint32_t y) </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">  int i; </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">  uint32_t z; </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">  z = 0; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:1 succs:14 exn: Instructions
+*&amp;z:unsigned int=(unsigned int)0 [line 40, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">  i = 0; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:6 exn: Instructions
+*&amp;i:int=0 [line 41, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">  for (i = 0; i &lt; 32; i ++) { <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:14 succs:5 exn: Instructions
+*&amp;i:int=0 [line 42, column 8];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;i:int [line 42, column 15];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:13 exn: Conditional true Branch
+PRUNE((n$2  &lt;  32), true); [line 42, column 15];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$1=*&amp;i:int [line 42, column 23];
+*&amp;i:int=(n$1 + 1) [line 42, column 23];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  32), false); [line 42, column 15];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">    z += x &amp; -(y &amp; 1); <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:9 succs:12 exn: Instructions
+n$5=*&amp;x:unsigned int [line 43, column 10];
+n$6=*&amp;y:unsigned int [line 43, column 16];
+n$7=*&amp;z:unsigned int [line 43, column 5];
+*&amp;z:unsigned int=(n$7 + (n$5 & -(n$6 & (unsigned int)1))) [line 43, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">    x &lt;&lt;= 1; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$4=*&amp;x:unsigned int [line 44, column 5];
+*&amp;x:unsigned int=(n$4  &lt;&lt;  1) [line 44, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">    y &gt;&gt;= 1; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:7 exn: Instructions
+n$3=*&amp;y:unsigned int [line 45, column 5];
+*&amp;y:unsigned int=(n$3  &gt;&gt;  1) [line 45, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">  return z; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*&amp;z:unsigned int [line 47, column 10];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$0 [line 47, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">} <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32%23ff613b0721c1fbe189e915a3264112dc.e276a03b1225a84e4810f5f72c4124b7_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">static inline int32_t <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32%23ff613b0721c1fbe189e915a3264112dc.8ec43463b24c0463d28b4cca8cfa38ef_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/muls32%23ff613b0721c1fbe189e915a3264112dc.8ec43463b24c0463d28b4cca8cfa38ef.html">summary for muls32</a></td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">muls32(int32_t x, int32_t y) </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  uint32_t r; </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  r = mulu32((uint32_t)x, (uint32_t)y); <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32%23ff613b0721c1fbe189e915a3264112dc.8ec43463b24c0463d28b4cca8cfa38ef_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$1=*&amp;x:int [line 55, column 24];
+n$2=*&amp;y:int [line 55, column 37];
+n$3=_fun_mulu32((unsigned int)n$1:unsigned int,(unsigned int)n$2:unsigned int) [line 55, column 7];
+*&amp;r:unsigned int=n$3 [line 55, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">  return *(int32_t *)&amp;r; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32%23ff613b0721c1fbe189e915a3264112dc.8ec43463b24c0463d28b4cca8cfa38ef_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*(int*)&amp;r:int [line 56, column 10];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32%23ff613b0721c1fbe189e915a3264112dc.8ec43463b24c0463d28b4cca8cfa38ef_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 56, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">} <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32%23ff613b0721c1fbe189e915a3264112dc.8ec43463b24c0463d28b4cca8cfa38ef_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">static inline uint64_t <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:16 exn: Start
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8.html">summary for mulu32w</a></td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">mulu32w(uint32_t x, uint32_t y) </td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">  int i; </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">  uint64_t xe, z; </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">  z = 0; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:1 succs:15 exn: Instructions
+*&amp;z:unsigned long=(unsigned long)0 [line 65, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">  xe = x; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$9=*&amp;x:unsigned int [line 66, column 8];
+*&amp;xe:unsigned long=(unsigned long)n$9 [line 66, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">  i = 0; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:6 exn: Instructions
+*&amp;i:int=0 [line 67, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">  for (i = 0; i &lt; 32; i ++) { <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:14 succs:5 exn: Instructions
+*&amp;i:int=0 [line 68, column 8];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;i:int [line 68, column 15];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:13 exn: Conditional true Branch
+PRUNE((n$2  &lt;  32), true); [line 68, column 15];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$1=*&amp;i:int [line 68, column 23];
+*&amp;i:int=(n$1 + 1) [line 68, column 23];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  32), false); [line 68, column 15];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">    z += xe &amp; -(uint64_t)(y &amp; 1); <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:9 succs:12 exn: Instructions
+n$5=*&amp;xe:unsigned long [line 69, column 10];
+n$6=*&amp;y:unsigned int [line 69, column 27];
+n$7=*&amp;z:unsigned long [line 69, column 5];
+*&amp;z:unsigned long=(n$7 + (n$5 & -(unsigned long)(n$6 & (unsigned int)1))) [line 69, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">    xe &lt;&lt;= 1; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$4=*&amp;xe:unsigned long [line 70, column 5];
+*&amp;xe:unsigned long=(n$4  &lt;&lt;  1) [line 70, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">    y &gt;&gt;= 1; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:7 exn: Instructions
+n$3=*&amp;y:unsigned int [line 71, column 5];
+*&amp;y:unsigned int=(n$3  &gt;&gt;  1) [line 71, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">  return z; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*&amp;z:unsigned long [line 73, column 10];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$0 [line 73, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">} <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu32w%23ff613b0721c1fbe189e915a3264112dc.077814634d8bbe0d1bb942d963e88af8_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">static inline int64_t <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:13 exn: Start
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105.html">summary for muls32w</a></td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">muls32w(int32_t x, int32_t y) </td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">  uint32_t xu, yu, xh, yh; </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">  uint64_t z; </td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">  xu = (uint32_t)x; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:1 succs:12 exn: Instructions
+n$17=*&amp;x:int [line 82, column 18];
+*&amp;xu:unsigned int=(unsigned int)n$17 [line 82, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">  yu = (uint32_t)y; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$16=*&amp;y:int [line 83, column 18];
+*&amp;yu:unsigned int=(unsigned int)n$16 [line 83, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">  xh = xu &gt;&gt; 31; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:10 exn: Instructions
+n$15=*&amp;xu:unsigned int [line 84, column 8];
+*&amp;xh:unsigned int=(n$15  &gt;&gt;  31) [line 84, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">  yh = yu &gt;&gt; 31; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$14=*&amp;yu:unsigned int [line 85, column 8];
+*&amp;yh:unsigned int=(n$14  &gt;&gt;  31) [line 85, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">  xu &amp;= 0x7FFFFFFF; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+n$13=*&amp;xu:unsigned int [line 86, column 3];
+*&amp;xu:unsigned int=(n$13 & (unsigned int)2147483647) [line 86, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">  yu &amp;= 0x7FFFFFFF; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$12=*&amp;yu:unsigned int [line 87, column 3];
+*&amp;yu:unsigned int=(n$12 & (unsigned int)2147483647) [line 87, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">  z = mulu32w(xu, yu); <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$9=*&amp;xu:unsigned int [line 88, column 15];
+n$10=*&amp;yu:unsigned int [line 88, column 19];
+n$11=_fun_mulu32w(n$9:unsigned int,n$10:unsigned int) [line 88, column 7];
+*&amp;z:unsigned long=n$11 [line 88, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">  z -= ((uint64_t)(xu &amp; -yh) + (uint64_t)(yu &amp; -xh)) &lt;&lt; 31; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$4=*&amp;xu:unsigned int [line 89, column 20];
+n$5=*&amp;yh:unsigned int [line 89, column 26];
+n$6=*&amp;yu:unsigned int [line 89, column 43];
+n$7=*&amp;xh:unsigned int [line 89, column 49];
+n$8=*&amp;z:unsigned long [line 89, column 3];
+*&amp;z:unsigned long=(n$8 - (((unsigned long)(n$4 & -n$5) + (unsigned long)(n$6 & -n$7))  &lt;&lt;  31)) [line 89, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">  z += (uint64_t)(xh &amp; yh) &lt;&lt; 62; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;xh:unsigned int [line 90, column 19];
+n$2=*&amp;yh:unsigned int [line 90, column 24];
+n$3=*&amp;z:unsigned long [line 90, column 3];
+*&amp;z:unsigned long=(n$3 + ((unsigned long)(n$1 & n$2)  &lt;&lt;  62)) [line 90, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">  return *(int64_t *)&amp;z; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*(long*)&amp;z:long [line 91, column 10];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:long=n$0 [line 91, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">} <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls32w%23ff613b0721c1fbe189e915a3264112dc.f57275ffcd8ef0ea1126f1f8c1cd6105_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">static inline uint64_t <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:15 exn: Start
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66.html">summary for mulu64</a></td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">mulu64(uint64_t x, uint64_t y) </td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">  uint64_t z; </td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">  int i; </td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">  z = 0; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:1 succs:14 exn: Instructions
+*&amp;z:unsigned long=(unsigned long)0 [line 100, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">  i = 0; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:6 exn: Instructions
+*&amp;i:int=0 [line 101, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">  for (i = 0; i &lt; 64; i ++) { <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:14 succs:5 exn: Instructions
+*&amp;i:int=0 [line 102, column 8];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;i:int [line 102, column 15];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:13 exn: Conditional true Branch
+PRUNE((n$2  &lt;  64), true); [line 102, column 15];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$1=*&amp;i:int [line 102, column 23];
+*&amp;i:int=(n$1 + 1) [line 102, column 23];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  64), false); [line 102, column 15];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">    z += x &amp; -(y &amp; 1); <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:9 succs:12 exn: Instructions
+n$5=*&amp;x:unsigned long [line 103, column 10];
+n$6=*&amp;y:unsigned long [line 103, column 16];
+n$7=*&amp;z:unsigned long [line 103, column 5];
+*&amp;z:unsigned long=(n$7 + (n$5 & -(n$6 & (unsigned long)1))) [line 103, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">    x &lt;&lt;= 1; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$4=*&amp;x:unsigned long [line 104, column 5];
+*&amp;x:unsigned long=(n$4  &lt;&lt;  1) [line 104, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">    y &gt;&gt;= 1; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:7 exn: Instructions
+n$3=*&amp;y:unsigned long [line 105, column 5];
+*&amp;y:unsigned long=(n$3  &gt;&gt;  1) [line 105, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">  return z; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*&amp;z:unsigned long [line 107, column 10];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$0 [line 107, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">} <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/mulu64%23ff613b0721c1fbe189e915a3264112dc.47d7a315db287a816711c66847124e66_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">static inline int64_t <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls64%23ff613b0721c1fbe189e915a3264112dc.3b0a0cd22d992200fbd58a6cf4ccb1de_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/muls64%23ff613b0721c1fbe189e915a3264112dc.3b0a0cd22d992200fbd58a6cf4ccb1de.html">summary for muls64</a></td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">muls64(int64_t x, int64_t y) </td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">  uint64_t r; </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">  r = mulu64((uint64_t)x, (uint64_t)y); <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls64%23ff613b0721c1fbe189e915a3264112dc.3b0a0cd22d992200fbd58a6cf4ccb1de_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$1=*&amp;x:long [line 115, column 24];
+n$2=*&amp;y:long [line 115, column 37];
+n$3=_fun_mulu64((unsigned long)n$1:unsigned long,(unsigned long)n$2:unsigned long) [line 115, column 7];
+*&amp;r:unsigned long=n$3 [line 115, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">  return *(int64_t *)&amp;r; <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls64%23ff613b0721c1fbe189e915a3264112dc.3b0a0cd22d992200fbd58a6cf4ccb1de_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*(long*)&amp;r:long [line 116, column 10];
+</span></span></a> <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls64%23ff613b0721c1fbe189e915a3264112dc.3b0a0cd22d992200fbd58a6cf4ccb1de_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:long=n$0 [line 116, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">} <a href="./cttk_inner.c.e8af8fea12e6771f04f19bc2fd9b418c/nodes/muls64%23ff613b0721c1fbe189e915a3264112dc.3b0a0cd22d992200fbd58a6cf4ccb1de_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">/* ==================================================================== */ </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line"> </td></tr>
+</table>
+
+<hr width="100%">
+LIKE DURING FOOTPRINT
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>

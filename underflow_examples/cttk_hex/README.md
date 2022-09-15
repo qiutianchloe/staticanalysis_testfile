@@ -12,9 +12,6 @@
 
 
 
-
-
-
 (unique) top-level bugs:
     9 (9 insec; 0 err)
 (unique) top-level conditional bugs:
