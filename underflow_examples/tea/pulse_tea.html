@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>tea.c.7b594da6b7640c88e6f7fd21675a2aa3</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/tea.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// from: XXX </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">#define NULL ((void *)0);  </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">/* *********************************************** </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">The Tiny Encryption Algorithm (TEA) by  </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">David Wheeler and Roger Needham of the </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">Cambridge Computer Laboratory </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">**** ANSI C VERSION **** </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">Notes: </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">TEA is a Feistel cipher with XOR and </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">and addition as the non-linear mixing </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">functions.  </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">Takes 64 bits of data in v[0] and v[1]. </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">Returns 64 bits of data in w[0] and w[1]. </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">Takes 128 bits of key in k[0] - k[3]. </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">TEA can be operated in any of the modes </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">of DES. Cipher Block Chaining is, for example, </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">simple to implement. </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">n is the number of iterations. 32 is ample, </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">16 is sufficient, as few as eight may be OK. </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">The algorithm achieves good dispersion after </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">six iterations. The iteration count can be </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">made variable if required. </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">Note this is optimised for 32-bit CPUs with </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">fast shift capabilities. It can very easily </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">be ported to assembly language on most CPUs. </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">delta is chosen to be the real part of (the </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">golden ratio Sqrt(5/4) - 1/2 ~ 0.618034 </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">multiplied by 2^32).  </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">Source: https://www.schneier.com/sccd/TEA.C </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">************************************************/ </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">void encipher(unsigned long *const v,unsigned long *const w, <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:20 exn: Start
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/encipher.b7036d496333fbc6f78bfcd991cda291.html">summary for encipher</a></td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">  const unsigned long *const k) </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">  register unsigned long       y=v[0]; unsigned long z=v[1]; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:1 succs:19 exn: Instructions
+VARIABLE_DECLARED(y:unsigned long); [line 46, column 3];
+n$32=*&amp;v:unsigned long* [line 46, column 34];
+n$33=*n$32[0]:unsigned long [line 46, column 34];
+*&amp;y:unsigned long=n$33 [line 46, column 3];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+VARIABLE_DECLARED(z:unsigned long); [line 46, column 40];
+n$30=*&amp;v:unsigned long* [line 46, column 56];
+n$31=*n$30[1]:unsigned long [line 46, column 56];
+*&amp;z:unsigned long=n$31 [line 46, column 40];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">  unsigned long sum=0; unsigned long delta=0x9E3779B9; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+VARIABLE_DECLARED(sum:unsigned long); [line 47, column 3];
+*&amp;sum:unsigned long=(unsigned long)0 [line 47, column 3];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(delta:unsigned long); [line 47, column 24];
+*&amp;delta:unsigned long=(unsigned long)2654435769 [line 47, column 24];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">  unsigned long a=k[0]; unsigned long b=k[1]; unsigned long c=k[2]; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+VARIABLE_DECLARED(a:unsigned long); [line 48, column 3];
+n$28=*&amp;k:unsigned long const * [line 48, column 19];
+n$29=*n$28[0]:unsigned long [line 48, column 19];
+*&amp;a:unsigned long=n$29 [line 48, column 3];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+VARIABLE_DECLARED(b:unsigned long); [line 48, column 25];
+n$26=*&amp;k:unsigned long const * [line 48, column 41];
+n$27=*n$26[1]:unsigned long [line 48, column 41];
+*&amp;b:unsigned long=n$27 [line 48, column 25];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+VARIABLE_DECLARED(c:unsigned long); [line 48, column 47];
+n$24=*&amp;k:unsigned long const * [line 48, column 63];
+n$25=*n$24[2]:unsigned long [line 48, column 63];
+*&amp;c:unsigned long=n$25 [line 48, column 47];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">  unsigned long d=k[3]; unsigned long n=32; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+VARIABLE_DECLARED(d:unsigned long); [line 49, column 3];
+n$22=*&amp;k:unsigned long const * [line 49, column 19];
+n$23=*n$22[3]:unsigned long [line 49, column 19];
+*&amp;d:unsigned long=n$23 [line 49, column 3];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:5 exn: Instructions
+VARIABLE_DECLARED(n:unsigned long); [line 49, column 25];
+*&amp;n:unsigned long=(unsigned long)32 [line 49, column 25];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">// //Test 1. Work here ~ </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">//   int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">//   int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  while(n--&gt;0) <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:12 9 succs:6 exn: Join
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:5 succs:7 8 exn: Instructions
+n$4=*&amp;n:unsigned long [line 53, column 9];
+*&amp;n:unsigned long=(n$4 - 1) [line 53, column 9];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:11 exn: Conditional true Branch
+PRUNE((n$4  &gt;  (unsigned long)0), true); [line 53, column 9];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:4 exn: Conditional false Branch
+PRUNE(!(n$4  &gt;  (unsigned long)0), false); [line 53, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">      { </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">// //Test 2. Work here ~ </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">//       int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">//       int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">      sum += delta; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:7 succs:10 exn: Instructions
+n$19=*&amp;delta:unsigned long [line 58, column 14];
+n$20=*&amp;sum:unsigned long [line 58, column 7];
+*&amp;sum:unsigned long=(n$20 + n$19) [line 58, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">      y += (z&lt;&lt;4)+a ^ z+sum ^ (z&gt;&gt;5)+b; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$12=*&amp;z:unsigned long [line 59, column 13];
+n$13=*&amp;a:unsigned long [line 59, column 19];
+n$14=*&amp;z:unsigned long [line 59, column 23];
+n$15=*&amp;sum:unsigned long [line 59, column 25];
+n$16=*&amp;z:unsigned long [line 59, column 32];
+n$17=*&amp;b:unsigned long [line 59, column 38];
+n$18=*&amp;y:unsigned long [line 59, column 7];
+*&amp;y:unsigned long=(n$18 + ((((n$12  &lt;&lt;  4) + n$13) ^ (n$14 + n$15)) ^ ((n$16  &gt;&gt;  5) + n$17))) [line 59, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">      z += (y&lt;&lt;4)+c ^ y+sum ^ (y&gt;&gt;5)+d;  <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:5 exn: Instructions
+n$5=*&amp;y:unsigned long [line 60, column 13];
+n$6=*&amp;c:unsigned long [line 60, column 19];
+n$7=*&amp;y:unsigned long [line 60, column 23];
+n$8=*&amp;sum:unsigned long [line 60, column 25];
+n$9=*&amp;y:unsigned long [line 60, column 32];
+n$10=*&amp;d:unsigned long [line 60, column 38];
+n$11=*&amp;z:unsigned long [line 60, column 7];
+*&amp;z:unsigned long=(n$11 + ((((n$5  &lt;&lt;  4) + n$6) ^ (n$7 + n$8)) ^ ((n$9  &gt;&gt;  5) + n$10))) [line 60, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">// //Test 3. Work here ~ </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">//       int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">//       int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">      } </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">   w[0]=y; w[1]=z; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:8 succs:3 exn: Instructions
+n$2=*&amp;w:unsigned long* [line 65, column 4];
+n$3=*&amp;y:unsigned long [line 65, column 9];
+*n$2[0]:unsigned long=n$3 [line 65, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+n$0=*&amp;w:unsigned long* [line 65, column 12];
+n$1=*&amp;z:unsigned long [line 65, column 17];
+*n$0[1]:unsigned long=n$1 [line 65, column 12];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">//Test 4. Work with --pulse-widen-threshold 32 --pulse-max-disjuncts 37 </td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">} <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/encipher.b7036d496333fbc6f78bfcd991cda291_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">void decipher(unsigned long *const v,unsigned long *const w, <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:20 exn: Start
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/decipher.cd94dec56bdd1e3541234228cbcc5ec2.html">summary for decipher</a></td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">const unsigned long *const k) </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">   register unsigned long       y=v[0],z=v[1],sum=0xC6EF3720, <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:1 succs:19 exn: Instructions
+VARIABLE_DECLARED(y:unsigned long); [line 74, column 4];
+n$32=*&amp;v:unsigned long* [line 74, column 35];
+n$33=*n$32[0]:unsigned long [line 74, column 35];
+*&amp;y:unsigned long=n$33 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+VARIABLE_DECLARED(z:unsigned long); [line 74, column 4];
+n$30=*&amp;v:unsigned long* [line 74, column 42];
+n$31=*n$30[1]:unsigned long [line 74, column 42];
+*&amp;z:unsigned long=n$31 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+VARIABLE_DECLARED(sum:unsigned long); [line 74, column 4];
+*&amp;sum:unsigned long=(unsigned long)3337565984 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(delta:unsigned long); [line 74, column 4];
+*&amp;delta:unsigned long=(unsigned long)2654435769 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+VARIABLE_DECLARED(a:unsigned long); [line 74, column 4];
+n$28=*&amp;k:unsigned long const * [line 75, column 24];
+n$29=*n$28[0]:unsigned long [line 75, column 24];
+*&amp;a:unsigned long=n$29 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+VARIABLE_DECLARED(b:unsigned long); [line 74, column 4];
+n$26=*&amp;k:unsigned long const * [line 75, column 31];
+n$27=*n$26[1]:unsigned long [line 75, column 31];
+*&amp;b:unsigned long=n$27 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+VARIABLE_DECLARED(c:unsigned long); [line 74, column 4];
+n$24=*&amp;k:unsigned long const * [line 75, column 38];
+n$25=*n$24[2]:unsigned long [line 75, column 38];
+*&amp;c:unsigned long=n$25 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+VARIABLE_DECLARED(d:unsigned long); [line 74, column 4];
+n$22=*&amp;k:unsigned long const * [line 76, column 7];
+n$23=*n$22[3]:unsigned long [line 76, column 7];
+*&amp;d:unsigned long=n$23 [line 74, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:5 exn: Instructions
+VARIABLE_DECLARED(n:unsigned long); [line 74, column 4];
+*&amp;n:unsigned long=(unsigned long)32 [line 74, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">				delta=0x9E3779B9,a=k[0],b=k[1],c=k[2], </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">				d=k[3],n=32; </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">   /* sum = delta&lt;&lt;5, in general sum = delta * n */ </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">   while(n--&gt;0) <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:12 9 succs:6 exn: Join
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:5 succs:7 8 exn: Instructions
+n$4=*&amp;n:unsigned long [line 80, column 10];
+*&amp;n:unsigned long=(n$4 - 1) [line 80, column 10];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:11 exn: Conditional true Branch
+PRUNE((n$4  &gt;  (unsigned long)0), true); [line 80, column 10];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:4 exn: Conditional false Branch
+PRUNE(!(n$4  &gt;  (unsigned long)0), false); [line 80, column 10];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">      { </td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">      z -= (y&lt;&lt;4)+c ^ y+sum ^ (y&gt;&gt;5)+d; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:7 succs:10 exn: Instructions
+n$14=*&amp;y:unsigned long [line 82, column 13];
+n$15=*&amp;c:unsigned long [line 82, column 19];
+n$16=*&amp;y:unsigned long [line 82, column 23];
+n$17=*&amp;sum:unsigned long [line 82, column 25];
+n$18=*&amp;y:unsigned long [line 82, column 32];
+n$19=*&amp;d:unsigned long [line 82, column 38];
+n$20=*&amp;z:unsigned long [line 82, column 7];
+*&amp;z:unsigned long=(n$20 - ((((n$14  &lt;&lt;  4) + n$15) ^ (n$16 + n$17)) ^ ((n$18  &gt;&gt;  5) + n$19))) [line 82, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">      y -= (z&lt;&lt;4)+a ^ z+sum ^ (z&gt;&gt;5)+b; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$7=*&amp;z:unsigned long [line 83, column 13];
+n$8=*&amp;a:unsigned long [line 83, column 19];
+n$9=*&amp;z:unsigned long [line 83, column 23];
+n$10=*&amp;sum:unsigned long [line 83, column 25];
+n$11=*&amp;z:unsigned long [line 83, column 32];
+n$12=*&amp;b:unsigned long [line 83, column 38];
+n$13=*&amp;y:unsigned long [line 83, column 7];
+*&amp;y:unsigned long=(n$13 - ((((n$7  &lt;&lt;  4) + n$8) ^ (n$9 + n$10)) ^ ((n$11  &gt;&gt;  5) + n$12))) [line 83, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">      sum -= delta; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:5 exn: Instructions
+n$5=*&amp;delta:unsigned long [line 84, column 14];
+n$6=*&amp;sum:unsigned long [line 84, column 7];
+*&amp;sum:unsigned long=(n$6 - n$5) [line 84, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">//Test 5. Work with --pulse-widen-threshold 32 --pulse-max-disjuncts 37 </td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">      // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">      // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">      } </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">    </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">   w[0]=y; w[1]=z; <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:8 succs:3 exn: Instructions
+n$2=*&amp;w:unsigned long* [line 90, column 4];
+n$3=*&amp;y:unsigned long [line 90, column 9];
+*n$2[0]:unsigned long=n$3 [line 90, column 4];
+</span></span></a> <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+n$0=*&amp;w:unsigned long* [line 90, column 12];
+n$1=*&amp;z:unsigned long [line 90, column 17];
+*n$0[1]:unsigned long=n$1 [line 90, column 12];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">//Test 6. Work with --pulse-widen-threshold 32 --pulse-max-disjuncts 37 </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">} <a href="./tea.c.7b594da6b7640c88e6f7fd21675a2aa3/nodes/decipher.cd94dec56bdd1e3541234228cbcc5ec2_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+LIKE DURING FOOTPRINT
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>

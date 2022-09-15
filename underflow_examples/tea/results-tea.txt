@@ -1,0 +1,15 @@
+args: List(examples/tea.c), target: examples/tea.c
+encipher
+FAILS (location: line: 49, col: 19) memory presumes exists unsigned long x33, unsigned long x31, unsigned long x29, unsigned long x23, unsigned long x25. (k + 2) |-> x33 && (k + 1) |-> x31 && k |-> x29 && (v + 1) |-> x25 && v |-> x23 && (k + 3) |-\-> fails memory (k + 2) |-> x33 && (k + 1) |-> x31 && k |-> x29 && (v + 1) |-> x25 && v |-> x23 && (k + 3) |-\->
+FAILS (location: line: 48, col: 63) memory presumes exists unsigned long x31, unsigned long x29, unsigned long x23, unsigned long x25. (k + 1) |-> x31 && k |-> x29 && (v + 1) |-> x25 && v |-> x23 && (k + 2) |-\-> fails memory (k + 1) |-> x31 && k |-> x29 && (v + 1) |-> x25 && v |-> x23 && (k + 2) |-\->
+FAILS (location: line: 48, col: 41) memory presumes exists unsigned long x29, unsigned long x23, unsigned long x25. k |-> x29 && (v + 1) |-> x25 && v |-> x23 && (k + 1) |-\-> fails memory k |-> x29 && (v + 1) |-> x25 && v |-> x23 && (k + 1) |-\->
+FAILS (location: line: 48, col: 19) memory presumes exists unsigned long x25, unsigned long x23. (v + 1) |-> x25 && v |-> x23 && k |-\-> fails memory (v + 1) |-> x25 && v |-> x23 && k |-\->
+FAILS (location: line: 46, col: 56) memory presumes exists unsigned long x23. v |-> x23 && (v + 1) |-\-> fails memory v |-> x23 && (v + 1) |-\->
+FAILS (location: line: 46, col: 34) memory presumes v |-\-> fails memory v |-\->
+decipher
+FAILS (location: line: 76, col: 7) memory presumes exists unsigned long x13, unsigned long x5, unsigned long x7, unsigned long x11, unsigned long x15. (k + 2) |-> x15 && (k + 1) |-> x13 && k |-> x11 && (v + 1) |-> x7 && v |-> x5 && (k + 3) |-\-> fails memory (k + 2) |-> x15 && (k + 1) |-> x13 && k |-> x11 && (v + 1) |-> x7 && v |-> x5 && (k + 3) |-\->
+FAILS (location: line: 75, col: 38) memory presumes exists unsigned long x13, unsigned long x5, unsigned long x7, unsigned long x11. (k + 1) |-> x13 && k |-> x11 && (v + 1) |-> x7 && v |-> x5 && (k + 2) |-\-> fails memory (k + 1) |-> x13 && k |-> x11 && (v + 1) |-> x7 && v |-> x5 && (k + 2) |-\->
+FAILS (location: line: 75, col: 31) memory presumes exists unsigned long x5, unsigned long x7, unsigned long x11. k |-> x11 && (v + 1) |-> x7 && v |-> x5 && (k + 1) |-\-> fails memory k |-> x11 && (v + 1) |-> x7 && v |-> x5 && (k + 1) |-\->
+FAILS (location: line: 75, col: 24) memory presumes exists unsigned long x7, unsigned long x5. (v + 1) |-> x7 && v |-> x5 && k |-\-> fails memory (v + 1) |-> x7 && v |-> x5 && k |-\->
+FAILS (location: line: 74, col: 42) memory presumes exists unsigned long x5. v |-> x5 && (v + 1) |-\-> fails memory v |-> x5 && (v + 1) |-\->
+FAILS (location: line: 74, col: 35) memory presumes v |-\-> fails memory v |-\->
