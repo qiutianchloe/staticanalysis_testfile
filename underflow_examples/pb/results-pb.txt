@@ -1,0 +1,16 @@
+args: List(examples/pb.c), target: examples/pb.c
+push_back
+OK presumes exists int * p3, int v4. v |-> p3 && p3 |-> v4 covers exists int v12, int result7, int * result11. ((! (result7 == 0)) && (result7 :: low)) && v |-> result11 && result11 |-> v12 && p3 |-\->
+OK presumes exists int * p3, int v4. v |-> p3 && p3 |-> v4 covers exists int result7. ((result7 == 0) && (result7 :: low)) && v |-> p3 && p3 |-> v4
+palloc
+OK presumes true covers exists int * p, int v. result |-> p && p |-> v
+free
+OK presumes exists int v. p |-> v covers p |-\->
+FAILS (location: unknown) memory presumes p |-\-> fails memory p |-\->
+isl_push_back
+OK presumes true covers exists int result720, int * * result2, int * p3. ((result720 == 0) && (result720 :: low)) && result2 |-> p3 && p3 |-> 88
+FAILS (location: line: 38, col: 5) memory presumes true fails memory exists int v1215, int * p3, int * result1117, int * * result2, int result716. ((! (result716 == 0)) && (result716 :: low)) && result2 |-> result1117 && result1117 |-> v1215 && p3 |-\->
+alloc
+OK presumes true covers exists int v. result |-> v
+nondet
+OK presumes true covers (result :: low)
