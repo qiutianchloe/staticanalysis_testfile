@@ -1,0 +1,12 @@
+args: List(examples/unreachable.c), target: examples/unreachable.c
+test2
+OK presumes exists int v, int y. p |-> v covers p |-> y && (result == 0)
+test
+OK presumes exists int v. p |-> v covers p |-> v && ((v == 10) && (result == 1))
+blah
+OK presumes true covers true
+OK presumes true covers (result >= 0)
+func3
+OK presumes true covers ((x >= 0) && (result == (x + 1)))
+meh
+OK presumes exists int x. (x > 0) covers (x < 0)

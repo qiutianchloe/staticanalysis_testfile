@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/unreachable.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">/* a file full of intentionally unreachable contracts, to serve as a  </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">   bunch of regression tests.  </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">   For each function we expect to see Underflow report 0 contracts satisfied. </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">   If any of these become satisfiable, it indicates a likely bug in Underflow. </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">*/ </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">// this contract should fail because there exists no path by which that result </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">// state can be reached: when result == 1, p |-&gt; 5, not 10.  </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">int test(int *p) <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:10 exn: Start
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/test.098f6bcd4621d373cade4e832627b4f6.html">summary for test</a></td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">  _(presumes exists int v. p |-&gt; v covers p |-&gt; v &amp;*&amp; v == 10 &amp;&amp; result == 1) </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">  int x = *p; <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(x:int); [line 16, column 3];
+n$2=*&amp;p:int* [line 16, column 12];
+n$3=*n$2:int [line 16, column 11];
+*&amp;x:int=n$3 [line 16, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">  if (x == 5) return 1; else return 0; <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:10 succs:6 7 exn: Instructions
+n$0=*&amp;x:int [line 17, column 7];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE((n$0 == 5), true); [line 17, column 7];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+*&amp;return:int=1 [line 17, column 15];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:9 exn: Conditional false Branch
+PRUNE(!(n$0 == 5), false); [line 17, column 7];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:7 succs:2 exn: Instructions
+*&amp;return:int=0 [line 17, column 30];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds: succs:4 exn: Join
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">} <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test.098f6bcd4621d373cade4e832627b4f6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:9 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">// this contract should fail because the result also covers result states </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">// (e.g. in which x == 0 and result == x, not x+1) that cannot be reached </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">// from any initial state </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">int func3(int x) <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/func3.c37ad1f9613fd69f699e59feb46f4e9b.html">summary for func3</a></td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">  _(presumes true covers x &gt;= 0 &amp;&amp; (result == x+1)) </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">  if(x &gt; 0){ <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;x:int [line 26, column 6];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE((n$0  &gt;  0), true); [line 26, column 6];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:10 exn: Conditional false Branch
+PRUNE(!(n$0  &gt;  0), false); [line 26, column 6];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds: succs:4 exn: Join
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">    return (x+1); <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:9 exn: Instructions
+n$1=*&amp;x:int [line 27, column 13];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:8 succs:2 exn: Instructions
+*&amp;return:int=(n$1 + 1) [line 27, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">  }else{ </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">    return x; <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:11 exn: Instructions
+n$2=*&amp;x:int [line 29, column 12];
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:10 succs:2 exn: Instructions
+*&amp;return:int=n$2 [line 29, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">} <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/func3.c37ad1f9613fd69f699e59feb46f4e9b_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:11 9 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">/* this contract doesn't hold without an additional equality on y and v, </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">   e.g. in the result is sufficient */ </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">int test2(int *p) <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test2.ad0234829205b9033196ba818f7a872b_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/test2.ad0234829205b9033196ba818f7a872b.html">summary for test2</a></td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">  _(presumes exists int v, int y. p |-&gt; v covers p |-&gt; y &amp;*&amp; result == 0) </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">  return 0; <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test2.ad0234829205b9033196ba818f7a872b_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+*&amp;return:int=0 [line 38, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">} <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/test2.ad0234829205b9033196ba818f7a872b_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">/* the first contract doesn't hold because it doesn't constrain the result. </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">   the second one doesn't hold because it doesn't sufficiently constrain the result */ </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">int blah() <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/blah.6f1ed002ab5595859014ebf0951522d9_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/blah.6f1ed002ab5595859014ebf0951522d9.html">summary for blah</a></td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">  _(presumes true covers true) </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">  _(presumes true covers result &gt;= 0)   </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">  return 0; <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/blah.6f1ed002ab5595859014ebf0951522d9_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+*&amp;return:int=0 [line 47, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">} <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/blah.6f1ed002ab5595859014ebf0951522d9_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">/* this contract is clearly unsatisfiable. But for Underflow to figure </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">   that it it needs to not existentially quantify x when testing the </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">   final x &lt; 0 ==&gt; x &gt; 0, which took some care to get right in </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">   Prove.reachable() (see underflow/src/underflow/c/Prove.scala) */ </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">void meh() <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/meh.15927d9ab6ea93229b4f22a561664ec1_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:2 exn: Start
+</span></span></a> <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/meh.15927d9ab6ea93229b4f22a561664ec1.html">summary for meh</a></td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  _(presumes exists int x. x &gt; 0 covers x &lt; 0) </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">} <a href="./unreachable.c.d8938107a2da4a9af7c7b77bc9db7bce/nodes/meh.15927d9ab6ea93229b4f22a561664ec1_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:1 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+LIKE DURING FOOTPRINT
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
