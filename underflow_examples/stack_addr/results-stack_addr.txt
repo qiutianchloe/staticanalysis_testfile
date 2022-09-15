@@ -1,0 +1,9 @@
+args: List(examples/stack_addr.c), target: examples/stack_addr.c
+use
+OK presumes exists int y1. p |-> y1 covers ((0 < 1) && (0 >= 0)) && p |-> 5
+isfive
+OK presumes p |-> 5 covers ((0 < 1) && (0 >= 0)) && p |-> 5
+test
+OK presumes true covers exists int * _and_x13, int * _and_x9. (((((result == 5) && ((0 < 1) && (0 >= 0))) && (! (_and_x13 == null))) && ((0 < 1) && (0 >= 0))) && (! (_and_x9 == null)))
+test2
+OK presumes true covers exists int * _and_y3. (((result == 5) && ((0 < 1) && (0 >= 0))) && (! (_and_y3 == null)))

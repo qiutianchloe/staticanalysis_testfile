@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/stack_addr.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">/* some small test cases for rudimentary functionality for taking the </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">   address of a stack variable and then passing those addresses to functions. </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">   NOTE: this will do weird things if you do for instance (&amp;x) + 1, etc. </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">         or you pass &amp;x to a function that does pointer arithmetic. </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">*/ </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">void use(int *p){ <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/use.5ef76d30bf9232902687324b5bfa0bd2_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/use.5ef76d30bf9232902687324b5bfa0bd2.html">summary for use</a></td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">  *p = 5; <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/use.5ef76d30bf9232902687324b5bfa0bd2_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=*&amp;p:int* [line 8, column 4];
+*n$0:int=5 [line 8, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">} <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/use.5ef76d30bf9232902687324b5bfa0bd2_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">void isfive(int *p){ <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/isfive.af1178b7fb756c189d2389bf99a76feb.html">summary for isfive</a></td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">  if (*p == 5) { <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;p:int* [line 12, column 8];
+n$1=*n$0:int [line 12, column 7];
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:3 exn: Conditional true Branch
+PRUNE((n$1 == 5), true); [line 12, column 7];
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:3 exn: Conditional false Branch
+PRUNE(!(n$1 == 5), false); [line 12, column 7];
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:7 6 succs:4 exn: Join
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">} <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/isfive.af1178b7fb756c189d2389bf99a76feb_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">int test(){ <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:7 exn: Start
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/test.098f6bcd4621d373cade4e832627b4f6.html">summary for test</a></td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">  int x; </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">  int *p = &amp;x; <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:1 succs:6 exn: Instructions
+VARIABLE_DECLARED(p:int*); [line 18, column 3];
+*&amp;p:int*=&amp;x [line 18, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">  //use(&amp;x); </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">  use(p+0); <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$2=*&amp;p:int* [line 20, column 7];
+n$3=_fun_use((n$2 + 0):int*) [line 20, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">  isfive(&amp;x); <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=_fun_isfive(&amp;x:int*) [line 21, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">  return x; <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;x:int [line 22, column 10];
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 22, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">} <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test.098f6bcd4621d373cade4e832627b4f6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">int test2(int y){ <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test2.ad0234829205b9033196ba818f7a872b_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/test2.ad0234829205b9033196ba818f7a872b.html">summary for test2</a></td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">  use(&amp;y); <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test2.ad0234829205b9033196ba818f7a872b_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$1=_fun_use(&amp;y:int*) [line 26, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">  return y; <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test2.ad0234829205b9033196ba818f7a872b_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;y:int [line 27, column 10];
+</span></span></a> <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test2.ad0234829205b9033196ba818f7a872b_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 27, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">} <a href="./stack_addr.c.a978ee7c1fa1848e1d68d28961dd4834/nodes/test2.ad0234829205b9033196ba818f7a872b_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+LIKE DURING FOOTPRINT
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
