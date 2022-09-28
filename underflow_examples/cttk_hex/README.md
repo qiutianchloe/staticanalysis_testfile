@@ -8,7 +8,7 @@
 |Tool|Command Line|exec time|issues found|Debug File|
 |----------------|-------------------------------|-----------------------------|---------------------------|-----|
 |Underflow|`./Underflow.sh examples/cttk_hex.c`|206.18 s|9 top-level bugs|results-cttk_hex.txt|
-|Pulse-x|`infer  --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/cttk_hex.c`|109ms|No issues found|
+|Pulse-x|`infer --pulse-model-skip-pattern "LOW" --pulse-model-alloc-pattern "alloc" --pulse-widen-threshold 16 --pulse-max-disjuncts 82 --pulse-isl --pulse-only --debug -- gcc -c -I./include/ ./examples/cttk_hex.c`|517ms|No issues found|cttk_hex.html|
 
 
 

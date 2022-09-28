@@ -1,0 +1,1001 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/cttk_hex.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// adapted from https://github.com/pornin/CTTK/blob/master/src/hex.c </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line"> * Copyright (c) 2018 Thomas Pornin &lt;pornin@bolet.org&gt; </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line"> * Permission is hereby granted, free of charge, to any person obtaining  </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line"> * a copy of this software and associated documentation files (the </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> * &quot;Software&quot;), to deal in the Software without restriction, including </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line"> * without limitation the rights to use, copy, modify, merge, publish, </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line"> * distribute, sublicense, and/or sell copies of the Software, and to </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> * permit persons to whom the Software is furnished to do so, subject to </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line"> * the following conditions: </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line"> * The above copyright notice and this permission notice shall be  </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line"> * included in all copies or substantial portions of the Software. </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,  </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line"> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line"> * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line"> * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line"> * SOFTWARE. </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">#define NULL ((void *)0) </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">typedef unsigned int uint32_t; </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">typedef unsigned long size_t; </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line"> * \brief Hex decoding flag: pad final half-byte with a 0. </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">#define CTTK_HEX_PAD_ODD       0x0001 </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line"> * \brief Hex decoding flag: silently skip whitespace. </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">#define CTTK_HEX_SKIP_WS       0x0002 </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line"> * \brief Hex encoding flag: use uppercase letters. </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">#define CTTK_HEX_UPPERCASE     0x0001 </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">typedef unsigned int cttk_bool; </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">cttk_bool <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795.html">summary for cttk_bool_of_u32</a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">cttk_bool_of_u32(uint32_t x) </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">	cttk_bool c; </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">	c = x; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned int [line 53, column 6];
+*&amp;c:unsigned int=n$1 [line 53, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">//Test 1. Work here </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">	return c; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;c:unsigned int [line 57, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$0 [line 57, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">cttk_bool <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_gt.a976d4a067220b0b64a7b4d4aabc756d_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_u32_gt.a976d4a067220b0b64a7b4d4aabc756d.html">summary for cttk_u32_gt</a></td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">cttk_u32_gt(uint32_t x, uint32_t y) </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">	 * If both x &lt; 2^31 and y &lt; 2^31, then y-x will have its high </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">	 * bit set if x &gt; y, cleared otherwise. </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">	 * If either x &gt;= 2^31 or y &gt;= 2^31 (but not both), then the </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">	 * result is the high bit of x. </td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">	 * If both x &gt;= 2^31 and y &gt;= 2^31, then we can virtually </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">	 * subtract 2^31 from both, and we are back to the first </td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">	 * case. Since (y-2^31)-(x-2^31) = y-x, the direct subtraction </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">	 * is already fine. </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">	uint32_t z; </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">	z = y - x; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_gt.a976d4a067220b0b64a7b4d4aabc756d_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$6=*&amp;y:unsigned int [line 77, column 6];
+n$7=*&amp;x:unsigned int [line 77, column 10];
+*&amp;z:unsigned int=(n$6 - n$7) [line 77, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">//Test 2. Work here </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">	return cttk_bool_of_u32((z ^ ((x ^ y) &amp; (x ^ z))) &gt;&gt; 31); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_gt.a976d4a067220b0b64a7b4d4aabc756d_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;z:unsigned int [line 81, column 27];
+n$1=*&amp;x:unsigned int [line 81, column 33];
+n$2=*&amp;y:unsigned int [line 81, column 37];
+n$3=*&amp;x:unsigned int [line 81, column 43];
+n$4=*&amp;z:unsigned int [line 81, column 47];
+n$5=_fun_cttk_bool_of_u32(((n$0 ^ ((n$1 ^ n$2) & (n$3 ^ n$4)))  &gt;&gt;  31):unsigned int) [line 81, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_gt.a976d4a067220b0b64a7b4d4aabc756d_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$5 [line 81, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_gt.a976d4a067220b0b64a7b4d4aabc756d_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">cttk_bool <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_lt.28fbadc170d2ebc5eebfb0c08e564b00_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_u32_lt.28fbadc170d2ebc5eebfb0c08e564b00.html">summary for cttk_u32_lt</a></td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">cttk_u32_lt(uint32_t x, uint32_t y) </td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">//Test 3. Work here </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">// 	int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">// 	int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">	return cttk_u32_gt(y, x); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_lt.28fbadc170d2ebc5eebfb0c08e564b00_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;y:unsigned int [line 90, column 21];
+n$1=*&amp;x:unsigned int [line 90, column 24];
+n$2=_fun_cttk_u32_gt(n$0:unsigned int,n$1:unsigned int) [line 90, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_lt.28fbadc170d2ebc5eebfb0c08e564b00_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 90, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_u32_lt.28fbadc170d2ebc5eebfb0c08e564b00_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">int <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:8 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f.html">summary for cttk_hexval</a></td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">cttk_hexval(char c) </td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">	 * Code below assumes an ASCII compatible charset. </td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">	 * Decimal digits are 0x30 to 0x39. </td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">	 * Uppercase letters 'A' to 'F' are 0x41 to 0x46. </td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">	 * Lowercase letters 'a' to 'f' are 0x61 to 0x66. </td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">	 * Only one of the three clauses (at most) will yield a non-zero </td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">	 * value; we increment it by 1 to get a value from 1 to 16, or 0 </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">	 * if the source character is not an hexadecimal digit. A final </td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">	 * subtraction ensures that we get -1 on an invalid source digit. </td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">	uint32_t x, y, z, r; </td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">	x = (uint32_t)c - 0x30; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:1 succs:7 exn: Instructions
+n$12=*&amp;c:unsigned int [line 112, column 16];
+*&amp;x:unsigned int=((unsigned int)n$12 - (unsigned int)48) [line 112, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">	y = (uint32_t)c - 0x41; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$11=*&amp;c:unsigned int [line 113, column 16];
+*&amp;y:unsigned int=((unsigned int)n$11 - (unsigned int)65) [line 113, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">	z = (uint32_t)c - 0x61; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$10=*&amp;c:unsigned int [line 114, column 16];
+*&amp;z:unsigned int=((unsigned int)n$10 - (unsigned int)97) [line 114, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">	r = ((x + 1) &amp; -cttk_u32_lt(x, 10)) <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned int [line 115, column 8];
+n$2=*&amp;x:unsigned int [line 115, column 30];
+n$3=_fun_cttk_u32_lt(n$2:unsigned int,(unsigned int)10:unsigned int) [line 115, column 18];
+n$4=*&amp;y:unsigned int [line 116, column 7];
+n$5=*&amp;y:unsigned int [line 116, column 30];
+n$6=_fun_cttk_u32_lt(n$5:unsigned int,(unsigned int)6:unsigned int) [line 116, column 18];
+n$7=*&amp;z:unsigned int [line 117, column 7];
+n$8=*&amp;z:unsigned int [line 117, column 30];
+n$9=_fun_cttk_u32_lt(n$8:unsigned int,(unsigned int)6:unsigned int) [line 117, column 18];
+*&amp;r:unsigned int=((((n$1 + (unsigned int)1) & -n$3) | ((n$4 + (unsigned int)11) & -n$6)) | ((n$7 + (unsigned int)11) & -n$9)) [line 115, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">		| ((y + 11) &amp; -cttk_u32_lt(y, 6)) </td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">		| ((z + 11) &amp; -cttk_u32_lt(z, 6)); </td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">//Test 4. Work here </td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line">	return (int)r - 1; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;r:int [line 121, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=(n$0 - 1) [line 121, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexval.06d28e43e7455f0018be870bd5b5f12f_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">char <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:9 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d.html">summary for cttk_hexdigit</a></td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line">cttk_hexdigit(int x, int uppercase) </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">	unsigned off; </td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line">	 * 'off' is the offset to add to the character value if going </td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">	 * beyond '9' (0x39) so that a letter is obtained ('A' is 0x41, </td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">	 * 'a' is 0x61). </td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">	off = (0x41 - 0x3A); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:1 succs:6 7 exn: Instructions
+*&amp;off:unsigned int=(unsigned int)(65 - 58) [line 135, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line">	if (!uppercase) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:9 succs:8 exn: Conditional true Branch
+n$3=*&amp;uppercase:int [line 136, column 7];
+PRUNE(!n$3, true); [line 136, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:9 succs:5 exn: Conditional false Branch
+n$3=*&amp;uppercase:int [line 136, column 7];
+PRUNE(n$3, false); [line 136, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 8 succs:3 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line">		off += 0x20; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:5 exn: Instructions
+n$4=*&amp;off:unsigned int [line 137, column 3];
+*&amp;off:unsigned int=(n$4 + (unsigned int)32) [line 137, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line">	 * If x &gt;= 10, then the subtraction will yield upper bits of </td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line">	 * value 0. </td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line">//Test 5. Work here with parameter --pulse-widen-threshold 1 --pulse-max-disjuncts 24 </td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">	//because the uppercase letter is referred by the function.  </td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE148">148</td><td class="line">	return (char)(0x30 + x + (off &amp; ~(((unsigned)x - 10) &gt;&gt; 8))); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;x:int [line 148, column 23];
+n$1=*&amp;off:unsigned int [line 148, column 28];
+n$2=*&amp;x:unsigned int [line 148, column 47];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:char=((unsigned int)(48 + n$0) + (n$1 & ~(((unsigned int)n$2 - (unsigned int)10)  &gt;&gt;  8))) [line 148, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE149">149</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexdigit.6397a91d4435a45bc526401a27a2928d_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE150">150</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE151">151</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE152">152</td><td class="line">size_t <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:6 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391.html">summary for cttk_hexscan</a></td></tr>
+<tr><td class="num" id="LINE153">153</td><td class="line">cttk_hexscan(const char *src, size_t src_len, int skipws) </td></tr>
+<tr><td class="num" id="LINE154">154</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE155">155</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE156">156</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE157">157</td><td class="line">	for (u = 0; u &lt; src_len; u ++) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:1 succs:5 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 157, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;u:unsigned long [line 157, column 14];
+n$3=*&amp;src_len:unsigned long [line 157, column 18];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:21 exn: Conditional true Branch
+PRUNE((n$2  &lt;  n$3), true); [line 157, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:19 11 succs:5 exn: Instructions
+n$1=*&amp;u:unsigned long [line 157, column 27];
+*&amp;u:unsigned long=(n$1 + 1) [line 157, column 27];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  n$3), false); [line 157, column 14];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE158">158</td><td class="line">		int c; </td></tr>
+<tr><td class="num" id="LINE159">159</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE160">160</td><td class="line">		c = src[u]; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:9 succs:16 17 exn: Instructions
+n$14=*&amp;src:char const * [line 160, column 7];
+n$15=*&amp;u:unsigned long [line 160, column 11];
+n$16=*n$14[n$15]:char [line 160, column 7];
+*&amp;c:int=n$16 [line 160, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE161">161</td><td class="line">		if (skipws &amp;&amp; c &lt;= 0x20) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node16.html"><span class='visited with_tooltip'>C_16<span class='tooltip'>node16 preds:21 succs:18 exn: Conditional true Branch
+n$9=*&amp;skipws:int [line 161, column 7];
+PRUNE(n$9, true); [line 161, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:16 succs:19 20 exn: Instructions
+n$10=*&amp;c:int [line 161, column 17];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node19.html"><span class='visited with_tooltip'>C_19<span class='tooltip'>node19 preds:18 succs:7 exn: Conditional true Branch
+PRUNE((n$10  &lt;=  32), true); [line 161, column 17];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node20.html"><span class='visited with_tooltip'>C_20<span class='tooltip'>node20 preds:18 succs:15 exn: Conditional false Branch
+PRUNE(!(n$10  &lt;=  32), false); [line 161, column 17];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node17.html"><span class='visited with_tooltip'>C_17<span class='tooltip'>node17 preds:21 succs:15 exn: Conditional false Branch
+n$9=*&amp;skipws:int [line 161, column 7];
+PRUNE(!n$9, false); [line 161, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node15.html"><span class='visited with_tooltip'>J_15<span class='tooltip'>node15 preds:20 17 succs:12 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE162">162</td><td class="line">			continue; </td></tr>
+<tr><td class="num" id="LINE163">163</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE164">164</td><td class="line">		if (cttk_hexval(c) &lt; 0) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:15 succs:13 14 exn: Instructions
+n$4=*&amp;c:int [line 164, column 19];
+n$5=_fun_cttk_hexval(n$4:char) [line 164, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node14.html"><span class='visited with_tooltip'>C_14<span class='tooltip'>node14 preds:12 succs:11 exn: Conditional false Branch
+PRUNE(!(n$5  &lt;  0), false); [line 164, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node11.html"><span class='visited with_tooltip'>J_11<span class='tooltip'>node11 preds:14 succs:7 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:12 succs:3 exn: Conditional true Branch
+PRUNE((n$5  &lt;  0), true); [line 164, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE165">165</td><td class="line">			break; </td></tr>
+<tr><td class="num" id="LINE166">166</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE167">167</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE168">168</td><td class="line">//Test 6. Not able to work here, since src function is not being referred.  </td></tr>
+<tr><td class="num" id="LINE169">169</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE170">170</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE171">171</td><td class="line">	return u; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 13 succs:4 exn: Instructions
+n$0=*&amp;u:unsigned long [line 171, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$0 [line 171, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE172">172</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hexscan.699402bfd3eb0e175e6a6c63bd175391_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE173">173</td><td class="line">size_t <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen2.b0e5fbecb7740989cb974c46062b1519_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_hextobin_gen2.b0e5fbecb7740989cb974c46062b1519.html">summary for cttk_hextobin_gen2</a></td></tr>
+<tr><td class="num" id="LINE174">174</td><td class="line">cttk_hextobin_gen2(unsigned char *dst, size_t dst_len, </td></tr>
+<tr><td class="num" id="LINE175">175</td><td class="line">	const char *src, size_t src_len, const char **err, unsigned flags) </td></tr>
+<tr><td class="num" id="LINE176">176</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE177">177</td><td class="line">	return dst_len;  <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen2.b0e5fbecb7740989cb974c46062b1519_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;dst_len:unsigned long [line 177, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen2.b0e5fbecb7740989cb974c46062b1519_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$0 [line 177, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE178">178</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen2.b0e5fbecb7740989cb974c46062b1519_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE179">179</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE180">180</td><td class="line">size_t <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:98 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c.html">summary for cttk_hextobin_gen</a></td></tr>
+<tr><td class="num" id="LINE181">181</td><td class="line">cttk_hextobin_gen(unsigned char *dst, size_t dst_len, </td></tr>
+<tr><td class="num" id="LINE182">182</td><td class="line">	const char *src, size_t src_len, const char **err, unsigned flags) </td></tr>
+<tr><td class="num" id="LINE183">183</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE184">184</td><td class="line">	size_t u, v; </td></tr>
+<tr><td class="num" id="LINE185">185</td><td class="line">	unsigned char *buf; </td></tr>
+<tr><td class="num" id="LINE186">186</td><td class="line">	int halfbyte; </td></tr>
+<tr><td class="num" id="LINE187">187</td><td class="line">	int acc; </td></tr>
+<tr><td class="num" id="LINE188">188</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE189">189</td><td class="line">	buf = dst; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node98.html"><span class='visited with_tooltip'>I_98<span class='tooltip'>node98 preds:1 succs:97 exn: Instructions
+n$82=*&amp;dst:unsigned char* [line 189, column 8];
+*&amp;buf:unsigned char*=n$82 [line 189, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE190">190</td><td class="line">	halfbyte = 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node97.html"><span class='visited with_tooltip'>I_97<span class='tooltip'>node97 preds:98 succs:96 exn: Instructions
+*&amp;halfbyte:int=0 [line 190, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE191">191</td><td class="line">	acc = 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node96.html"><span class='visited with_tooltip'>I_96<span class='tooltip'>node96 preds:97 succs:95 exn: Instructions
+*&amp;acc:int=0 [line 191, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE192">192</td><td class="line">	v = 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node95.html"><span class='visited with_tooltip'>I_95<span class='tooltip'>node95 preds:96 succs:31 exn: Instructions
+*&amp;v:unsigned long=(unsigned long)0 [line 192, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE193">193</td><td class="line">//Test 7. Work here </td></tr>
+<tr><td class="num" id="LINE194">194</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE195">195</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE196">196</td><td class="line">	for (u = 0; u &lt; src_len; u ++) {//threashold should be equal or larger than 16 <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node31.html"><span class='visited with_tooltip'>I_31<span class='tooltip'>node31 preds:95 succs:30 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 196, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node30.html"><span class='visited with_tooltip'>J_30<span class='tooltip'>node30 preds:32 31 succs:33 exn: Join
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node33.html"><span class='visited with_tooltip'>I_33<span class='tooltip'>node33 preds:30 succs:34 35 exn: Instructions
+n$25=*&amp;u:unsigned long [line 196, column 14];
+n$26=*&amp;src_len:unsigned long [line 196, column 18];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node34.html"><span class='visited with_tooltip'>C_34<span class='tooltip'>node34 preds:33 succs:94 exn: Conditional true Branch
+PRUNE((n$25  &lt;  n$26), true); [line 196, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node32.html"><span class='visited with_tooltip'>I_32<span class='tooltip'>node32 preds:91 36 succs:30 exn: Instructions
+n$24=*&amp;u:unsigned long [line 196, column 27];
+*&amp;u:unsigned long=(n$24 + 1) [line 196, column 27];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node35.html"><span class='visited with_tooltip'>C_35<span class='tooltip'>node35 preds:33 succs:11 12 exn: Conditional false Branch
+PRUNE(!(n$25  &lt;  n$26), false); [line 196, column 14];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE197">197</td><td class="line">		int c, d; </td></tr>
+<tr><td class="num" id="LINE198">198</td><td class="line">//Test 8. Work here </td></tr>
+<tr><td class="num" id="LINE199">199</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE200">200</td><td class="line">	// int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE201">201</td><td class="line">		 </td></tr>
+<tr><td class="num" id="LINE202">202</td><td class="line">		 // * We read source characters as unsigned bytes, so that </td></tr>
+<tr><td class="num" id="LINE203">203</td><td class="line">		 // * values are positive and bytes beyond 0x7F are not </td></tr>
+<tr><td class="num" id="LINE204">204</td><td class="line">		 // * considered whitespace. </td></tr>
+<tr><td class="num" id="LINE205">205</td><td class="line">		  </td></tr>
+<tr><td class="num" id="LINE206">206</td><td class="line">		c = *((const unsigned char *)src + u); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node94.html"><span class='visited with_tooltip'>I_94<span class='tooltip'>node94 preds:34 succs:93 exn: Instructions
+n$78=*&amp;src:unsigned char const * [line 206, column 32];
+n$79=*&amp;u:unsigned long [line 206, column 38];
+n$80=*((unsigned char const *)n$78 + n$79):unsigned char [line 206, column 7];
+*&amp;c:int=n$80 [line 206, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE207">207</td><td class="line">		d = cttk_hexval(c); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node93.html"><span class='visited with_tooltip'>I_93<span class='tooltip'>node93 preds:94 succs:66 exn: Instructions
+n$76=*&amp;c:int [line 207, column 19];
+n$77=_fun_cttk_hexval(n$76:char) [line 207, column 7];
+*&amp;d:int=n$77 [line 207, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE208">208</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE209">209</td><td class="line">		/* </td></tr>
+<tr><td class="num" id="LINE210">210</td><td class="line">		 * If the character is not an hex digit, it may be </td></tr>
+<tr><td class="num" id="LINE211">211</td><td class="line">		 * whitespace to be ignored; otherwise, this is an </td></tr>
+<tr><td class="num" id="LINE212">212</td><td class="line">		 * error to report. Padding of half-bytes must be applied </td></tr>
+<tr><td class="num" id="LINE213">213</td><td class="line">		 * where necessary (in such a case, output buffer capacity </td></tr>
+<tr><td class="num" id="LINE214">214</td><td class="line">		 * was already checked). </td></tr>
+<tr><td class="num" id="LINE215">215</td><td class="line">		 */ </td></tr>
+<tr><td class="num" id="LINE216">216</td><td class="line">		if (d &lt; 0) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node66.html"><span class='visited with_tooltip'>I_66<span class='tooltip'>node66 preds:93 succs:67 68 exn: Instructions
+n$51=*&amp;d:int [line 216, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node67.html"><span class='visited with_tooltip'>C_67<span class='tooltip'>node67 preds:66 succs:87 exn: Conditional true Branch
+PRUNE((n$51  &lt;  0), true); [line 216, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node68.html"><span class='visited with_tooltip'>C_68<span class='tooltip'>node68 preds:66 succs:65 exn: Conditional false Branch
+PRUNE(!(n$51  &lt;  0), false); [line 216, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node65.html"><span class='visited with_tooltip'>J_65<span class='tooltip'>node65 preds:68 69 succs:42 43 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE217">217</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE218">218</td><td class="line">//Test 9. Work here </td></tr>
+<tr><td class="num" id="LINE219">219</td><td class="line">			// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE220">220</td><td class="line">			// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE221">221</td><td class="line">			if ((flags &amp; 0x0002 /* CTTK_HEX_SKIP_WS */) != 0 &amp;&amp; c &lt;= 32) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node87.html"><span class='visited with_tooltip'>I_87<span class='tooltip'>node87 preds:67 succs:88 89 exn: Instructions
+n$69=*&amp;flags:unsigned int [line 221, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node88.html"><span class='visited with_tooltip'>C_88<span class='tooltip'>node88 preds:87 succs:90 exn: Conditional true Branch
+PRUNE(((n$69 & (unsigned int)2) != (unsigned int)0), true); [line 221, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node90.html"><span class='visited with_tooltip'>I_90<span class='tooltip'>node90 preds:88 succs:91 92 exn: Instructions
+n$70=*&amp;c:int [line 221, column 56];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node91.html"><span class='visited with_tooltip'>C_91<span class='tooltip'>node91 preds:90 succs:32 exn: Conditional true Branch
+PRUNE((n$70  &lt;=  32), true); [line 221, column 56];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node92.html"><span class='visited with_tooltip'>C_92<span class='tooltip'>node92 preds:90 succs:86 exn: Conditional false Branch
+PRUNE(!(n$70  &lt;=  32), false); [line 221, column 56];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node89.html"><span class='visited with_tooltip'>C_89<span class='tooltip'>node89 preds:87 succs:86 exn: Conditional false Branch
+PRUNE(!((n$69 & (unsigned int)2) != (unsigned int)0), false); [line 221, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node86.html"><span class='visited with_tooltip'>J_86<span class='tooltip'>node86 preds:92 89 succs:82 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE222">222</td><td class="line">//Test10: do not work here </td></tr>
+<tr><td class="num" id="LINE223">223</td><td class="line">					// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE224">224</td><td class="line">					// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE225">225</td><td class="line">				continue; </td></tr>
+<tr><td class="num" id="LINE226">226</td><td class="line">			} </td></tr>
+<tr><td class="num" id="LINE227">227</td><td class="line">			if (err != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node82.html"><span class='visited with_tooltip'>I_82<span class='tooltip'>node82 preds:86 succs:83 84 exn: Instructions
+n$63=*&amp;err:char const ** [line 227, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node83.html"><span class='visited with_tooltip'>C_83<span class='tooltip'>node83 preds:82 succs:85 exn: Conditional true Branch
+PRUNE((n$63 != null), true); [line 227, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node84.html"><span class='visited with_tooltip'>C_84<span class='tooltip'>node84 preds:82 succs:81 exn: Conditional false Branch
+PRUNE(!(n$63 != null), false); [line 227, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node81.html"><span class='visited with_tooltip'>J_81<span class='tooltip'>node81 preds:84 85 succs:70 71 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE228">228</td><td class="line">//Test11: do not work here </td></tr>
+<tr><td class="num" id="LINE229">229</td><td class="line">					// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE230">230</td><td class="line">					// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE231">231</td><td class="line">				*err = src + u; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node85.html"><span class='visited with_tooltip'>I_85<span class='tooltip'>node85 preds:83 succs:81 exn: Instructions
+n$64=*&amp;err:char const ** [line 231, column 6];
+n$65=*&amp;src:char const * [line 231, column 12];
+n$66=*&amp;u:unsigned long [line 231, column 18];
+*n$64:char const *=(n$65 + n$66) [line 231, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE232">232</td><td class="line">			} </td></tr>
+<tr><td class="num" id="LINE233">233</td><td class="line">			if (halfbyte &amp;&amp; (flags &amp; 0x0001 /* CTTK_HEX_PAD_ODD */) != 0) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node70.html"><span class='visited with_tooltip'>C_70<span class='tooltip'>node70 preds:81 succs:72 exn: Conditional true Branch
+n$52=*&amp;halfbyte:int [line 233, column 8];
+PRUNE(n$52, true); [line 233, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node72.html"><span class='visited with_tooltip'>I_72<span class='tooltip'>node72 preds:70 succs:73 74 exn: Instructions
+n$53=*&amp;flags:unsigned int [line 233, column 21];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node73.html"><span class='visited with_tooltip'>C_73<span class='tooltip'>node73 preds:72 succs:77 exn: Conditional true Branch
+PRUNE(((n$53 & (unsigned int)1) != (unsigned int)0), true); [line 233, column 20];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node74.html"><span class='visited with_tooltip'>C_74<span class='tooltip'>node74 preds:72 succs:69 exn: Conditional false Branch
+PRUNE(!((n$53 & (unsigned int)1) != (unsigned int)0), false); [line 233, column 20];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node71.html"><span class='visited with_tooltip'>C_71<span class='tooltip'>node71 preds:81 succs:69 exn: Conditional false Branch
+n$52=*&amp;halfbyte:int [line 233, column 8];
+PRUNE(!n$52, false); [line 233, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node69.html"><span class='visited with_tooltip'>J_69<span class='tooltip'>node69 preds:74 71 75 succs:65 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE234">234</td><td class="line">//Test12: do not work here </td></tr>
+<tr><td class="num" id="LINE235">235</td><td class="line">					// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE236">236</td><td class="line">					// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE237">237</td><td class="line">				if (buf != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node77.html"><span class='visited with_tooltip'>I_77<span class='tooltip'>node77 preds:73 succs:78 79 exn: Instructions
+n$55=*&amp;buf:unsigned char* [line 237, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node78.html"><span class='visited with_tooltip'>C_78<span class='tooltip'>node78 preds:77 succs:80 exn: Conditional true Branch
+PRUNE((n$55 != (unsigned char*)null), true); [line 237, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node79.html"><span class='visited with_tooltip'>C_79<span class='tooltip'>node79 preds:77 succs:76 exn: Conditional false Branch
+PRUNE(!(n$55 != (unsigned char*)null), false); [line 237, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node76.html"><span class='visited with_tooltip'>J_76<span class='tooltip'>node76 preds:79 80 succs:75 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE238">238</td><td class="line">//Test13: do not work here </td></tr>
+<tr><td class="num" id="LINE239">239</td><td class="line">					// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE240">240</td><td class="line">					// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE241">241</td><td class="line">					buf[v] = acc; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node80.html"><span class='visited with_tooltip'>I_80<span class='tooltip'>node80 preds:78 succs:76 exn: Instructions
+n$56=*&amp;buf:unsigned char* [line 241, column 6];
+n$57=*&amp;v:unsigned long [line 241, column 10];
+n$58=*&amp;acc:int [line 241, column 15];
+*n$56[n$57]:unsigned char=(unsigned char)n$58 [line 241, column 6];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE242">242</td><td class="line">				} </td></tr>
+<tr><td class="num" id="LINE243">243</td><td class="line">				v ++; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node75.html"><span class='visited with_tooltip'>I_75<span class='tooltip'>node75 preds:76 succs:69 exn: Instructions
+n$54=*&amp;v:unsigned long [line 243, column 5];
+*&amp;v:unsigned long=(n$54 + 1) [line 243, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE244">244</td><td class="line">			}  </td></tr>
+<tr><td class="num" id="LINE245">245</td><td class="line">//Test14: Worked here </td></tr>
+<tr><td class="num" id="LINE246">246</td><td class="line">			// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE247">247</td><td class="line">			// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE248">248</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE249">249</td><td class="line">		 // * We have a new digit. We either keep it in the accumulator </td></tr>
+<tr><td class="num" id="LINE250">250</td><td class="line">		 // * (first digit of the next byte) or store it into the output </td></tr>
+<tr><td class="num" id="LINE251">251</td><td class="line">		 // * buffer. </td></tr>
+<tr><td class="num" id="LINE252">252</td><td class="line">		 // * </td></tr>
+<tr><td class="num" id="LINE253">253</td><td class="line">		 // * Output buffer overflow is detected on the first digit, </td></tr>
+<tr><td class="num" id="LINE254">254</td><td class="line">		 // * not the second. </td></tr>
+<tr><td class="num" id="LINE255">255</td><td class="line">		  </td></tr>
+<tr><td class="num" id="LINE256">256</td><td class="line">//Test15 Work here </td></tr>
+<tr><td class="num" id="LINE257">257</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE258">258</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE259">259</td><td class="line">		if (halfbyte) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node42.html"><span class='visited with_tooltip'>C_42<span class='tooltip'>node42 preds:65 succs:46 exn: Conditional true Branch
+n$28=*&amp;halfbyte:int [line 259, column 7];
+PRUNE(n$28, true); [line 259, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node43.html"><span class='visited with_tooltip'>C_43<span class='tooltip'>node43 preds:65 succs:52 exn: Conditional false Branch
+n$28=*&amp;halfbyte:int [line 259, column 7];
+PRUNE(!n$28, false); [line 259, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node41.html"><span class='visited with_tooltip'>J_41<span class='tooltip'>node41 preds:50 44 succs:37 38 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE260">260</td><td class="line">//Test16 Work here </td></tr>
+<tr><td class="num" id="LINE261">261</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE262">262</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE263">263</td><td class="line">			if (buf != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node46.html"><span class='visited with_tooltip'>I_46<span class='tooltip'>node46 preds:42 succs:47 48 exn: Instructions
+n$30=*&amp;buf:unsigned char* [line 263, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node47.html"><span class='visited with_tooltip'>C_47<span class='tooltip'>node47 preds:46 succs:49 exn: Conditional true Branch
+PRUNE((n$30 != (unsigned char*)null), true); [line 263, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node48.html"><span class='visited with_tooltip'>C_48<span class='tooltip'>node48 preds:46 succs:45 exn: Conditional false Branch
+PRUNE(!(n$30 != (unsigned char*)null), false); [line 263, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node45.html"><span class='visited with_tooltip'>J_45<span class='tooltip'>node45 preds:48 49 succs:44 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE264">264</td><td class="line">//Test17 Work here </td></tr>
+<tr><td class="num" id="LINE265">265</td><td class="line">				// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE266">266</td><td class="line">				// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE267">267</td><td class="line">				buf[v] = acc + d; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node49.html"><span class='visited with_tooltip'>I_49<span class='tooltip'>node49 preds:47 succs:45 exn: Instructions
+n$31=*&amp;buf:unsigned char* [line 267, column 5];
+n$32=*&amp;v:unsigned long [line 267, column 9];
+n$33=*&amp;acc:int [line 267, column 14];
+n$34=*&amp;d:int [line 267, column 20];
+*n$31[n$32]:unsigned char=(unsigned char)(n$33 + n$34) [line 267, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE268">268</td><td class="line">			} </td></tr>
+<tr><td class="num" id="LINE269">269</td><td class="line">//Test18 Work here </td></tr>
+<tr><td class="num" id="LINE270">270</td><td class="line">				// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE271">271</td><td class="line">				// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE272">272</td><td class="line">			v ++; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node44.html"><span class='visited with_tooltip'>I_44<span class='tooltip'>node44 preds:45 succs:41 exn: Instructions
+n$29=*&amp;v:unsigned long [line 272, column 4];
+*&amp;v:unsigned long=(n$29 + 1) [line 272, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE273">273</td><td class="line">		} else { </td></tr>
+<tr><td class="num" id="LINE274">274</td><td class="line">//Test19 Work here </td></tr>
+<tr><td class="num" id="LINE275">275</td><td class="line">			// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE276">276</td><td class="line">			// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE277">277</td><td class="line">			if (buf != NULL &amp;&amp; v == dst_len) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node52.html"><span class='visited with_tooltip'>I_52<span class='tooltip'>node52 preds:43 succs:53 54 exn: Instructions
+n$38=*&amp;buf:unsigned char* [line 277, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node53.html"><span class='visited with_tooltip'>C_53<span class='tooltip'>node53 preds:52 succs:55 exn: Conditional true Branch
+PRUNE((n$38 != (unsigned char*)null), true); [line 277, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node55.html"><span class='visited with_tooltip'>I_55<span class='tooltip'>node55 preds:53 succs:56 57 exn: Instructions
+n$39=*&amp;v:unsigned long [line 277, column 23];
+n$40=*&amp;dst_len:unsigned long [line 277, column 28];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node57.html"><span class='visited with_tooltip'>C_57<span class='tooltip'>node57 preds:55 succs:51 exn: Conditional false Branch
+PRUNE(!(n$39 == n$40), false); [line 277, column 23];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node54.html"><span class='visited with_tooltip'>C_54<span class='tooltip'>node54 preds:52 succs:51 exn: Conditional false Branch
+PRUNE(!(n$38 != (unsigned char*)null), false); [line 277, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node51.html"><span class='visited with_tooltip'>J_51<span class='tooltip'>node51 preds:57 54 succs:50 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node56.html"><span class='visited with_tooltip'>C_56<span class='tooltip'>node56 preds:55 succs:61 exn: Conditional true Branch
+PRUNE((n$39 == n$40), true); [line 277, column 23];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE278">278</td><td class="line">//Test20 Do not Work here </td></tr>
+<tr><td class="num" id="LINE279">279</td><td class="line">				// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE280">280</td><td class="line">				// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE281">281</td><td class="line">				if (err != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node61.html"><span class='visited with_tooltip'>I_61<span class='tooltip'>node61 preds:56 succs:62 63 exn: Instructions
+n$42=*&amp;err:char const ** [line 281, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node62.html"><span class='visited with_tooltip'>C_62<span class='tooltip'>node62 preds:61 succs:64 exn: Conditional true Branch
+PRUNE((n$42 != null), true); [line 281, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node63.html"><span class='visited with_tooltip'>C_63<span class='tooltip'>node63 preds:61 succs:60 exn: Conditional false Branch
+PRUNE(!(n$42 != null), false); [line 281, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node60.html"><span class='visited with_tooltip'>J_60<span class='tooltip'>node60 preds:63 64 succs:58 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE282">282</td><td class="line">//Test21 Do Work here </td></tr>
+<tr><td class="num" id="LINE283">283</td><td class="line">				// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE284">284</td><td class="line">				// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE285">285</td><td class="line">					*err = src + u; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node64.html"><span class='visited with_tooltip'>I_64<span class='tooltip'>node64 preds:62 succs:60 exn: Instructions
+n$43=*&amp;err:char const ** [line 285, column 7];
+n$44=*&amp;src:char const * [line 285, column 13];
+n$45=*&amp;u:unsigned long [line 285, column 19];
+*n$43:char const *=(n$44 + n$45) [line 285, column 6];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE286">286</td><td class="line">				} </td></tr>
+<tr><td class="num" id="LINE287">287</td><td class="line">				return v; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node58.html"><span class='visited with_tooltip'>I_58<span class='tooltip'>node58 preds:60 succs:59 exn: Instructions
+n$41=*&amp;v:unsigned long [line 287, column 12];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node59.html"><span class='visited with_tooltip'>I_59<span class='tooltip'>node59 preds:58 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$41 [line 287, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE288">288</td><td class="line">			} </td></tr>
+<tr><td class="num" id="LINE289">289</td><td class="line">//Test22 Work here </td></tr>
+<tr><td class="num" id="LINE290">290</td><td class="line">			// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE291">291</td><td class="line">			// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE292">292</td><td class="line">			acc = d &lt;&lt; 4; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node50.html"><span class='visited with_tooltip'>I_50<span class='tooltip'>node50 preds:51 succs:41 exn: Instructions
+n$37=*&amp;d:int [line 292, column 10];
+*&amp;acc:int=(n$37  &lt;&lt;  4) [line 292, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE293">293</td><td class="line">//Test23 Work here </td></tr>
+<tr><td class="num" id="LINE294">294</td><td class="line">			// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE295">295</td><td class="line">			// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE296">296</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE297">297</td><td class="line">		halfbyte = !halfbyte; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node37.html"><span class='visited with_tooltip'>C_37<span class='tooltip'>node37 preds:41 succs:39 exn: Conditional true Branch
+n$27=*&amp;halfbyte:int [line 297, column 15];
+PRUNE(n$27, true); [line 297, column 15];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node39.html"><span class='visited with_tooltip'>I_39<span class='tooltip'>node39 preds:37 succs:36 exn: Instructions
+*&amp;halfbyte:int=0 [line 297, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node38.html"><span class='visited with_tooltip'>C_38<span class='tooltip'>node38 preds:41 succs:40 exn: Conditional false Branch
+n$27=*&amp;halfbyte:int [line 297, column 15];
+PRUNE(!n$27, false); [line 297, column 15];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node40.html"><span class='visited with_tooltip'>I_40<span class='tooltip'>node40 preds:38 succs:36 exn: Instructions
+*&amp;halfbyte:int=1 [line 297, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node36.html"><span class='visited with_tooltip'>J_36<span class='tooltip'>node36 preds:40 39 succs:32 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE298">298</td><td class="line">//Test24 Work here </td></tr>
+<tr><td class="num" id="LINE299">299</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE300">300</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE301">301</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE302">302</td><td class="line">// //Test25 Work here? No the function reach the return statement  </td></tr>
+<tr><td class="num" id="LINE303">303</td><td class="line">// 		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE304">304</td><td class="line">// 		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE305">305</td><td class="line">	 </td></tr>
+<tr><td class="num" id="LINE306">306</td><td class="line">// 	 * This part is reached when the source string is finished. We </td></tr>
+<tr><td class="num" id="LINE307">307</td><td class="line">// 	 * encountered no error so far. If there is a pending digit, </td></tr>
+<tr><td class="num" id="LINE308">308</td><td class="line">// 	 * then we either pad it into a full byte, or report an error, </td></tr>
+<tr><td class="num" id="LINE309">309</td><td class="line">// 	 * depending on the relevant flag. Note that output buffer </td></tr>
+<tr><td class="num" id="LINE310">310</td><td class="line">// 	 * capacity was already checked when that first digit was read. </td></tr>
+<tr><td class="num" id="LINE311">311</td><td class="line">	  </td></tr>
+<tr><td class="num" id="LINE312">312</td><td class="line">	if (halfbyte) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:35 succs:14 exn: Conditional true Branch
+n$5=*&amp;halfbyte:int [line 312, column 6];
+PRUNE(n$5, true); [line 312, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:35 succs:10 exn: Conditional false Branch
+n$5=*&amp;halfbyte:int [line 312, column 6];
+PRUNE(!n$5, false); [line 312, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node10.html"><span class='visited with_tooltip'>J_10<span class='tooltip'>node10 preds:12 13 succs:6 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE313">313</td><td class="line">		if ((flags &amp; 0x0001 /* CTTK_HEX_PAD_ODD */) != 0) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:11 succs:15 16 exn: Instructions
+n$6=*&amp;flags:unsigned int [line 313, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node15.html"><span class='visited with_tooltip'>C_15<span class='tooltip'>node15 preds:14 succs:19 exn: Conditional true Branch
+PRUNE(((n$6 & (unsigned int)1) != (unsigned int)0), true); [line 313, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node13.html"><span class='visited with_tooltip'>J_13<span class='tooltip'>node13 preds:17 succs:10 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node16.html"><span class='visited with_tooltip'>C_16<span class='tooltip'>node16 preds:14 succs:26 exn: Conditional false Branch
+PRUNE(!((n$6 & (unsigned int)1) != (unsigned int)0), false); [line 313, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE314">314</td><td class="line">			if (buf != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:15 succs:20 21 exn: Instructions
+n$8=*&amp;buf:unsigned char* [line 314, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node20.html"><span class='visited with_tooltip'>C_20<span class='tooltip'>node20 preds:19 succs:22 exn: Conditional true Branch
+PRUNE((n$8 != (unsigned char*)null), true); [line 314, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node21.html"><span class='visited with_tooltip'>C_21<span class='tooltip'>node21 preds:19 succs:18 exn: Conditional false Branch
+PRUNE(!(n$8 != (unsigned char*)null), false); [line 314, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node18.html"><span class='visited with_tooltip'>J_18<span class='tooltip'>node18 preds:21 22 succs:17 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE315">315</td><td class="line">				buf[v] = acc; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:20 succs:18 exn: Instructions
+n$9=*&amp;buf:unsigned char* [line 315, column 5];
+n$10=*&amp;v:unsigned long [line 315, column 9];
+n$11=*&amp;acc:int [line 315, column 14];
+*n$9[n$10]:unsigned char=(unsigned char)n$11 [line 315, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE316">316</td><td class="line">			} </td></tr>
+<tr><td class="num" id="LINE317">317</td><td class="line">			v ++; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:13 exn: Instructions
+n$7=*&amp;v:unsigned long [line 317, column 4];
+*&amp;v:unsigned long=(n$7 + 1) [line 317, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE318">318</td><td class="line">		} else { </td></tr>
+<tr><td class="num" id="LINE319">319</td><td class="line">			if (err != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node26.html"><span class='visited with_tooltip'>I_26<span class='tooltip'>node26 preds:16 succs:27 28 exn: Instructions
+n$15=*&amp;err:char const ** [line 319, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node27.html"><span class='visited with_tooltip'>C_27<span class='tooltip'>node27 preds:26 succs:29 exn: Conditional true Branch
+PRUNE((n$15 != null), true); [line 319, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node28.html"><span class='visited with_tooltip'>C_28<span class='tooltip'>node28 preds:26 succs:25 exn: Conditional false Branch
+PRUNE(!(n$15 != null), false); [line 319, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node25.html"><span class='visited with_tooltip'>J_25<span class='tooltip'>node25 preds:28 29 succs:23 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE320">320</td><td class="line">				*err = src + src_len; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node29.html"><span class='visited with_tooltip'>I_29<span class='tooltip'>node29 preds:27 succs:25 exn: Instructions
+n$16=*&amp;err:char const ** [line 320, column 6];
+n$17=*&amp;src:char const * [line 320, column 12];
+n$18=*&amp;src_len:unsigned long [line 320, column 18];
+*n$16:char const *=(n$17 + n$18) [line 320, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE321">321</td><td class="line">			} </td></tr>
+<tr><td class="num" id="LINE322">322</td><td class="line">			return v; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:25 succs:24 exn: Instructions
+n$14=*&amp;v:unsigned long [line 322, column 11];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:23 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$14 [line 322, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE323">323</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE324">324</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE325">325</td><td class="line">	if (err != NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:10 succs:7 8 exn: Instructions
+n$1=*&amp;err:char const ** [line 325, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:9 exn: Conditional true Branch
+PRUNE((n$1 != null), true); [line 325, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:5 exn: Conditional false Branch
+PRUNE(!(n$1 != null), false); [line 325, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:8 9 succs:3 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE326">326</td><td class="line">		*err = NULL; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:7 succs:5 exn: Instructions
+n$2=*&amp;err:char const ** [line 326, column 4];
+*n$2:char const *=null [line 326, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE327">327</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE328">328</td><td class="line">	return v; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;v:unsigned long [line 328, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$0 [line 328, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE329">329</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_hextobin_gen.7e3bd7508c3a027d0fc3bafb4dc6738c_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:59 24 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE330">330</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE331">331</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE332">332</td><td class="line">size_t <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:46 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2.html">summary for cttk_bintohex_gen</a></td></tr>
+<tr><td class="num" id="LINE333">333</td><td class="line">cttk_bintohex_gen(char *dst, size_t dst_len, </td></tr>
+<tr><td class="num" id="LINE334">334</td><td class="line">	const unsigned char *src, size_t src_len, unsigned flags) </td></tr>
+<tr><td class="num" id="LINE335">335</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE336">336</td><td class="line">	const unsigned char *buf; </td></tr>
+<tr><td class="num" id="LINE337">337</td><td class="line">	size_t u, v; </td></tr>
+<tr><td class="num" id="LINE338">338</td><td class="line">	int halflast, uppercase; </td></tr>
+<tr><td class="num" id="LINE339">339</td><td class="line">//Test26 Work here </td></tr>
+<tr><td class="num" id="LINE340">340</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE341">341</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE342">342</td><td class="line">	if (dst == NULL) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node46.html"><span class='visited with_tooltip'>I_46<span class='tooltip'>node46 preds:1 succs:47 48 exn: Instructions
+n$44=*&amp;dst:char* [line 342, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node47.html"><span class='visited with_tooltip'>C_47<span class='tooltip'>node47 preds:46 succs:49 exn: Conditional true Branch
+PRUNE((n$44 == (char*)null), true); [line 342, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node48.html"><span class='visited with_tooltip'>C_48<span class='tooltip'>node48 preds:46 succs:45 exn: Conditional false Branch
+PRUNE(!(n$44 == (char*)null), false); [line 342, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node45.html"><span class='visited with_tooltip'>J_45<span class='tooltip'>node45 preds:48 succs:41 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE343">343</td><td class="line">//Test27 Do not Work here(but work if dst != NULL) </td></tr>
+<tr><td class="num" id="LINE344">344</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE345">345</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE346">346</td><td class="line">		return (src_len &lt;&lt; 1); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node49.html"><span class='visited with_tooltip'>I_49<span class='tooltip'>node49 preds:47 succs:50 exn: Instructions
+n$45=*&amp;src_len:unsigned long [line 346, column 11];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node50.html"><span class='visited with_tooltip'>I_50<span class='tooltip'>node50 preds:49 succs:2 exn: Instructions
+*&amp;return:unsigned long=(n$45  &lt;&lt;  1) [line 346, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE347">347</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE348">348</td><td class="line">//Test28 work </td></tr>
+<tr><td class="num" id="LINE349">349</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE350">350</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE351">351</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE352">352</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE353">353</td><td class="line">	 * Special case: destination buffer has size 0; we cannot even </td></tr>
+<tr><td class="num" id="LINE354">354</td><td class="line">	 * write the terminating null byte. </td></tr>
+<tr><td class="num" id="LINE355">355</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE356">356</td><td class="line">	if (dst_len == 0) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node41.html"><span class='visited with_tooltip'>I_41<span class='tooltip'>node41 preds:45 succs:42 43 exn: Instructions
+n$41=*&amp;dst_len:unsigned long [line 356, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node42.html"><span class='visited with_tooltip'>C_42<span class='tooltip'>node42 preds:41 succs:44 exn: Conditional true Branch
+PRUNE((n$41 == (unsigned long)0), true); [line 356, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node43.html"><span class='visited with_tooltip'>C_43<span class='tooltip'>node43 preds:41 succs:40 exn: Conditional false Branch
+PRUNE(!(n$41 == (unsigned long)0), false); [line 356, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node40.html"><span class='visited with_tooltip'>J_40<span class='tooltip'>node40 preds:43 succs:39 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE357">357</td><td class="line">//Test29 do not work </td></tr>
+<tr><td class="num" id="LINE358">358</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE359">359</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE360">360</td><td class="line">		return 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node44.html"><span class='visited with_tooltip'>I_44<span class='tooltip'>node44 preds:42 succs:2 exn: Instructions
+*&amp;return:unsigned long=(unsigned long)0 [line 360, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE361">361</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE362">362</td><td class="line">//Test30 work </td></tr>
+<tr><td class="num" id="LINE363">363</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE364">364</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE365">365</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE366">366</td><td class="line">	 * Adjust lengths. Three situations: </td></tr>
+<tr><td class="num" id="LINE367">367</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE368">368</td><td class="line">	 *  - Destination is large enough for all characters. </td></tr>
+<tr><td class="num" id="LINE369">369</td><td class="line">	 *  - Destination is too short, but may accommodate an even number </td></tr>
+<tr><td class="num" id="LINE370">370</td><td class="line">	 *    of digits. </td></tr>
+<tr><td class="num" id="LINE371">371</td><td class="line">	 *  - Destination is too short, but may accommodate an odd number </td></tr>
+<tr><td class="num" id="LINE372">372</td><td class="line">	 *    of digits. </td></tr>
+<tr><td class="num" id="LINE373">373</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE374">374</td><td class="line">	halflast = 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node39.html"><span class='visited with_tooltip'>I_39<span class='tooltip'>node39 preds:40 succs:29 exn: Instructions
+*&amp;halflast:int=0 [line 374, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE375">375</td><td class="line">//Test31 work </td></tr>
+<tr><td class="num" id="LINE376">376</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE377">377</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE378">378</td><td class="line">	if (dst_len &lt; (1 + (src_len &lt;&lt; 1))) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node29.html"><span class='visited with_tooltip'>I_29<span class='tooltip'>node29 preds:39 succs:30 31 exn: Instructions
+n$33=*&amp;dst_len:unsigned long [line 378, column 6];
+n$34=*&amp;src_len:unsigned long [line 378, column 22];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node30.html"><span class='visited with_tooltip'>C_30<span class='tooltip'>node30 preds:29 succs:33 exn: Conditional true Branch
+PRUNE((n$33  &lt;  ((unsigned long)1 + (n$34  &lt;&lt;  1))), true); [line 378, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node31.html"><span class='visited with_tooltip'>C_31<span class='tooltip'>node31 preds:29 succs:28 exn: Conditional false Branch
+PRUNE(!(n$33  &lt;  ((unsigned long)1 + (n$34  &lt;&lt;  1))), false); [line 378, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node28.html"><span class='visited with_tooltip'>J_28<span class='tooltip'>node28 preds:31 32 succs:27 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE379">379</td><td class="line">//Test32 Do not work </td></tr>
+<tr><td class="num" id="LINE380">380</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE381">381</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE382">382</td><td class="line">		if ((dst_len &amp; 1) == 0) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node33.html"><span class='visited with_tooltip'>I_33<span class='tooltip'>node33 preds:30 succs:34 35 exn: Instructions
+n$35=*&amp;dst_len:unsigned long [line 382, column 8];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node34.html"><span class='visited with_tooltip'>C_34<span class='tooltip'>node34 preds:33 succs:37 exn: Conditional true Branch
+PRUNE(((n$35 & (unsigned long)1) == (unsigned long)0), true); [line 382, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node35.html"><span class='visited with_tooltip'>C_35<span class='tooltip'>node35 preds:33 succs:38 exn: Conditional false Branch
+PRUNE(!((n$35 & (unsigned long)1) == (unsigned long)0), false); [line 382, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node32.html"><span class='visited with_tooltip'>J_32<span class='tooltip'>node32 preds:38 36 succs:28 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE383">383</td><td class="line">			src_len = (dst_len - 1) &gt;&gt; 1; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node37.html"><span class='visited with_tooltip'>I_37<span class='tooltip'>node37 preds:34 succs:36 exn: Instructions
+n$36=*&amp;dst_len:unsigned long [line 383, column 15];
+*&amp;src_len:unsigned long=((n$36 - (unsigned long)1)  &gt;&gt;  1) [line 383, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE384">384</td><td class="line">			halflast = 1; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node36.html"><span class='visited with_tooltip'>I_36<span class='tooltip'>node36 preds:37 succs:32 exn: Instructions
+*&amp;halflast:int=1 [line 384, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE385">385</td><td class="line">		} else { </td></tr>
+<tr><td class="num" id="LINE386">386</td><td class="line">			src_len = dst_len &gt;&gt; 1; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node38.html"><span class='visited with_tooltip'>I_38<span class='tooltip'>node38 preds:35 succs:32 exn: Instructions
+n$37=*&amp;dst_len:unsigned long [line 386, column 14];
+*&amp;src_len:unsigned long=(n$37  &gt;&gt;  1) [line 386, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE387">387</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE388">388</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE389">389</td><td class="line">//Test33 work </td></tr>
+<tr><td class="num" id="LINE390">390</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE391">391</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE392">392</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE393">393</td><td class="line">	buf = src; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node27.html"><span class='visited with_tooltip'>I_27<span class='tooltip'>node27 preds:28 succs:26 exn: Instructions
+n$32=*&amp;src:unsigned char const * [line 393, column 8];
+*&amp;buf:unsigned char const *=n$32 [line 393, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE394">394</td><td class="line">	v = 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node26.html"><span class='visited with_tooltip'>I_26<span class='tooltip'>node26 preds:27 succs:21 exn: Instructions
+*&amp;v:unsigned long=(unsigned long)0 [line 394, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE395">395</td><td class="line">	uppercase = (flags &amp; 0x0001 /* CTTK_HEX_UPPERCASE */) != 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:26 succs:22 23 exn: Instructions
+n$31=*&amp;flags:unsigned int [line 395, column 15];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node22.html"><span class='visited with_tooltip'>C_22<span class='tooltip'>node22 preds:21 succs:24 exn: Conditional true Branch
+PRUNE(((n$31 & (unsigned int)1) != (unsigned int)0), true); [line 395, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:22 succs:20 exn: Instructions
+*&amp;uppercase:int=1 [line 395, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node23.html"><span class='visited with_tooltip'>C_23<span class='tooltip'>node23 preds:21 succs:25 exn: Conditional false Branch
+PRUNE(!((n$31 & (unsigned int)1) != (unsigned int)0), false); [line 395, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node25.html"><span class='visited with_tooltip'>I_25<span class='tooltip'>node25 preds:23 succs:20 exn: Instructions
+*&amp;uppercase:int=0 [line 395, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node20.html"><span class='visited with_tooltip'>J_20<span class='tooltip'>node20 preds:25 24 succs:12 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE396">396</td><td class="line">//Test34 work </td></tr>
+<tr><td class="num" id="LINE397">397</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE398">398</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE399">399</td><td class="line">	for (u = 0; u &lt; src_len; u ++) { <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:20 succs:11 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 399, column 7];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node11.html"><span class='visited with_tooltip'>J_11<span class='tooltip'>node11 preds:13 12 succs:14 exn: Join
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:11 succs:15 16 exn: Instructions
+n$15=*&amp;u:unsigned long [line 399, column 14];
+n$16=*&amp;src_len:unsigned long [line 399, column 18];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node15.html"><span class='visited with_tooltip'>C_15<span class='tooltip'>node15 preds:14 succs:19 exn: Conditional true Branch
+PRUNE((n$15  &lt;  n$16), true); [line 399, column 14];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:17 succs:11 exn: Instructions
+n$14=*&amp;u:unsigned long [line 399, column 27];
+*&amp;u:unsigned long=(n$14 + 1) [line 399, column 27];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node16.html"><span class='visited with_tooltip'>C_16<span class='tooltip'>node16 preds:14 succs:7 8 exn: Conditional false Branch
+PRUNE(!(n$15  &lt;  n$16), false); [line 399, column 14];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE400">400</td><td class="line">		int x; </td></tr>
+<tr><td class="num" id="LINE401">401</td><td class="line">//Test35 work  </td></tr>
+<tr><td class="num" id="LINE402">402</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE403">403</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE404">404</td><td class="line">		x = buf[u]; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:15 succs:18 exn: Instructions
+n$27=*&amp;buf:unsigned char const * [line 404, column 7];
+n$28=*&amp;u:unsigned long [line 404, column 11];
+n$29=*n$27[n$28]:unsigned char [line 404, column 7];
+*&amp;x:int=n$29 [line 404, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE405">405</td><td class="line">		dst[v ++] = cttk_hexdigit(x &gt;&gt; 4, uppercase); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+n$22=*&amp;dst:char* [line 405, column 3];
+n$23=*&amp;v:unsigned long [line 405, column 7];
+*&amp;v:unsigned long=(n$23 + 1) [line 405, column 7];
+n$24=*&amp;x:int [line 405, column 29];
+n$25=*&amp;uppercase:int [line 405, column 37];
+n$26=_fun_cttk_hexdigit((n$24  &gt;&gt;  4):int,n$25:int) [line 405, column 15];
+*n$22[n$23]:char=n$26 [line 405, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE406">406</td><td class="line">		dst[v ++] = cttk_hexdigit(x &amp; 15, uppercase); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:13 exn: Instructions
+n$17=*&amp;dst:char* [line 406, column 3];
+n$18=*&amp;v:unsigned long [line 406, column 7];
+*&amp;v:unsigned long=(n$18 + 1) [line 406, column 7];
+n$19=*&amp;x:int [line 406, column 29];
+n$20=*&amp;uppercase:int [line 406, column 37];
+n$21=_fun_cttk_hexdigit((n$19 & 15):int,n$20:int) [line 406, column 15];
+*n$17[n$18]:char=n$21 [line 406, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE407">407</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE408">408</td><td class="line">//Test36 work with --pulse-widen-threshold 8 --pulse-max-disjuncts 72 </td></tr>
+<tr><td class="num" id="LINE409">409</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE410">410</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE411">411</td><td class="line">	if (halflast) {//halflast assigned with value 0 at line 371 <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:16 succs:10 exn: Conditional true Branch
+n$3=*&amp;halflast:int [line 411, column 6];
+PRUNE(n$3, true); [line 411, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:16 succs:6 exn: Conditional false Branch
+n$3=*&amp;halflast:int [line 411, column 6];
+PRUNE(!n$3, false); [line 411, column 6];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node6.html"><span class='visited with_tooltip'>J_6<span class='tooltip'>node6 preds:8 9 succs:5 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE412">412</td><td class="line">//Test37 Do not work  </td></tr>
+<tr><td class="num" id="LINE413">413</td><td class="line">		// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE414">414</td><td class="line">		// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE415">415</td><td class="line">		int x; </td></tr>
+<tr><td class="num" id="LINE416">416</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE417">417</td><td class="line">		x = buf[u]; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:9 exn: Instructions
+n$9=*&amp;buf:unsigned char const * [line 417, column 7];
+n$10=*&amp;u:unsigned long [line 417, column 11];
+n$11=*n$9[n$10]:unsigned char [line 417, column 7];
+*&amp;x:int=n$11 [line 417, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE418">418</td><td class="line">		dst[v ++] = cttk_hexdigit(x &gt;&gt; 4, uppercase); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:6 exn: Instructions
+n$4=*&amp;dst:char* [line 418, column 3];
+n$5=*&amp;v:unsigned long [line 418, column 7];
+*&amp;v:unsigned long=(n$5 + 1) [line 418, column 7];
+n$6=*&amp;x:int [line 418, column 29];
+n$7=*&amp;uppercase:int [line 418, column 37];
+n$8=_fun_cttk_hexdigit((n$6  &gt;&gt;  4):int,n$7:int) [line 418, column 15];
+*n$4[n$5]:char=n$8 [line 418, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE419">419</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE420">420</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE421">421</td><td class="line">	dst[v] = 0; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$1=*&amp;dst:char* [line 421, column 2];
+n$2=*&amp;v:unsigned long [line 421, column 6];
+*n$1[n$2]:char=0 [line 421, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE422">422</td><td class="line">//Test38 work with --pulse-widen-threshold 8 --pulse-max-disjuncts 82 </td></tr>
+<tr><td class="num" id="LINE423">423</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE424">424</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE425">425</td><td class="line">	return v; <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;v:unsigned long [line 425, column 9];
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned long=n$0 [line 425, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE426">426</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/cttk_bintohex_gen.299d6c823ee9c2543ab3994e4e742cf2_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:50 44 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE427">427</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE428">428</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE429">429</td><td class="line">void main_hextobin(){ <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/main_hextobin.f24ddfb755c942bba63681623472abb6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/main_hextobin.f24ddfb755c942bba63681623472abb6.html">summary for main_hextobin</a></td></tr>
+<tr><td class="num" id="LINE430">430</td><td class="line">//Test39 work  </td></tr>
+<tr><td class="num" id="LINE431">431</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE432">432</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE433">433</td><td class="line">  char hexstring[17]; // 16 chars plus trailing NUL byte </td></tr>
+<tr><td class="num" id="LINE434">434</td><td class="line">  unsigned char bytes[8]; </td></tr>
+<tr><td class="num" id="LINE435">435</td><td class="line">//Test40 work  </td></tr>
+<tr><td class="num" id="LINE436">436</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE437">437</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE438">438</td><td class="line">  size_t res = <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/main_hextobin.f24ddfb755c942bba63681623472abb6_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+VARIABLE_DECLARED(res:unsigned long); [line 438, column 3];
+n$0=_fun_cttk_hextobin_gen(&amp;bytes:unsigned char*,(unsigned long)8:unsigned long,&amp;hexstring:char*,(unsigned long)16:unsigned long,null:char const **,(unsigned int)0:unsigned int) [line 439, column 5];
+*&amp;res:unsigned long=n$0 [line 438, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE439">439</td><td class="line">    cttk_hextobin_gen(bytes, 8, hexstring, 16, NULL, 0); </td></tr>
+<tr><td class="num" id="LINE440">440</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE441">441</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/main_hextobin.f24ddfb755c942bba63681623472abb6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE442">442</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE443">443</td><td class="line">void main_bintohex(){ <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/main_bintohex.04e5b523e2da050a01a5f2aabfbb2cb0_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/main_bintohex.04e5b523e2da050a01a5f2aabfbb2cb0.html">summary for main_bintohex</a></td></tr>
+<tr><td class="num" id="LINE444">444</td><td class="line">//Test41 work  </td></tr>
+<tr><td class="num" id="LINE445">445</td><td class="line">	// int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE446">446</td><td class="line">	// int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE447">447</td><td class="line">  char hexstring[17]; // 16 chars plus trailing NUL byte </td></tr>
+<tr><td class="num" id="LINE448">448</td><td class="line">  unsigned char bytes[8]; </td></tr>
+<tr><td class="num" id="LINE449">449</td><td class="line">  size_t res =  cttk_bintohex_gen(hexstring,17,bytes,8,0); <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/main_bintohex.04e5b523e2da050a01a5f2aabfbb2cb0_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+VARIABLE_DECLARED(res:unsigned long); [line 449, column 3];
+n$0=_fun_cttk_bintohex_gen(&amp;hexstring:char*,(unsigned long)17:unsigned long,&amp;bytes:unsigned char*,(unsigned long)8:unsigned long,(unsigned int)0:unsigned int) [line 449, column 17];
+*&amp;res:unsigned long=n$0 [line 449, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE450">450</td><td class="line">} <a href="./cttk_hex.c.4d0f77d80a6e585a0824f01affbd116a/nodes/main_bintohex.04e5b523e2da050a01a5f2aabfbb2cb0_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
