@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>db.c.5c91cdc687564b7100126f2ecc2f0a55</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/db.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">#define NULL ((void*)0) </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">typedef struct { </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">  int key; </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">  int value; </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">} elem_t; </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">int lookup(elem_t *elems, int len, int key, int *valueOut) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:22 exn: Start
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/lookup.bd95200a60e47be9736970fd665f6195.html">summary for lookup</a></td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">//Test1: Work </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">  int i = 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:1 succs:21 exn: Instructions
+VARIABLE_DECLARED(i:int); [line 13, column 3];
+*&amp;i:int=0 [line 13, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">  elem_t *p = elems; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:22 succs:20 exn: Instructions
+VARIABLE_DECLARED(p:elem_t*); [line 14, column 3];
+n$15=*&amp;elems:elem_t* [line 14, column 15];
+*&amp;p:elem_t*=n$15 [line 14, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">  int ret = 1; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:21 succs:5 exn: Instructions
+VARIABLE_DECLARED(ret:int); [line 15, column 3];
+*&amp;ret:int=1 [line 15, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">//Test2: Work </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">  while (i &lt; len &amp;&amp; ret == 1) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:20 12 succs:6 exn: Join
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:5 succs:7 8 exn: Instructions
+n$1=*&amp;i:int [line 19, column 10];
+n$2=*&amp;len:int [line 19, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:9 exn: Conditional true Branch
+PRUNE((n$1  &lt;  n$2), true); [line 19, column 10];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:7 succs:10 11 exn: Instructions
+n$3=*&amp;ret:int [line 19, column 21];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:9 succs:15 exn: Conditional true Branch
+PRUNE((n$3 == 1), true); [line 19, column 21];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:9 succs:3 exn: Conditional false Branch
+PRUNE(!(n$3 == 1), false); [line 19, column 21];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:3 exn: Conditional false Branch
+PRUNE(!(n$1  &lt;  n$2), false); [line 19, column 10];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">//Test3: Do not work cause there is no function called this function  </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">    if (p-&gt;key == key){ <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:10 succs:16 17 exn: Instructions
+n$6=*&amp;p:elem_t* [line 24, column 9];
+n$7=*n$6.key:int [line 24, column 9];
+n$8=*&amp;key:int [line 24, column 19];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node16.html"><span class='visited with_tooltip'>C_16<span class='tooltip'>node16 preds:15 succs:19 exn: Conditional true Branch
+PRUNE((n$7 == n$8), true); [line 24, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node17.html"><span class='visited with_tooltip'>C_17<span class='tooltip'>node17 preds:15 succs:14 exn: Conditional false Branch
+PRUNE(!(n$7 == n$8), false); [line 24, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node14.html"><span class='visited with_tooltip'>J_14<span class='tooltip'>node14 preds:17 18 succs:13 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">      *valueOut = p-&gt;value; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:16 succs:18 exn: Instructions
+n$9=*&amp;valueOut:int* [line 25, column 8];
+n$10=*&amp;p:elem_t* [line 25, column 19];
+n$11=*n$10.value:int [line 25, column 19];
+*n$9:int=n$11 [line 25, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">      ret = 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:14 exn: Instructions
+*&amp;ret:int=0 [line 26, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">    p++; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$5=*&amp;p:elem_t* [line 28, column 5];
+*&amp;p:elem_t*=(n$5 + 1) [line 28, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">    i++; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:5 exn: Instructions
+n$4=*&amp;i:int [line 29, column 5];
+*&amp;i:int=(n$4 + 1) [line 29, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">//Test4: Do not work cause there is no function called this function, so the function won't work after the while loop  </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">  return ret; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:11 8 succs:4 exn: Instructions
+n$0=*&amp;ret:int [line 34, column 10];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 34, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">} <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/lookup.bd95200a60e47be9736970fd665f6195_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">int binsearch(elem_t *elems, int len, int key, int *valueOut) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:26 exn: Start
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/binsearch.3f44a0d082a154f197f5f4bfca3c7750.html">summary for binsearch</a></td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">//Test5: work </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">//   if (len &lt;= 0){ </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">// //Test6: Do not work cause there is no function called this function, so the function won't work after the while loop  </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">//     // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">//     // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">//     return 1; </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">//   } </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">//Test7: Do not work cause there is no function called this function, but work after delete the if statement lines before </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">  int mid = len/2; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node26.html"><span class='visited with_tooltip'>I_26<span class='tooltip'>node26 preds:1 succs:25 exn: Instructions
+VARIABLE_DECLARED(mid:int); [line 50, column 3];
+n$30=*&amp;len:int [line 50, column 13];
+*&amp;mid:int=(n$30 / 2) [line 50, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">  int k = (elems + mid)-&gt;key; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node25.html"><span class='visited with_tooltip'>I_25<span class='tooltip'>node25 preds:26 succs:5 exn: Instructions
+VARIABLE_DECLARED(k:int); [line 51, column 3];
+n$27=*&amp;elems:elem_t* [line 51, column 12];
+n$28=*&amp;mid:int [line 51, column 20];
+n$29=*(n$27 + n$28).key:int [line 51, column 11];
+*&amp;k:int=n$29 [line 51, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">//Test8: Do not work cause there is no function called this function, but work after delete the if statement lines before </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  if (k == key){ <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:25 succs:6 7 exn: Instructions
+n$0=*&amp;k:int [line 55, column 7];
+n$1=*&amp;key:int [line 55, column 12];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:9 exn: Conditional true Branch
+PRUNE((n$0 == n$1), true); [line 55, column 7];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:21 exn: Conditional false Branch
+PRUNE(!(n$0 == n$1), false); [line 55, column 7];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:10 succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">//Test9: Works </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">    *valueOut = (elems + mid)-&gt;value; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:6 succs:8 exn: Instructions
+n$2=*&amp;valueOut:int* [line 59, column 6];
+n$3=*&amp;elems:elem_t* [line 59, column 18];
+n$4=*&amp;mid:int [line 59, column 26];
+n$5=*(n$3 + n$4).value:int [line 59, column 17];
+*n$2:int=n$5 [line 59, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">//Test10: Works </td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">    return 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:2 exn: Instructions
+*&amp;return:int=0 [line 63, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">  }else{ </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">//Test11: Do not Works </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">    if (len == 1){ <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:7 succs:22 23 exn: Instructions
+n$23=*&amp;len:int [line 68, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node22.html"><span class='visited with_tooltip'>C_22<span class='tooltip'>node22 preds:21 succs:24 exn: Conditional true Branch
+PRUNE((n$23 == 1), true); [line 68, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node23.html"><span class='visited with_tooltip'>C_23<span class='tooltip'>node23 preds:21 succs:20 exn: Conditional false Branch
+PRUNE(!(n$23 == 1), false); [line 68, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node20.html"><span class='visited with_tooltip'>J_20<span class='tooltip'>node20 preds:23 succs:11 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">      return 1; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:22 succs:2 exn: Instructions
+*&amp;return:int=1 [line 69, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">    if (k &gt; key){ <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:20 succs:12 13 exn: Instructions
+n$6=*&amp;k:int [line 71, column 9];
+n$7=*&amp;key:int [line 71, column 13];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:11 succs:16 exn: Conditional true Branch
+PRUNE((n$6  &gt;  n$7), true); [line 71, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:11 succs:19 exn: Conditional false Branch
+PRUNE(!(n$6  &gt;  n$7), false); [line 71, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node10.html"><span class='visited with_tooltip'>J_10<span class='tooltip'>node10 preds: succs:3 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">      int ret = binsearch(elems,mid-1,key,valueOut); <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:12 succs:14 exn: Instructions
+VARIABLE_DECLARED(ret:int); [line 72, column 7];
+n$9=*&amp;elems:elem_t* [line 72, column 27];
+n$10=*&amp;mid:int [line 72, column 33];
+n$11=*&amp;key:int [line 72, column 39];
+n$12=*&amp;valueOut:int* [line 72, column 43];
+n$13=_fun_binsearch(n$9:elem_t*,(n$10 - 1):int,n$11:int,n$12:int*) [line 72, column 17];
+*&amp;ret:int=n$13 [line 72, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">      return ret; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:16 succs:15 exn: Instructions
+n$8=*&amp;ret:int [line 73, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:14 succs:2 exn: Instructions
+*&amp;return:int=n$8 [line 73, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">    }else{ </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">      int ret = binsearch(elems+mid+1,len - mid - 1,key,valueOut); <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:13 succs:17 exn: Instructions
+VARIABLE_DECLARED(ret:int); [line 75, column 7];
+n$15=*&amp;elems:elem_t* [line 75, column 27];
+n$16=*&amp;mid:int [line 75, column 33];
+n$17=*&amp;len:int [line 75, column 39];
+n$18=*&amp;mid:int [line 75, column 45];
+n$19=*&amp;key:int [line 75, column 53];
+n$20=*&amp;valueOut:int* [line 75, column 57];
+n$21=_fun_binsearch(((n$15 + n$16) + 1):elem_t*,((n$17 - n$18) - 1):int,n$19:int,n$20:int*) [line 75, column 17];
+*&amp;ret:int=n$21 [line 75, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">      return ret; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:19 succs:18 exn: Instructions
+n$14=*&amp;ret:int [line 76, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:17 succs:2 exn: Instructions
+*&amp;return:int=n$14 [line 76, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">} <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/binsearch.3f44a0d082a154f197f5f4bfca3c7750_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:24 18 15 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">int sum_all(elem_t *elems, int len, int key) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:20 exn: Start
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/sum_all.81cd35369e2c1512564625df10272e64.html">summary for sum_all</a></td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">//Test13: Works </td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">  int sum = 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:1 succs:19 exn: Instructions
+VARIABLE_DECLARED(sum:int); [line 85, column 3];
+*&amp;sum:int=0 [line 85, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">  elem_t *p = elems; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+VARIABLE_DECLARED(p:elem_t*); [line 86, column 3];
+n$16=*&amp;elems:elem_t* [line 86, column 15];
+*&amp;p:elem_t*=n$16 [line 86, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">  int i = 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:5 exn: Instructions
+VARIABLE_DECLARED(i:int); [line 87, column 3];
+*&amp;i:int=0 [line 87, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">//Test14: Works </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">  while (i &lt; len) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:18 9 succs:6 exn: Join
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:5 succs:7 8 exn: Instructions
+n$1=*&amp;i:int [line 91, column 10];
+n$2=*&amp;len:int [line 91, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:17 exn: Conditional true Branch
+PRUNE((n$1  &lt;  n$2), true); [line 91, column 10];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:3 exn: Conditional false Branch
+PRUNE(!(n$1  &lt;  n$2), false); [line 91, column 10];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line">//Test15: Do not Work as expect </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">    int k = p-&gt;key; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:7 succs:16 exn: Instructions
+VARIABLE_DECLARED(k:int); [line 96, column 5];
+n$13=*&amp;p:elem_t* [line 96, column 13];
+n$14=*n$13.key:int [line 96, column 13];
+*&amp;k:int=n$14 [line 96, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">    int v = p-&gt;value; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:12 exn: Instructions
+VARIABLE_DECLARED(v:int); [line 97, column 5];
+n$11=*&amp;p:elem_t* [line 97, column 13];
+n$12=*n$11.value:int [line 97, column 13];
+*&amp;v:int=n$12 [line 97, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">    if (k == key){ <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:16 succs:13 14 exn: Instructions
+n$5=*&amp;k:int [line 98, column 9];
+n$6=*&amp;key:int [line 98, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:12 succs:15 exn: Conditional true Branch
+PRUNE((n$5 == n$6), true); [line 98, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node14.html"><span class='visited with_tooltip'>C_14<span class='tooltip'>node14 preds:12 succs:11 exn: Conditional false Branch
+PRUNE(!(n$5 == n$6), false); [line 98, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node11.html"><span class='visited with_tooltip'>J_11<span class='tooltip'>node11 preds:14 15 succs:10 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">      sum += v; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:13 succs:11 exn: Instructions
+n$7=*&amp;v:int [line 99, column 14];
+n$8=*&amp;sum:int [line 99, column 7];
+*&amp;sum:int=(n$8 + n$7) [line 99, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">    p++; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$4=*&amp;p:elem_t* [line 101, column 5];
+*&amp;p:elem_t*=(n$4 + 1) [line 101, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">    i++; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:5 exn: Instructions
+n$3=*&amp;i:int [line 102, column 5];
+*&amp;i:int=(n$3 + 1) [line 102, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">  return sum; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:8 succs:4 exn: Instructions
+n$0=*&amp;sum:int [line 104, column 10];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 104, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">} <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/sum_all.81cd35369e2c1512564625df10272e64_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">int sum_all_rec(elem_t *p, int len, int key, int init) </td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">  if (len &gt; 0) </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">    int k = p-&gt;key; </td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">    int v = p-&gt;value; </td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">    if (k == key){ </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">      int s = sum_all_rec(p+1,len-1,key,init + v); </td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">      return s; </td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">    }else{ </td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">      int s = sum_all_rec(p+1,len-1,key,init); </td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">      return s; </td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line">  }else{ </td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line">    return init; </td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line">} </td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line">*/ </td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">void remove_all(elem_t *elems, int len, int key) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:16 exn: Start
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/remove_all.98de50fe45a8db6151cee82b15c4b9ea.html">summary for remove_all</a></td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">//Test16: Work as expect </td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line">  int i = 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:1 succs:15 exn: Instructions
+VARIABLE_DECLARED(i:int); [line 130, column 3];
+*&amp;i:int=0 [line 130, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line">  elem_t *p = elems; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:3 exn: Instructions
+VARIABLE_DECLARED(p:elem_t*); [line 131, column 3];
+n$12=*&amp;elems:elem_t* [line 131, column 15];
+*&amp;p:elem_t*=n$12 [line 131, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">//Test17: Work as expect </td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">  while (i &lt; len) <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:15 7 succs:4 exn: Join
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:5 6 exn: Instructions
+n$0=*&amp;i:int [line 135, column 10];
+n$1=*&amp;len:int [line 135, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node5.html"><span class='visited with_tooltip'>C_5<span class='tooltip'>node5 preds:4 succs:14 exn: Conditional true Branch
+PRUNE((n$0  &lt;  n$1), true); [line 135, column 10];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:4 succs:2 exn: Conditional false Branch
+PRUNE(!(n$0  &lt;  n$1), false); [line 135, column 10];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line">//Test18: Do not Work as expect </td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">    int k = p-&gt;key; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:5 succs:10 exn: Instructions
+VARIABLE_DECLARED(k:int); [line 140, column 5];
+n$9=*&amp;p:elem_t* [line 140, column 13];
+n$10=*n$9.key:int [line 140, column 13];
+*&amp;k:int=n$10 [line 140, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line">    if (k == key){ <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:14 succs:11 12 exn: Instructions
+n$4=*&amp;k:int [line 141, column 9];
+n$5=*&amp;key:int [line 141, column 14];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:10 succs:13 exn: Conditional true Branch
+PRUNE((n$4 == n$5), true); [line 141, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:10 succs:9 exn: Conditional false Branch
+PRUNE(!(n$4 == n$5), false); [line 141, column 9];
+</span></span></a> <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds:12 13 succs:8 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line">      p-&gt;value = 0; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:11 succs:9 exn: Instructions
+n$6=*&amp;p:elem_t* [line 142, column 7];
+*n$6.value:int=0 [line 142, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line">    p++; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$3=*&amp;p:elem_t* [line 144, column 5];
+*&amp;p:elem_t*=(n$3 + 1) [line 144, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">    i++; <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:3 exn: Instructions
+n$2=*&amp;i:int [line 145, column 5];
+*&amp;i:int=(n$2 + 1) [line 145, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">} <a href="./db.c.5c91cdc687564b7100126f2ecc2f0a55/nodes/remove_all.98de50fe45a8db6151cee82b15c4b9ea_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:6 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
