@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/libsodium_memcmp.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// derived from https://github.com/binsec/rel_bench/blob/main/src/ct/libsodium/libsodium/src/libsodium/sodium/utils.c </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">#define NULL ((void*)0) </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">typedef unsigned int size_t; </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">// void * changed to char * in the args </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">int <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:14 exn: Start
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0.html">summary for sodium_memcmp</a></td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">sodium_memcmp(const char * const b1_, const char * const b2_, size_t len) </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">//Test 1. Work  </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">    // int *x = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">    // int y = *x;  </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">    const unsigned char *b1 = (const unsigned char *) b1_; <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:1 succs:13 exn: Instructions
+VARIABLE_DECLARED(b1:unsigned char const *); [line 14, column 5];
+n$13=*&amp;b1_:unsigned char const * [line 14, column 55];
+*&amp;b1:unsigned char const *=(unsigned char const *)n$13 [line 14, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">    const unsigned char *b2 = (const unsigned char *) b2_; <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+VARIABLE_DECLARED(b2:unsigned char const *); [line 15, column 5];
+n$12=*&amp;b2_:unsigned char const * [line 15, column 55];
+*&amp;b2:unsigned char const *=(unsigned char const *)n$12 [line 15, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">    size_t               i; </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">    unsigned char        d = (unsigned char) 0U; <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:6 exn: Instructions
+VARIABLE_DECLARED(d:unsigned char); [line 17, column 5];
+*&amp;d:unsigned char=(unsigned char)0 [line 17, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">    for (i = 0U; i &lt; len; i++) { <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:12 succs:5 exn: Instructions
+*&amp;i:unsigned int=0 [line 19, column 10];
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;i:unsigned int [line 19, column 18];
+n$3=*&amp;len:unsigned int [line 19, column 22];
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:11 exn: Conditional true Branch
+PRUNE((n$2  &lt;  n$3), true); [line 19, column 18];
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$1=*&amp;i:unsigned int [line 19, column 27];
+*&amp;i:unsigned int=(n$1 + 1) [line 19, column 27];
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  n$3), false); [line 19, column 18];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">// Test 2. Work here </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">        // int *x = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">        // int y = *x;  </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">        d |= b1[i] ^ b2[i]; <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:9 succs:7 exn: Instructions
+n$4=*&amp;b1:unsigned char const * [line 23, column 14];
+n$5=*&amp;i:unsigned int [line 23, column 17];
+n$6=*n$4[n$5]:unsigned char [line 23, column 14];
+n$7=*&amp;b2:unsigned char const * [line 23, column 22];
+n$8=*&amp;i:unsigned int [line 23, column 25];
+n$9=*n$7[n$8]:unsigned char [line 23, column 22];
+n$10=*&amp;d:unsigned char [line 23, column 9];
+*&amp;d:unsigned char=(n$10 | (n$6 ^ n$9)) [line 23, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">//Test 3. Work with parameter --pulse-widen-threshold 64 --pulse-max-disjuncts 69 </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">    // int *x = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">    // int y = *x;  </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">    return (int) ((1 &amp; ((d - 1) &gt;&gt; 8)) - 1); <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*&amp;d:unsigned char [line 28, column 26];
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=((1 & ((n$0 - 1)  &gt;&gt;  8)) - 1) [line 28, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">} <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/sodium_memcmp.ce4c067e9d9b9d611a5c05628513d9d0_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">int main(){ <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/main.fad58de7366495db4650cfefac2fcd61_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/main.fad58de7366495db4650cfefac2fcd61.html">summary for main</a></td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">//Test 4. Work here   </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">  // int *x = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">  // int y = *x;  </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">  char mem1[64]; </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">  char mem2[64]; </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">  return sodium_memcmp(mem1,mem2,64); <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/main.fad58de7366495db4650cfefac2fcd61_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=_fun_sodium_memcmp(&amp;mem1:char*,&amp;mem2:char*,(unsigned int)64:unsigned int) [line 37, column 10];
+</span></span></a> <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/main.fad58de7366495db4650cfefac2fcd61_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 37, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">} <a href="./libsodium_memcmp.c.3bb53480ee60a25f2ed743efbe2ee5f5/nodes/main.fad58de7366495db4650cfefac2fcd61_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
