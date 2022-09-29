@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>words_casts.c.69fd10eb99fffd5549922467821c7fef</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/words_casts.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">void testa(unsigned int x){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testa.7a68f09bd992671bb3b19a5e70b7827e.html">summary for testa</a></td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">  if (++x &gt;= 0){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;x:unsigned int [line 4, column 7];
+*&amp;x:unsigned int=(n$0 + 1) [line 4, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:3 exn: Conditional true Branch
+PRUNE(((n$0 + 1)  &gt;=  (unsigned int)0), true); [line 4, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:3 exn: Conditional false Branch
+PRUNE(!((n$0 + 1)  &gt;=  (unsigned int)0), false); [line 4, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:7 6 succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testa.7a68f09bd992671bb3b19a5e70b7827e_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">void testb(unsigned char x){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testb.458903d2ea1f5e446fdc34ff1f351142.html">summary for testb</a></td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">  if (x &gt;= 0){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;x:unsigned char [line 9, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:3 exn: Conditional true Branch
+PRUNE((n$0  &gt;=  0), true); [line 9, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:3 exn: Conditional false Branch
+PRUNE(!(n$0  &gt;=  0), false); [line 9, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:7 6 succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testb.458903d2ea1f5e446fdc34ff1f351142_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">void testc(unsigned char x){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testc.a2636ddd84c9fbbc9df5d3597e0a5e30.html">summary for testc</a></td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">  if (x &gt;= 256){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;x:unsigned char [line 14, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:3 exn: Conditional true Branch
+PRUNE((n$0  &gt;=  256), true); [line 14, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:3 exn: Conditional false Branch
+PRUNE(!(n$0  &gt;=  256), false); [line 14, column 7];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:7 6 succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testc.a2636ddd84c9fbbc9df5d3597e0a5e30_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">char retbig(){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/retbig.e3363f3f291dca72de015747321715fe_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/retbig.e3363f3f291dca72de015747321715fe.html">summary for retbig</a></td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">  return 257; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/retbig.e3363f3f291dca72de015747321715fe_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+*&amp;return:char=257 [line 19, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/retbig.e3363f3f291dca72de015747321715fe_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">void blah(){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/blah.6f1ed002ab5595859014ebf0951522d9_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/blah.6f1ed002ab5595859014ebf0951522d9.html">summary for blah</a></td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">  int x = retbig(); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/blah.6f1ed002ab5595859014ebf0951522d9_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+VARIABLE_DECLARED(x:int); [line 23, column 3];
+n$0=_fun_retbig() [line 23, column 11];
+*&amp;x:int=n$0 [line 23, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">  _(assert x == 1) </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/blah.6f1ed002ab5595859014ebf0951522d9_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">char callmewithchar(char c){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithchar.dcf83cd12f2997d55cbc65316477dad2_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/callmewithchar.dcf83cd12f2997d55cbc65316477dad2.html">summary for callmewithchar</a></td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">  return (c+1); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithchar.dcf83cd12f2997d55cbc65316477dad2_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;c:char [line 28, column 11];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithchar.dcf83cd12f2997d55cbc65316477dad2_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:char=(n$0 + 1) [line 28, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithchar.dcf83cd12f2997d55cbc65316477dad2_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">int callmewithint(int i){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithint.fcf4a02cb15bfddba958c5c87a64316c_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/callmewithint.fcf4a02cb15bfddba958c5c87a64316c.html">summary for callmewithint</a></td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">  return (i+1); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithint.fcf4a02cb15bfddba958c5c87a64316c_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;i:int [line 32, column 11];
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithint.fcf4a02cb15bfddba958c5c87a64316c_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=(n$0 + 1) [line 32, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/callmewithint.fcf4a02cb15bfddba958c5c87a64316c_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">void testcalls(int i, char c){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testcalls.fb458f72904ebcfa30a79a42e3af93b5_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:6 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testcalls.fb458f72904ebcfa30a79a42e3af93b5.html">summary for testcalls</a></td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">  int i_copy = i; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testcalls.fb458f72904ebcfa30a79a42e3af93b5_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(i_copy:int); [line 37, column 3];
+n$5=*&amp;i:int [line 37, column 16];
+*&amp;i_copy:int=n$5 [line 37, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">  int c_copy = c; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testcalls.fb458f72904ebcfa30a79a42e3af93b5_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+VARIABLE_DECLARED(c_copy:int); [line 38, column 3];
+n$4=*&amp;c:char [line 38, column 16];
+*&amp;c_copy:int=n$4 [line 38, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">  i = callmewithchar(i); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testcalls.fb458f72904ebcfa30a79a42e3af93b5_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$2=*&amp;i:int [line 39, column 22];
+n$3=_fun_callmewithchar(n$2:char) [line 39, column 7];
+*&amp;i:int=n$3 [line 39, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">  c = callmewithint(c); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testcalls.fb458f72904ebcfa30a79a42e3af93b5_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+n$0=*&amp;c:char [line 40, column 21];
+n$1=_fun_callmewithint(n$0:int) [line 40, column 7];
+*&amp;c:char=n$1 [line 40, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">  _(assert i == (int)(((char)i_copy)+1)) </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">  _(assert c == (char)(((int)c_copy)+1)) </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testcalls.fb458f72904ebcfa30a79a42e3af93b5_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">void testbig(){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testbig.76d4eff645cf903ee27cc8a933ce0484_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testbig.76d4eff645cf903ee27cc8a933ce0484.html">summary for testbig</a></td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">  int x = 0xFFFFFFFF; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testbig.76d4eff645cf903ee27cc8a933ce0484_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+VARIABLE_DECLARED(x:int); [line 46, column 3];
+*&amp;x:int=4294967295 [line 46, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">  _(assert x == -1) </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testbig.76d4eff645cf903ee27cc8a933ce0484_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">void testlong(){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:8 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testlong.74205c0cecd1c24479b3fdd15c437698.html">summary for testlong</a></td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">  long x = -1; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:1 succs:7 exn: Instructions
+VARIABLE_DECLARED(x:long); [line 51, column 3];
+*&amp;x:long=-1 [line 51, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">  int xlow = x; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+VARIABLE_DECLARED(xlow:int); [line 52, column 3];
+n$3=*&amp;x:long [line 52, column 14];
+*&amp;xlow:int=n$3 [line 52, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  int xhigh = (x &gt;&gt; 32); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+VARIABLE_DECLARED(xhigh:int); [line 53, column 3];
+n$2=*&amp;x:long [line 53, column 16];
+*&amp;xhigh:int=(n$2  &gt;&gt;  32) [line 53, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">  _(assert xlow == 0xFFFFFFFF) </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  _(assert xhigh == 0xFFFFFFFF) </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">  unsigned long y = 0xEFFFFFFFFFFFFFFFUL; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+VARIABLE_DECLARED(y:unsigned long); [line 56, column 3];
+*&amp;y:unsigned long=17293822569102704639 [line 56, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">  unsigned int ylow = y; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+VARIABLE_DECLARED(ylow:unsigned int); [line 57, column 3];
+n$1=*&amp;y:unsigned long [line 57, column 23];
+*&amp;ylow:unsigned int=(unsigned int)n$1 [line 57, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">  unsigned int yhigh = (y &gt;&gt; 32); <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+VARIABLE_DECLARED(yhigh:unsigned int); [line 58, column 3];
+n$0=*&amp;y:unsigned long [line 58, column 25];
+*&amp;yhigh:unsigned int=(unsigned int)(n$0  &gt;&gt;  32) [line 58, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">  _(assert ylow == 0xFFFFFFFF) </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line"> _(assert yhigh == 0xEFFFFFFF) </td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testlong.74205c0cecd1c24479b3fdd15c437698_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">void testU(){ <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testU.9c29732eb5d8d373b5cbf96bf59d10c6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/testU.9c29732eb5d8d373b5cbf96bf59d10c6.html">summary for testU</a></td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">  unsigned int x = 55U; <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testU.9c29732eb5d8d373b5cbf96bf59d10c6_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+VARIABLE_DECLARED(x:unsigned int); [line 64, column 3];
+*&amp;x:unsigned int=55 [line 64, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">  _(assert x == 55) </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">} <a href="./words_casts.c.69fd10eb99fffd5549922467821c7fef/nodes/testU.9c29732eb5d8d373b5cbf96bf59d10c6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line"> </td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
