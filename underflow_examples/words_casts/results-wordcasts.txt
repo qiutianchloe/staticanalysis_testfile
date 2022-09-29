@@ -1,0 +1,20 @@
+args: List(-report:conditional, examples/words_casts.c), target: examples/words_casts.c
+retbig
+OK presumes true covers (result == (char)257)
+testlong
+OK presumes true covers (((((unsigned int)(17293822569102704639 >> (unsigned long)32) == (unsigned int)4026531839) && ((unsigned int)17293822569102704639 == (unsigned int)4294967295)) && ((int)((long)(- 1) >> (long)32) == 4294967295)) && ((int)(long)(- 1) == 4294967295))
+test
+OK presumes true covers (! ((unsigned int)x >= (unsigned int)256))
+blah
+OK presumes true covers exists char result14. (((int)result14 == 1) && ((int)result14 == (int)(char)257))
+callmewithchar
+OK presumes true covers (result == (char)((int)c + 1))
+testbig
+OK presumes true covers (4294967295 == (- 1))
+testU
+OK presumes true covers (55 == (unsigned int)55)
+testcalls
+OK presumes true covers exists int result8, char result5. (((((int)(char)result8 == (int)(char)((int)c + 1)) && ((int)result5 == ((int)(char)i + 1))) && (result8 == ((int)c + 1))) && ((int)result5 == (int)(char)(i + 1)))
+FAILS (location: line: 41, col: 12) assertion presumes true fails assertion exists char result5, int result8. (((! ((int)result5 == ((int)(char)i + 1))) && (result8 == ((int)c + 1))) && ((int)result5 == (int)(char)(i + 1)))
+callmewithint
+OK presumes true covers (result == (i + 1))
