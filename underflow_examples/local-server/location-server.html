@@ -1,0 +1,700 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>location-server.c.d12b6a5c0841f022cf482d16be7636c1</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/location-server.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">#define NULL ((void*)0) </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">#if __UNDERFLOW </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">typedef int double; </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">#endif </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">#define NULL ((void *)0) </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">struct ulocation </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">  double lat; </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">  double lon; </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">  struct ulocation *nxt; </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">struct point </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">  double lat; </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">  double lon; </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">enum ev_status </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">  Consumed, </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">  Replenished </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">typedef enum ev_status event_status; </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">struct event </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">  event_status est; </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">  double noislat; </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">  double noislon; </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">enum ret_code </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">  Failure, </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">  Success </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">}; </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">typedef enum ret_code status_code; </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">void get_real_location(struct point *p); </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">_(presumes exists double _lat, double _lon. &amp;p-&gt;lat |-&gt; _lat &amp;*&amp; &amp;p-&gt;lon |-&gt; _lon covers exists double _nlat, double _nlon. &amp;p-&gt;lat |-&gt; _nlat &amp;*&amp; &amp;p-&gt;lon |-&gt; _nlon &amp;*&amp; _nlat :!: attacker &amp;&amp; _nlon :!: attacker) </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">_(presumes exists double _lat. &amp;p-&gt;lat |-&gt; _lat &amp;*&amp; &amp;p-&gt;lon |-\-&gt; fails memory exists double _nlat. &amp;p-&gt;lat |-&gt; _nlat &amp;*&amp; &amp;p-&gt;lon |-\-&gt; &amp;*&amp; _nlat :!: attacker) </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">_(presumes &amp;p-&gt;lat |-\-&gt; fails memory &amp;p-&gt;lat |-\-&gt;) </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">struct event add_noise_to_real_point(struct point *p, double eps); </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">_(presumes exists double _lat, double _lon. &amp;p-&gt;lat |-&gt; _lat &amp;*&amp; &amp;p-&gt;lon |-&gt; _lon covers exists double _nlat, double _nlon. &amp;p-&gt;lat |-&gt; _nlat &amp;*&amp; &amp;p-&gt;lon |-&gt; _nlon &amp;*&amp; _nlat :!: attacker &amp;&amp; _nlon :!: attacker &amp;&amp; result.est == Consumed &amp;&amp; result.noislat == _nlat &amp;&amp;  </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">  result.noislon == _nlon) </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">_(presumes exists double _lat. &amp;p-&gt;lat |-&gt; _lat &amp;*&amp; &amp;p-&gt;lon |-\-&gt; fails memory exists double _nlat. &amp;p-&gt;lat |-&gt; _nlat &amp;*&amp; &amp;p-&gt;lon |-\-&gt; &amp;*&amp; _nlat :!: attacker) </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">_(presumes &amp;p-&gt;lat |-\-&gt; fails memory &amp;p-&gt;lat |-\-&gt;) </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">struct event generate_replenished_event(); </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">_(presumes true covers  result.est == Replenished &amp;&amp; result.noislat == 0 &amp;&amp; result.noislon == 0) </td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">status_code start_the_location_server(struct ulocation *s, double *budget, double eps, double refvalue) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/start_the_location_server.5745685812cd8174f3359c552a1a7436_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:4 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/start_the_location_server.5745685812cd8174f3359c552a1a7436.html">summary for start_the_location_server</a></td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">  *budget = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/start_the_location_server.5745685812cd8174f3359c552a1a7436_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:1 succs:3 exn: Instructions
+n$0=*&amp;budget:double* [line 52, column 4];
+*n$0:double=0 [line 52, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">//Test1: Work </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">  // int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  // int blah = *p;  </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">  return Success; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/start_the_location_server.5745685812cd8174f3359c552a1a7436_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+*&amp;return:int=1 [line 56, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/start_the_location_server.5745685812cd8174f3359c552a1a7436_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">status_code refill_budget(struct ulocation *s, double *budget, double eps, double refvalue) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/refill_budget.a929ee8e3aaefc3c7b2b193027a9f298_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/refill_budget.a929ee8e3aaefc3c7b2b193027a9f298.html">summary for refill_budget</a></td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">  *budget = *budget + refvalue; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/refill_budget.a929ee8e3aaefc3c7b2b193027a9f298_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:4 exn: Instructions
+n$2=*&amp;budget:double* [line 60, column 4];
+n$3=*&amp;budget:double* [line 60, column 14];
+n$4=*n$3:double [line 60, column 13];
+n$5=*&amp;refvalue:double [line 60, column 23];
+*n$2:double=(n$4 + n$5) [line 60, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">  struct event e = generate_replenished_event(); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/refill_budget.a929ee8e3aaefc3c7b2b193027a9f298_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+VARIABLE_DECLARED(e:event); [line 61, column 3];
+n$1=_fun_generate_replenished_event(&amp;e:event*) assign_last [line 61, column 20];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">//Test2: Work </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">  // int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">  // int blah = *p;  </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">  return Success; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/refill_budget.a929ee8e3aaefc3c7b2b193027a9f298_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+*&amp;return:int=1 [line 65, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/refill_budget.a929ee8e3aaefc3c7b2b193027a9f298_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">status_code release_current_location(struct ulocation *s, double *budget, double eps, double refvalue, struct point *p, struct ulocation *ncell) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:18 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/release_current_location.b67bdce8ae580d67f25685f88651cb98.html">summary for release_current_location</a></td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">  double cbudget = *budget; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(cbudget:double); [line 69, column 3];
+n$22=*&amp;budget:double* [line 69, column 21];
+n$23=*n$22:double [line 69, column 20];
+*&amp;cbudget:double=n$23 [line 69, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">//Test3: Work </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">  if(cbudget &gt;= eps) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:18 succs:6 7 exn: Instructions
+n$0=*&amp;cbudget:double [line 73, column 6];
+n$1=*&amp;eps:double [line 73, column 17];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:16 exn: Conditional true Branch
+PRUNE((n$0  &gt;=  n$1), true); [line 73, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:17 exn: Conditional false Branch
+PRUNE(!(n$0  &gt;=  n$1), false); [line 73, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds: succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">//Test4: Do not work here since there is no call fun </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">        // int *o = NULL;  // o is a null pointer </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">        // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">        get_real_location(p); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:6 succs:15 exn: Instructions
+n$19=*&amp;p:point* [line 78, column 27];
+n$20=_fun_get_real_location(n$19:point*) [line 78, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">        struct event e = add_noise_to_real_point(p, eps); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+VARIABLE_DECLARED(e:event); [line 79, column 9];
+n$15=*&amp;p:point* [line 79, column 50];
+n$16=*&amp;eps:double [line 79, column 53];
+n$18=_fun_add_noise_to_real_point(n$15:point*,n$16:double,&amp;e:event*) assign_last [line 79, column 26];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">        double nlat = p-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+VARIABLE_DECLARED(nlat:double); [line 80, column 9];
+n$13=*&amp;p:point* [line 80, column 23];
+n$14=*n$13.lat:double [line 80, column 23];
+*&amp;nlat:double=n$14 [line 80, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">        double nlon = p-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+VARIABLE_DECLARED(nlon:double); [line 81, column 9];
+n$11=*&amp;p:point* [line 81, column 23];
+n$12=*n$11.lon:double [line 81, column 23];
+*&amp;nlon:double=n$12 [line 81, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">        *budget = cbudget - eps; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$8=*&amp;budget:double* [line 82, column 10];
+n$9=*&amp;cbudget:double [line 82, column 19];
+n$10=*&amp;eps:double [line 82, column 29];
+*n$8:double=(n$9 - n$10) [line 82, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">        ncell-&gt;lat = nlat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:10 exn: Instructions
+n$6=*&amp;ncell:ulocation* [line 83, column 9];
+n$7=*&amp;nlat:double [line 83, column 22];
+*n$6.lat:double=n$7 [line 83, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">        ncell-&gt;lon = nlon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$4=*&amp;ncell:ulocation* [line 84, column 9];
+n$5=*&amp;nlon:double [line 84, column 22];
+*n$4.lon:double=n$5 [line 84, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">        ncell-&gt;nxt = s; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+n$2=*&amp;ncell:ulocation* [line 85, column 9];
+n$3=*&amp;s:ulocation* [line 85, column 22];
+*n$2.nxt:ulocation*=n$3 [line 85, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">        return Success; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:2 exn: Instructions
+*&amp;return:int=1 [line 86, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">  else{ </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">//Test5: Do not work here  </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">    return Failure; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:7 succs:2 exn: Instructions
+*&amp;return:int=0 [line 92, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_current_location.b67bdce8ae580d67f25685f88651cb98_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:17 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">void compute_the_values_recursively(struct ulocation *s, double eps, double refvalue, <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04.html">summary for compute_the_values_recursively</a></td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">  double *sumx, double *sumx2, double *sumxy, double *sumy, double *sumy2, int *n) </td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">//Test6: work here  </td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">  if(s == NULL) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;s:ulocation* [line 101, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE((n$0 == null), true); [line 101, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:18 exn: Conditional false Branch
+PRUNE(!(n$0 == null), false); [line 101, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds: succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">//Test7: Do not work here  </td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">    return; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">  else </td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">//Test8: Do not work here  </td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">    int slat = s-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:7 succs:17 exn: Instructions
+VARIABLE_DECLARED(slat:int); [line 113, column 5];
+n$44=*&amp;s:ulocation* [line 113, column 16];
+n$45=*n$44.lat:double [line 113, column 16];
+*&amp;slat:int=n$45 [line 113, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">    int slon = s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(slon:int); [line 114, column 5];
+n$42=*&amp;s:ulocation* [line 114, column 16];
+n$43=*n$42.lon:double [line 114, column 16];
+*&amp;slon:int=n$43 [line 114, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">    *sumx += slat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$39=*&amp;sumx:double* [line 115, column 6];
+n$40=*&amp;slat:int [line 115, column 14];
+n$41=*n$39:double [line 115, column 5];
+*n$39:double=(n$41 + n$40) [line 115, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">    *sumx2 += s-&gt;lat * s-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$33=*&amp;sumx2:double* [line 116, column 6];
+n$34=*&amp;s:ulocation* [line 116, column 15];
+n$35=*n$34.lat:double [line 116, column 15];
+n$36=*&amp;s:ulocation* [line 116, column 24];
+n$37=*n$36.lat:double [line 116, column 24];
+n$38=*n$33:double [line 116, column 5];
+*n$33:double=(n$38 + (n$35 * n$37)) [line 116, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">    *sumxy += s-&gt;lat * s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+n$27=*&amp;sumxy:double* [line 117, column 6];
+n$28=*&amp;s:ulocation* [line 117, column 15];
+n$29=*n$28.lat:double [line 117, column 15];
+n$30=*&amp;s:ulocation* [line 117, column 24];
+n$31=*n$30.lon:double [line 117, column 24];
+n$32=*n$27:double [line 117, column 5];
+*n$27:double=(n$32 + (n$29 * n$31)) [line 117, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">    *sumy += s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$23=*&amp;sumy:double* [line 118, column 6];
+n$24=*&amp;s:ulocation* [line 118, column 14];
+n$25=*n$24.lon:double [line 118, column 14];
+n$26=*n$23:double [line 118, column 5];
+*n$23:double=(n$26 + n$25) [line 118, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">    *sumy2 += s-&gt;lon * s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$17=*&amp;sumy2:double* [line 119, column 6];
+n$18=*&amp;s:ulocation* [line 119, column 15];
+n$19=*n$18.lon:double [line 119, column 15];
+n$20=*&amp;s:ulocation* [line 119, column 24];
+n$21=*n$20.lon:double [line 119, column 24];
+n$22=*n$17:double [line 119, column 5];
+*n$17:double=(n$22 + (n$19 * n$21)) [line 119, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line">    *n = *n + 1; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:10 exn: Instructions
+n$14=*&amp;n:int* [line 120, column 6];
+n$15=*&amp;n:int* [line 120, column 11];
+n$16=*n$15:int [line 120, column 10];
+*n$14:int=(n$16 + 1) [line 120, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line">    compute_the_values_recursively(s-&gt;nxt, eps, refvalue, sumx, sumx2, sumxy, sumy, sumy2, n); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$3=*&amp;s:ulocation* [line 121, column 36];
+n$4=*n$3.nxt:ulocation* [line 121, column 36];
+n$5=*&amp;eps:double [line 121, column 44];
+n$6=*&amp;refvalue:double [line 121, column 49];
+n$7=*&amp;sumx:double* [line 121, column 59];
+n$8=*&amp;sumx2:double* [line 121, column 65];
+n$9=*&amp;sumxy:double* [line 121, column 72];
+n$10=*&amp;sumy:double* [line 121, column 79];
+n$11=*&amp;sumy2:double* [line 121, column 85];
+n$12=*&amp;n:int* [line 121, column 92];
+n$13=_fun_compute_the_values_recursively(n$4:ulocation*,n$5:double,n$6:double,n$7:double*,n$8:double*,n$9:double*,n$10:double*,n$11:double*,n$12:int*) [line 121, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line">    return; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line">//Test9: Do not work here  </td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_recursively.5bdb8a536d1477ed4d38d86856caff04_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:9 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">void compute_the_values_iteratively(struct ulocation *s, double eps, double refvalue, <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c.html">summary for compute_the_values_iteratively</a></td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line">  double *sumx, double *sumx2, double *sumxy, double *sumy, double *sumy2, int *n) </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line">//Test10: Work here  </td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line">  while(s != NULL) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:1 7 succs:4 exn: Join
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:5 6 exn: Instructions
+n$0=*&amp;s:ulocation* [line 134, column 9];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node5.html"><span class='visited with_tooltip'>C_5<span class='tooltip'>node5 preds:4 succs:15 exn: Conditional true Branch
+PRUNE((n$0 != null), true); [line 134, column 9];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:4 succs:2 exn: Conditional false Branch
+PRUNE(!(n$0 != null), false); [line 134, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line">//Test11: Do not work here  </td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line">    int slat = s-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:5 succs:14 exn: Instructions
+VARIABLE_DECLARED(slat:int); [line 139, column 5];
+n$33=*&amp;s:ulocation* [line 139, column 16];
+n$34=*n$33.lat:double [line 139, column 16];
+*&amp;slat:int=n$34 [line 139, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">    int slon = s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+VARIABLE_DECLARED(slon:int); [line 140, column 5];
+n$31=*&amp;s:ulocation* [line 140, column 16];
+n$32=*n$31.lon:double [line 140, column 16];
+*&amp;slon:int=n$32 [line 140, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line">    *sumx += slat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$28=*&amp;sumx:double* [line 141, column 6];
+n$29=*&amp;slat:int [line 141, column 14];
+n$30=*n$28:double [line 141, column 5];
+*n$28:double=(n$30 + n$29) [line 141, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line">    *sumx2 += s-&gt;lat * s-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$22=*&amp;sumx2:double* [line 142, column 6];
+n$23=*&amp;s:ulocation* [line 142, column 15];
+n$24=*n$23.lat:double [line 142, column 15];
+n$25=*&amp;s:ulocation* [line 142, column 24];
+n$26=*n$25.lat:double [line 142, column 24];
+n$27=*n$22:double [line 142, column 5];
+*n$22:double=(n$27 + (n$24 * n$26)) [line 142, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line">    *sumxy += s-&gt;lat * s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:10 exn: Instructions
+n$16=*&amp;sumxy:double* [line 143, column 6];
+n$17=*&amp;s:ulocation* [line 143, column 15];
+n$18=*n$17.lat:double [line 143, column 15];
+n$19=*&amp;s:ulocation* [line 143, column 24];
+n$20=*n$19.lon:double [line 143, column 24];
+n$21=*n$16:double [line 143, column 5];
+*n$16:double=(n$21 + (n$18 * n$20)) [line 143, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line">    *sumy += s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$12=*&amp;sumy:double* [line 144, column 6];
+n$13=*&amp;s:ulocation* [line 144, column 14];
+n$14=*n$13.lon:double [line 144, column 14];
+n$15=*n$12:double [line 144, column 5];
+*n$12:double=(n$15 + n$14) [line 144, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">    *sumy2 += s-&gt;lon * s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+n$6=*&amp;sumy2:double* [line 145, column 6];
+n$7=*&amp;s:ulocation* [line 145, column 15];
+n$8=*n$7.lon:double [line 145, column 15];
+n$9=*&amp;s:ulocation* [line 145, column 24];
+n$10=*n$9.lon:double [line 145, column 24];
+n$11=*n$6:double [line 145, column 5];
+*n$6:double=(n$11 + (n$8 * n$10)) [line 145, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">    *n = *n + 1; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$3=*&amp;n:int* [line 146, column 6];
+n$4=*&amp;n:int* [line 146, column 11];
+n$5=*n$4:int [line 146, column 10];
+*n$3:int=(n$5 + 1) [line 146, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">    s = s-&gt;nxt; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:3 exn: Instructions
+n$1=*&amp;s:ulocation* [line 147, column 9];
+n$2=*n$1.nxt:ulocation* [line 147, column 9];
+*&amp;s:ulocation*=n$2 [line 147, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE148">148</td><td class="line">//Test12: Do not work here  </td></tr>
+<tr><td class="num" id="LINE149">149</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE150">150</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE151">151</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE152">152</td><td class="line">//Test13: Do not work here  </td></tr>
+<tr><td class="num" id="LINE153">153</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE154">154</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE155">155</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/compute_the_values_iteratively.54b2a244f883fcb59477eec22f1d6d7c_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:6 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE156">156</td><td class="line">status_code extrapolate_points(struct ulocation *s, struct point *p, double eps, double refvalue, <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:20 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7.html">summary for extrapolate_points</a></td></tr>
+<tr><td class="num" id="LINE157">157</td><td class="line">  double *sumx, double *sumx2, double *sumxy, double *sumy, double *sumy2, int *n) </td></tr>
+<tr><td class="num" id="LINE158">158</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE159">159</td><td class="line">//Test14: work here  </td></tr>
+<tr><td class="num" id="LINE160">160</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE161">161</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE162">162</td><td class="line">  *sumx = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:1 succs:19 exn: Instructions
+n$48=*&amp;sumx:double* [line 162, column 4];
+*n$48:double=0 [line 162, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE163">163</td><td class="line">  *sumx2 = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+n$47=*&amp;sumx2:double* [line 163, column 4];
+*n$47:double=0 [line 163, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE164">164</td><td class="line">  *sumxy = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+n$46=*&amp;sumxy:double* [line 164, column 4];
+*n$46:double=0 [line 164, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE165">165</td><td class="line">  *sumy = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+n$45=*&amp;sumy:double* [line 165, column 4];
+*n$45:double=0 [line 165, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE166">166</td><td class="line">  *sumy2 = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$44=*&amp;sumy2:double* [line 166, column 4];
+*n$44:double=0 [line 166, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE167">167</td><td class="line">  *n = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$43=*&amp;n:int* [line 167, column 4];
+*n$43:int=0 [line 167, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE168">168</td><td class="line">  //compute_the_values_recursively(s, eps, refvalue, sumx, sumx2, sumxy, sumy, sumy2, n);   </td></tr>
+<tr><td class="num" id="LINE169">169</td><td class="line">//Test15: Work here </td></tr>
+<tr><td class="num" id="LINE170">170</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE171">171</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE172">172</td><td class="line">  compute_the_values_iteratively(s, eps, refvalue, sumx, sumx2, sumxy, sumy, sumy2, n); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+n$33=*&amp;s:ulocation* [line 172, column 34];
+n$34=*&amp;eps:double [line 172, column 37];
+n$35=*&amp;refvalue:double [line 172, column 42];
+n$36=*&amp;sumx:double* [line 172, column 52];
+n$37=*&amp;sumx2:double* [line 172, column 58];
+n$38=*&amp;sumxy:double* [line 172, column 65];
+n$39=*&amp;sumy:double* [line 172, column 72];
+n$40=*&amp;sumy2:double* [line 172, column 78];
+n$41=*&amp;n:int* [line 172, column 85];
+n$42=_fun_compute_the_values_iteratively(n$33:ulocation*,n$34:double,n$35:double,n$36:double*,n$37:double*,n$38:double*,n$39:double*,n$40:double*,n$41:int*) [line 172, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE173">173</td><td class="line">//Test16: Do not Work here </td></tr>
+<tr><td class="num" id="LINE174">174</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE175">175</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE176">176</td><td class="line">  double denom = *n * *sumx2 - *sumx * *sumx; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:9 exn: Instructions
+VARIABLE_DECLARED(denom:double); [line 176, column 3];
+n$25=*&amp;n:int* [line 176, column 19];
+n$26=*n$25:int [line 176, column 18];
+n$27=*&amp;sumx2:double* [line 176, column 24];
+n$28=*n$27:double [line 176, column 23];
+n$29=*&amp;sumx:double* [line 176, column 33];
+n$30=*n$29:double [line 176, column 32];
+n$31=*&amp;sumx:double* [line 176, column 41];
+n$32=*n$31:double [line 176, column 40];
+*&amp;denom:double=((n$26 * n$28) - (n$30 * n$32)) [line 176, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE177">177</td><td class="line">  if (denom == 0) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:13 succs:10 11 exn: Instructions
+n$22=*&amp;denom:double [line 177, column 7];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:9 succs:12 exn: Conditional true Branch
+PRUNE((n$22 == 0), true); [line 177, column 7];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:9 succs:8 exn: Conditional false Branch
+PRUNE(!(n$22 == 0), false); [line 177, column 7];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node8.html"><span class='visited with_tooltip'>J_8<span class='tooltip'>node8 preds:11 succs:7 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE178">178</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE179">179</td><td class="line">    return Failure; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:10 succs:2 exn: Instructions
+*&amp;return:int=0 [line 179, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE180">180</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE181">181</td><td class="line">//Test17: Do not Work here </td></tr>
+<tr><td class="num" id="LINE182">182</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE183">183</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE184">184</td><td class="line">  double m = (*n * *sumxy - *sumx * *sumy)/denom; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+VARIABLE_DECLARED(m:double); [line 184, column 3];
+n$13=*&amp;n:int* [line 184, column 16];
+n$14=*n$13:int [line 184, column 15];
+n$15=*&amp;sumxy:double* [line 184, column 21];
+n$16=*n$15:double [line 184, column 20];
+n$17=*&amp;sumx:double* [line 184, column 30];
+n$18=*n$17:double [line 184, column 29];
+n$19=*&amp;sumy:double* [line 184, column 38];
+n$20=*n$19:double [line 184, column 37];
+n$21=*&amp;denom:double [line 184, column 44];
+*&amp;m:double=(((n$14 * n$16) - (n$18 * n$20)) /. n$21) [line 184, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE185">185</td><td class="line">  double b = (*sumy * *sumx2 - *sumx * *sumxy)/denom; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+VARIABLE_DECLARED(b:double); [line 185, column 3];
+n$4=*&amp;sumy:double* [line 185, column 16];
+n$5=*n$4:double [line 185, column 15];
+n$6=*&amp;sumx2:double* [line 185, column 24];
+n$7=*n$6:double [line 185, column 23];
+n$8=*&amp;sumx:double* [line 185, column 33];
+n$9=*n$8:double [line 185, column 32];
+n$10=*&amp;sumxy:double* [line 185, column 41];
+n$11=*n$10:double [line 185, column 40];
+n$12=*&amp;denom:double [line 185, column 48];
+*&amp;b:double=(((n$5 * n$7) - (n$9 * n$11)) /. n$12) [line 185, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE186">186</td><td class="line">  p-&gt;lat = m; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+n$2=*&amp;p:point* [line 186, column 3];
+n$3=*&amp;m:double [line 186, column 12];
+*n$2.lat:double=n$3 [line 186, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE187">187</td><td class="line">  p-&gt;lon = b; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$0=*&amp;p:point* [line 187, column 3];
+n$1=*&amp;b:double [line 187, column 12];
+*n$0.lon:double=n$1 [line 187, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE188">188</td><td class="line">  return Success; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+*&amp;return:int=1 [line 188, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE189">189</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/extrapolate_points.3b175638488931c3c3d9f89c8bb146f7_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:12 3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE190">190</td><td class="line">double sqrt(double x); </td></tr>
+<tr><td class="num" id="LINE191">191</td><td class="line">_(presumes true covers true) </td></tr>
+<tr><td class="num" id="LINE192">192</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE193">193</td><td class="line">status_code release_predicted_location(struct ulocation *s, double *budget, struct point *p, double eps, double refvalue, int prediction_count, <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045.html">summary for release_predicted_location</a></td></tr>
+<tr><td class="num" id="LINE194">194</td><td class="line">  double *sumx, double *sumx2, double *sumxy, double *sumy, double *sumy2, int *n) </td></tr>
+<tr><td class="num" id="LINE195">195</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE196">196</td><td class="line">//Test18: Work here </td></tr>
+<tr><td class="num" id="LINE197">197</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE198">198</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE199">199</td><td class="line">  if(s == NULL) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:6 7 exn: Instructions
+n$0=*&amp;s:ulocation* [line 199, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:8 exn: Conditional true Branch
+PRUNE((n$0 == null), true); [line 199, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:22 exn: Conditional false Branch
+PRUNE(!(n$0 == null), false); [line 199, column 6];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds: succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE200">200</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE201">201</td><td class="line">//Test19: Do not Work here </td></tr>
+<tr><td class="num" id="LINE202">202</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE203">203</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE204">204</td><td class="line">    return Failure; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:2 exn: Instructions
+*&amp;return:int=0 [line 204, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE205">205</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE206">206</td><td class="line">  else </td></tr>
+<tr><td class="num" id="LINE207">207</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE208">208</td><td class="line">//Test20: Do not Work here </td></tr>
+<tr><td class="num" id="LINE209">209</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE210">210</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE211">211</td><td class="line">    status_code st = extrapolate_points(s, p, eps, refvalue, sumx, sumx2, sumxy, sumy, sumy2, n); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:7 succs:11 exn: Instructions
+VARIABLE_DECLARED(st:int); [line 211, column 5];
+n$28=*&amp;s:ulocation* [line 211, column 41];
+n$29=*&amp;p:point* [line 211, column 44];
+n$30=*&amp;eps:double [line 211, column 47];
+n$31=*&amp;refvalue:double [line 211, column 52];
+n$32=*&amp;sumx:double* [line 211, column 62];
+n$33=*&amp;sumx2:double* [line 211, column 68];
+n$34=*&amp;sumxy:double* [line 211, column 75];
+n$35=*&amp;sumy:double* [line 211, column 82];
+n$36=*&amp;sumy2:double* [line 211, column 88];
+n$37=*&amp;n:int* [line 211, column 95];
+n$38=_fun_extrapolate_points(n$28:ulocation*,n$29:point*,n$30:double,n$31:double,n$32:double*,n$33:double*,n$34:double*,n$35:double*,n$36:double*,n$37:int*) [line 211, column 22];
+*&amp;st:int=n$38 [line 211, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE212">212</td><td class="line">    if(st == Success) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:22 succs:12 13 exn: Instructions
+n$1=*&amp;st:int [line 212, column 8];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:11 succs:19 exn: Conditional true Branch
+PRUNE(((unsigned int)n$1 == (unsigned int)1), true); [line 212, column 8];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:11 succs:21 exn: Conditional false Branch
+PRUNE(!((unsigned int)n$1 == (unsigned int)1), false); [line 212, column 8];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node10.html"><span class='visited with_tooltip'>J_10<span class='tooltip'>node10 preds:20 14 succs:9 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE213">213</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE214">214</td><td class="line">      double m = p-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:12 succs:18 exn: Instructions
+VARIABLE_DECLARED(m:double); [line 214, column 7];
+n$19=*&amp;p:point* [line 214, column 18];
+n$20=*n$19.lat:double [line 214, column 18];
+*&amp;m:double=n$20 [line 214, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE215">215</td><td class="line">      double b = p-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+VARIABLE_DECLARED(b:double); [line 215, column 7];
+n$17=*&amp;p:point* [line 215, column 18];
+n$18=*n$17.lon:double [line 215, column 18];
+*&amp;b:double=n$18 [line 215, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE216">216</td><td class="line">      double denom = m*m + 1; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(denom:double); [line 216, column 7];
+n$15=*&amp;m:double [line 216, column 22];
+n$16=*&amp;m:double [line 216, column 24];
+*&amp;denom:double=((n$15 * n$16) + 1) [line 216, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE217">217</td><td class="line">      double latdisp = sqrt((prediction_count+1) * (prediction_count+1) / (100 * 100 * denom)); <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+VARIABLE_DECLARED(latdisp:double); [line 217, column 7];
+n$11=*&amp;prediction_count:int [line 217, column 30];
+n$12=*&amp;prediction_count:int [line 217, column 53];
+n$13=*&amp;denom:double [line 217, column 88];
+n$14=_fun_sqrt((((n$11 + 1) * (n$12 + 1)) /. ((100 * 100) * n$13)):double) [line 217, column 24];
+*&amp;latdisp:double=n$14 [line 217, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE218">218</td><td class="line">      p-&gt;lat = s-&gt;lat + latdisp; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+n$7=*&amp;p:point* [line 218, column 7];
+n$8=*&amp;s:ulocation* [line 218, column 16];
+n$9=*n$8.lat:double [line 218, column 16];
+n$10=*&amp;latdisp:double [line 218, column 25];
+*n$7.lat:double=(n$9 + n$10) [line 218, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE219">219</td><td class="line">      p-&gt;lon = m * p-&gt;lat + b; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:10 exn: Instructions
+n$2=*&amp;p:point* [line 219, column 7];
+n$3=*&amp;m:double [line 219, column 16];
+n$4=*&amp;p:point* [line 219, column 20];
+n$5=*n$4.lat:double [line 219, column 20];
+n$6=*&amp;b:double [line 219, column 29];
+*n$2.lon:double=((n$3 * n$5) + n$6) [line 219, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE220">220</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE221">221</td><td class="line">    else </td></tr>
+<tr><td class="num" id="LINE222">222</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE223">223</td><td class="line">      p-&gt;lat = s-&gt;lat; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:13 succs:20 exn: Instructions
+n$24=*&amp;p:point* [line 223, column 7];
+n$25=*&amp;s:ulocation* [line 223, column 16];
+n$26=*n$25.lat:double [line 223, column 16];
+*n$24.lat:double=n$26 [line 223, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE224">224</td><td class="line">      p-&gt;lon = s-&gt;lon; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:21 succs:10 exn: Instructions
+n$21=*&amp;p:point* [line 224, column 7];
+n$22=*&amp;s:ulocation* [line 224, column 16];
+n$23=*n$22.lon:double [line 224, column 16];
+*n$21.lon:double=n$23 [line 224, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE225">225</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE226">226</td><td class="line">    return Success; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:2 exn: Instructions
+*&amp;return:int=1 [line 226, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE227">227</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE228">228</td><td class="line">//Test21: Do not Work here </td></tr>
+<tr><td class="num" id="LINE229">229</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE230">230</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE231">231</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/release_predicted_location.474ebc3d8914d247441fbbb68e6e7045_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:9 8 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE232">232</td><td class="line">int database_length(struct ulocation *s, double eps, double refvalue) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:11 exn: Start
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/database_length.09372c2751776deccd259923841cb17d.html">summary for database_length</a></td></tr>
+<tr><td class="num" id="LINE233">233</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE234">234</td><td class="line">//Test22: Work here </td></tr>
+<tr><td class="num" id="LINE235">235</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE236">236</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE237">237</td><td class="line">  int ret = 0; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(ret:int); [line 237, column 3];
+*&amp;ret:int=0 [line 237, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE238">238</td><td class="line">  while(s != NULL) <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:11 9 succs:6 exn: Join
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:5 succs:7 8 exn: Instructions
+n$1=*&amp;s:ulocation* [line 238, column 9];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:10 exn: Conditional true Branch
+PRUNE((n$1 != null), true); [line 238, column 9];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:3 exn: Conditional false Branch
+PRUNE(!(n$1 != null), false); [line 238, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE239">239</td><td class="line">  { </td></tr>
+<tr><td class="num" id="LINE240">240</td><td class="line">//Test23: Work here </td></tr>
+<tr><td class="num" id="LINE241">241</td><td class="line">    // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE242">242</td><td class="line">    // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE243">243</td><td class="line">    ret++; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:9 exn: Instructions
+n$4=*&amp;ret:int [line 243, column 5];
+*&amp;ret:int=(n$4 + 1) [line 243, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE244">244</td><td class="line">    s = s-&gt;nxt; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:5 exn: Instructions
+n$2=*&amp;s:ulocation* [line 244, column 9];
+n$3=*n$2.nxt:ulocation* [line 244, column 9];
+*&amp;s:ulocation*=n$3 [line 244, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE245">245</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE246">246</td><td class="line">//Test24: Work here </td></tr>
+<tr><td class="num" id="LINE247">247</td><td class="line">  // int *o = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE248">248</td><td class="line">  // int blah = *o;  </td></tr>
+<tr><td class="num" id="LINE249">249</td><td class="line">  return ret; <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:8 succs:4 exn: Instructions
+n$0=*&amp;ret:int [line 249, column 10];
+</span></span></a> <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 249, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE250">250</td><td class="line">} <a href="./location-server.c.d12b6a5c0841f022cf482d16be7636c1/nodes/database_length.09372c2751776deccd259923841cb17d_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
