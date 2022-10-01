@@ -1,0 +1,841 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File cttk_oram1_origin_withtests.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">#define NULL ((void*)0) </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">// adapted from https://github.com/pornin/CTTK/blob/master/src/oram1.c </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line"> * Copyright (c) 2018 Thomas Pornin &lt;pornin@bolet.org&gt; </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line"> * Permission is hereby granted, free of charge, to any person obtaining  </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line"> * a copy of this software and associated documentation files (the </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line"> * &quot;Software&quot;), to deal in the Software without restriction, including </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> * without limitation the rights to use, copy, modify, merge, publish, </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line"> * distribute, sublicense, and/or sell copies of the Software, and to </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> * permit persons to whom the Software is furnished to do so, subject to </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line"> * the following conditions: </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line"> * The above copyright notice and this permission notice shall be  </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line"> * included in all copies or substantial portions of the Software. </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line"> * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,  </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line"> * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND  </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line"> * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line"> * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line"> * SOFTWARE. </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">typedef unsigned int cttk_bool; </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">typedef unsigned long size_t; </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">typedef unsigned long uint64_t; </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">typedef unsigned int uint32_t; </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">typedef unsigned int * uintptr_t; </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">typedef int int32_t; </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">void <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:23 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_cond_copy.b0b979e878f361b4966268262af9dca2.html">summary for cttk_cond_copy</a></td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">cttk_cond_copy(cttk_bool ctl, unsigned char *dst, const unsigned char *src, size_t len) </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">	 * TODO: make optimised versions for special cases: </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">	 *  - We can copy by full words, depending on alignment (and </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">	 *    architecture tolerance for unaligned accesses), even in </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">	 *    case of overlap (it suffices to do the copy in the </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">	 *    appropriate direction). </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">	 *  - We may use SSE2, AVX2, or similar vector operands on </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">	 *    platforms that support them. </td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">	 * Code below is the basic, portable variant. It relies on the </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">	 * idea that if source and destination overlap, then converting </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">	 * the pointers to integers should preserve ordering. </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">	unsigned char *bdst; </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">	const unsigned char *bsrc; </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">	 * In order to perform a constant-time copy, we need to read the </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">	 * current contents of the destination buffer, which may be, from </td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">	 * the point of view of the C compiler, uninitialised. Note that </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">	 * reading uninitialised values of a character type is actually </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">	 * supported by the C standard (values are unspecified, but this </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">	 * shall incur no trap representation, and therefore no undefined </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">	 * behaviour). </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">	bdst = dst; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:1 succs:22 exn: Instructions
+n$32=*&amp;dst:unsigned char* [line 67, column 9];
+*&amp;bdst:unsigned char*=n$32 [line 67, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">	bsrc = src; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:23 succs:5 exn: Instructions
+n$31=*&amp;src:unsigned char const * [line 68, column 9];
+*&amp;bsrc:unsigned char const *=n$31 [line 68, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">//Test1: Work </td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">  // int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">  // int blah = *p;  </td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">	if ((uintptr_t)dst &lt;= (uintptr_t)src) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:22 succs:6 7 exn: Instructions
+n$0=*&amp;dst:unsigned int* [line 72, column 17];
+n$1=*&amp;src:unsigned int* [line 72, column 35];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:14 exn: Conditional true Branch
+PRUNE(((unsigned int*)n$0  &lt;=  (unsigned int*)n$1), true); [line 72, column 6];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:21 exn: Conditional false Branch
+PRUNE(!((unsigned int*)n$0  &lt;=  (unsigned int*)n$1), false); [line 72, column 6];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:18 11 succs:4 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">//Test2: Work here </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">		// int blah = *p;  </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">		u = 0; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:6 succs:8 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 76, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">		while (u &lt; len) {//len = 2 <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node8.html"><span class='visited with_tooltip'>J_8<span class='tooltip'>node8 preds:14 12 succs:9 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:8 succs:10 11 exn: Instructions
+n$2=*&amp;u:unsigned long [line 77, column 10];
+n$3=*&amp;len:unsigned long [line 77, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:9 succs:13 exn: Conditional true Branch
+PRUNE((n$2  &lt;  n$3), true); [line 77, column 10];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node11.html"><span class='visited with_tooltip'>C_11<span class='tooltip'>node11 preds:9 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  n$3), false); [line 77, column 10];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">//Test3: Work here </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">			// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">			// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">			bdst[u] ^= (bsrc[u] ^ bdst[u]) &amp; -ctl; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:10 succs:12 exn: Instructions
+n$5=*&amp;bdst:unsigned char* [line 81, column 4];
+n$6=*&amp;u:unsigned long [line 81, column 9];
+n$7=*&amp;bsrc:unsigned char const * [line 81, column 16];
+n$8=*&amp;u:unsigned long [line 81, column 21];
+n$9=*n$7[n$8]:unsigned char [line 81, column 16];
+n$10=*&amp;bdst:unsigned char* [line 81, column 26];
+n$11=*&amp;u:unsigned long [line 81, column 31];
+n$12=*n$10[n$11]:unsigned char [line 81, column 26];
+n$13=*&amp;ctl:unsigned int [line 81, column 38];
+n$14=*n$5[n$6]:unsigned char [line 81, column 4];
+*n$5[n$6]:unsigned char=(n$14 ^ ((unsigned int)(n$9 ^ n$12) & -n$13)) [line 81, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">			u ++; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:8 exn: Instructions
+n$4=*&amp;u:unsigned long [line 82, column 4];
+*&amp;u:unsigned long=(n$4 + 1) [line 82, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">//Test4: Work here </td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">			// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">			// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">//Test5: Work here: Default would work  </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">	} else { </td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">//Test6: Work here: Default would work  </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">		u = len; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:7 succs:15 exn: Instructions
+n$29=*&amp;len:unsigned long [line 94, column 7];
+*&amp;u:unsigned long=n$29 [line 94, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">		while (u &gt; 0) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node15.html"><span class='visited with_tooltip'>J_15<span class='tooltip'>node15 preds:21 19 succs:16 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:15 succs:17 18 exn: Instructions
+n$16=*&amp;u:unsigned long [line 95, column 10];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node17.html"><span class='visited with_tooltip'>C_17<span class='tooltip'>node17 preds:16 succs:20 exn: Conditional true Branch
+PRUNE((n$16  &gt;  (unsigned long)0), true); [line 95, column 10];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node18.html"><span class='visited with_tooltip'>C_18<span class='tooltip'>node18 preds:16 succs:3 exn: Conditional false Branch
+PRUNE(!(n$16  &gt;  (unsigned long)0), false); [line 95, column 10];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">//Test7: Work here: Default would work  </td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">			// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">			// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">			u --; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:17 succs:19 exn: Instructions
+n$27=*&amp;u:unsigned long [line 99, column 4];
+*&amp;u:unsigned long=(n$27 - 1) [line 99, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">			bdst[u] ^= (bsrc[u] ^ bdst[u]) &amp; -ctl; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:15 exn: Instructions
+n$17=*&amp;bdst:unsigned char* [line 100, column 4];
+n$18=*&amp;u:unsigned long [line 100, column 9];
+n$19=*&amp;bsrc:unsigned char const * [line 100, column 16];
+n$20=*&amp;u:unsigned long [line 100, column 21];
+n$21=*n$19[n$20]:unsigned char [line 100, column 16];
+n$22=*&amp;bdst:unsigned char* [line 100, column 26];
+n$23=*&amp;u:unsigned long [line 100, column 31];
+n$24=*n$22[n$23]:unsigned char [line 100, column 26];
+n$25=*&amp;ctl:unsigned int [line 100, column 38];
+n$26=*n$17[n$18]:unsigned char [line 100, column 4];
+*n$17[n$18]:unsigned char=(n$26 ^ ((unsigned int)(n$21 ^ n$24) & -n$25)) [line 100, column 4];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">		} </td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">//Test8: Work here: Default would work  </td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">//Test9: Work here: Default would work  </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_copy.b0b979e878f361b4966268262af9dca2_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">void <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:13 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a.html">summary for cttk_cond_swap</a></td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">cttk_cond_swap(cttk_bool ctl, unsigned char *a, unsigned char *b, size_t len) </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">	/* </td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">	 * TODO: make optimised versions for special cases: </td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">	 *  - We can copy by full words, depending on alignment (and </td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">	 *    architecture tolerance for unaligned accesses), even in </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line">	 *    case of overlap (it suffices to do the copy in the </td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line">	 *    appropriate direction). </td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line">	 *  - We may use SSE2, AVX2, or similar vector operands on </td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line">	 *    platforms that support them. </td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">	 * </td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line">	 * Code below is the basic, portable variant. </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">	 */ </td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">  unsigned char *za; </td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line">  unsigned char *zb; </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">	za = a; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:1 succs:12 exn: Instructions
+n$20=*&amp;a:unsigned char* [line 132, column 7];
+*&amp;za:unsigned char*=n$20 [line 132, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">	zb = b; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:4 exn: Instructions
+n$19=*&amp;b:unsigned char* [line 133, column 7];
+*&amp;zb:unsigned char*=n$19 [line 133, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line">//Test10: Work here: Default would work  </td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line">	for (u = 0; u &lt; len; u ++) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:12 succs:3 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 137, column 7];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:5 4 succs:6 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:3 succs:7 8 exn: Instructions
+n$1=*&amp;u:unsigned long [line 137, column 14];
+n$2=*&amp;len:unsigned long [line 137, column 18];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:11 exn: Conditional true Branch
+PRUNE((n$1  &lt;  n$2), true); [line 137, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:9 succs:3 exn: Instructions
+n$0=*&amp;u:unsigned long [line 137, column 23];
+*&amp;u:unsigned long=(n$0 + 1) [line 137, column 23];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:2 exn: Conditional false Branch
+PRUNE(!(n$1  &lt;  n$2), false); [line 137, column 14];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">//Test11: Do not work here since there is no call function  </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line">		uint32_t x; </td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line">		x = ((za[u]) ^ (zb[u])) &amp; (-ctl); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:7 succs:10 exn: Instructions
+n$11=*&amp;za:unsigned char* [line 143, column 9];
+n$12=*&amp;u:unsigned long [line 143, column 12];
+n$13=*n$11[n$12]:unsigned char [line 143, column 8];
+n$14=*&amp;zb:unsigned char* [line 143, column 19];
+n$15=*&amp;u:unsigned long [line 143, column 22];
+n$16=*n$14[n$15]:unsigned char [line 143, column 18];
+n$17=*&amp;ctl:unsigned int [line 143, column 31];
+*&amp;x:unsigned int=((unsigned int)(n$13 ^ n$16) & -n$17) [line 143, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line">		za[u] ^= x; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$7=*&amp;za:unsigned char* [line 144, column 3];
+n$8=*&amp;u:unsigned long [line 144, column 6];
+n$9=*&amp;x:unsigned int [line 144, column 12];
+n$10=*n$7[n$8]:unsigned char [line 144, column 3];
+*n$7[n$8]:unsigned char=(n$10 ^ n$9) [line 144, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">		zb[u] ^= x; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:5 exn: Instructions
+n$3=*&amp;zb:unsigned char* [line 145, column 3];
+n$4=*&amp;u:unsigned long [line 145, column 6];
+n$5=*&amp;x:unsigned int [line 145, column 12];
+n$6=*n$3[n$4]:unsigned char [line 145, column 3];
+*n$3[n$4]:unsigned char=(n$6 ^ n$5) [line 145, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">//Test12: Do not work here since there is no call function  </td></tr>
+<tr><td class="num" id="LINE148">148</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE149">149</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE150">150</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_cond_swap.b82457b953ed52e07c133d16e42c9b0a_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:8 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE151">151</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE152">152</td><td class="line">// manual implementation to give it a spec </td></tr>
+<tr><td class="num" id="LINE153">153</td><td class="line">void memset(unsigned char *d, int c, size_t len){ <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:4 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/memset.716af30655f8f3d9b32750dca746ddfb.html">summary for memset</a></td></tr>
+<tr><td class="num" id="LINE154">154</td><td class="line">	//d, 0, elt_len=3 </td></tr>
+<tr><td class="num" id="LINE155">155</td><td class="line">//Test13: Work here </td></tr>
+<tr><td class="num" id="LINE156">156</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE157">157</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE158">158</td><td class="line">  size_t i; </td></tr>
+<tr><td class="num" id="LINE159">159</td><td class="line">  for (i=0;i&lt;len;i++){ <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:1 succs:3 exn: Instructions
+*&amp;i:unsigned long=(unsigned long)0 [line 159, column 8];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:5 4 succs:6 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:3 succs:7 8 exn: Instructions
+n$1=*&amp;i:unsigned long [line 159, column 12];
+n$2=*&amp;len:unsigned long [line 159, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:10 exn: Conditional true Branch
+PRUNE((n$1  &lt;  n$2), true); [line 159, column 12];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:9 succs:3 exn: Instructions
+n$0=*&amp;i:unsigned long [line 159, column 18];
+*&amp;i:unsigned long=(n$0 + 1) [line 159, column 18];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:2 exn: Conditional false Branch
+PRUNE(!(n$1  &lt;  n$2), false); [line 159, column 12];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE160">160</td><td class="line">//Test14: Work here </td></tr>
+<tr><td class="num" id="LINE161">161</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE162">162</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE163">163</td><td class="line">    *d = (unsigned char)c; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:7 succs:9 exn: Instructions
+n$4=*&amp;d:unsigned char* [line 163, column 6];
+n$5=*&amp;c:unsigned char [line 163, column 25];
+*n$4:unsigned char=(unsigned char)n$5 [line 163, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE164">164</td><td class="line">    d++; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:5 exn: Instructions
+n$3=*&amp;d:unsigned char* [line 164, column 5];
+*&amp;d:unsigned char*=(n$3 + 1) [line 164, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE165">165</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE166">166</td><td class="line">//Test15: Work here with Default mode --pulse-widen-threshold 3 --pulse-max-disjuncts 10 </td></tr>
+<tr><td class="num" id="LINE167">167</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE168">168</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE169">169</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/memset.716af30655f8f3d9b32750dca746ddfb_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:8 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE170">170</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE171">171</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795.html">summary for cttk_bool_of_u32</a></td></tr>
+<tr><td class="num" id="LINE172">172</td><td class="line">cttk_bool_of_u32(uint32_t x) </td></tr>
+<tr><td class="num" id="LINE173">173</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE174">174</td><td class="line">        cttk_bool c; </td></tr>
+<tr><td class="num" id="LINE175">175</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE176">176</td><td class="line">        c = x; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$1=*&amp;x:unsigned int [line 176, column 13];
+*&amp;c:unsigned int=n$1 [line 176, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE177">177</td><td class="line">//Test16: Work here </td></tr>
+<tr><td class="num" id="LINE178">178</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE179">179</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE180">180</td><td class="line">        return c; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;c:unsigned int [line 180, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$0 [line 180, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE181">181</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_bool_of_u32.95c70bfcd50263b6e732ce1733ff7795_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE182">182</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE183">183</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_neq0.5ea960d0c8a6fa9d7a026b2dce4ac091_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_u64_neq0.5ea960d0c8a6fa9d7a026b2dce4ac091.html">summary for cttk_u64_neq0</a></td></tr>
+<tr><td class="num" id="LINE184">184</td><td class="line">cttk_u64_neq0(uint64_t x) </td></tr>
+<tr><td class="num" id="LINE185">185</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE186">186</td><td class="line">        uint64_t q; </td></tr>
+<tr><td class="num" id="LINE187">187</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE188">188</td><td class="line">        q = x | -x; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_neq0.5ea960d0c8a6fa9d7a026b2dce4ac091_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$3=*&amp;x:unsigned long [line 188, column 13];
+n$4=*&amp;x:unsigned long [line 188, column 18];
+*&amp;q:unsigned long=(n$3 | -n$4) [line 188, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE189">189</td><td class="line">//Test17: Work here </td></tr>
+<tr><td class="num" id="LINE190">190</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE191">191</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE192">192</td><td class="line">        return cttk_bool_of_u32((uint32_t)((q | -q) &gt;&gt; 63)); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_neq0.5ea960d0c8a6fa9d7a026b2dce4ac091_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;q:unsigned long [line 192, column 45];
+n$1=*&amp;q:unsigned long [line 192, column 50];
+n$2=_fun_cttk_bool_of_u32((unsigned int)((n$0 | -n$1)  &gt;&gt;  63):unsigned int) [line 192, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_neq0.5ea960d0c8a6fa9d7a026b2dce4ac091_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 192, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE193">193</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_neq0.5ea960d0c8a6fa9d7a026b2dce4ac091_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE194">194</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE195">195</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_not.8f7a2231d00d6a8eda0c4e7c1a5a9499_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_not.8f7a2231d00d6a8eda0c4e7c1a5a9499.html">summary for cttk_not</a></td></tr>
+<tr><td class="num" id="LINE196">196</td><td class="line">cttk_not(cttk_bool c) </td></tr>
+<tr><td class="num" id="LINE197">197</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE198">198</td><td class="line">        c ^= (uint32_t)1; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_not.8f7a2231d00d6a8eda0c4e7c1a5a9499_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$1=*&amp;c:unsigned int [line 198, column 9];
+*&amp;c:unsigned int=(n$1 ^ (unsigned int)1) [line 198, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE199">199</td><td class="line">//Test18: Work here </td></tr>
+<tr><td class="num" id="LINE200">200</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE201">201</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE202">202</td><td class="line">        return c; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_not.8f7a2231d00d6a8eda0c4e7c1a5a9499_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;c:unsigned int [line 202, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_not.8f7a2231d00d6a8eda0c4e7c1a5a9499_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$0 [line 202, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE203">203</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_not.8f7a2231d00d6a8eda0c4e7c1a5a9499_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE204">204</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE205">205</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq0.5662935bbe6628ead2e27db5b371f87a_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_u64_eq0.5662935bbe6628ead2e27db5b371f87a.html">summary for cttk_u64_eq0</a></td></tr>
+<tr><td class="num" id="LINE206">206</td><td class="line">cttk_u64_eq0(uint64_t x) </td></tr>
+<tr><td class="num" id="LINE207">207</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE208">208</td><td class="line">//Test19: Work here </td></tr>
+<tr><td class="num" id="LINE209">209</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE210">210</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE211">211</td><td class="line">        return cttk_not(cttk_u64_neq0(x)); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq0.5662935bbe6628ead2e27db5b371f87a_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned long [line 211, column 39];
+n$1=_fun_cttk_u64_neq0(n$0:unsigned long) [line 211, column 25];
+n$2=_fun_cttk_not(n$1:unsigned int) [line 211, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq0.5662935bbe6628ead2e27db5b371f87a_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 211, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE212">212</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq0.5662935bbe6628ead2e27db5b371f87a_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE213">213</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE214">214</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq.cbb2d92c7270469756e5106e4f03fecd_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_u64_eq.cbb2d92c7270469756e5106e4f03fecd.html">summary for cttk_u64_eq</a></td></tr>
+<tr><td class="num" id="LINE215">215</td><td class="line">cttk_u64_eq(uint64_t x, uint64_t y) </td></tr>
+<tr><td class="num" id="LINE216">216</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE217">217</td><td class="line">//Test20: Work here </td></tr>
+<tr><td class="num" id="LINE218">218</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE219">219</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE220">220</td><td class="line">        return cttk_u64_eq0(x ^ y); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq.cbb2d92c7270469756e5106e4f03fecd_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned long [line 220, column 29];
+n$1=*&amp;y:unsigned long [line 220, column 33];
+n$2=_fun_cttk_u64_eq0((n$0 ^ n$1):unsigned long) [line 220, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq.cbb2d92c7270469756e5106e4f03fecd_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 220, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE221">221</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u64_eq.cbb2d92c7270469756e5106e4f03fecd_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE222">222</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE223">223</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE224">224</td><td class="line">void <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:10 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_array_read.08c85d815704ca0973ec56c30b5afd55.html">summary for cttk_array_read</a></td></tr>
+<tr><td class="num" id="LINE225">225</td><td class="line">cttk_array_read(unsigned char *d, </td></tr>
+<tr><td class="num" id="LINE226">226</td><td class="line">	const unsigned char *a, size_t elt_len, size_t num_len, size_t index) </td></tr>
+<tr><td class="num" id="LINE227">227</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE228">228</td><td class="line">	//(array2,array1,3,2,1) d, 0, elt_len=3 </td></tr>
+<tr><td class="num" id="LINE229">229</td><td class="line">//Test21: Work here </td></tr>
+<tr><td class="num" id="LINE230">230</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE231">231</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE232">232</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE233">233</td><td class="line">	const unsigned char *b; </td></tr>
+<tr><td class="num" id="LINE234">234</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE235">235</td><td class="line">	memset(d, 0, elt_len); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:1 succs:4 exn: Instructions
+n$17=*&amp;d:unsigned char* [line 235, column 9];
+n$18=*&amp;elt_len:unsigned long [line 235, column 15];
+n$19=_fun_memset(n$17:unsigned char*,0:int,n$18:unsigned long) [line 235, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE236">236</td><td class="line">//Test22: Work here </td></tr>
+<tr><td class="num" id="LINE237">237</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE238">238</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE239">239</td><td class="line">	for (u = 0, b = a; u &lt; num_len; u ++, b += elt_len) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:10 succs:3 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 239, column 7];
+n$0=*&amp;u:unsigned long [line 239, column 7];
+n$1=*&amp;a:unsigned char const * [line 239, column 18];
+*&amp;b:unsigned char const *=n$1 [line 239, column 14];
+n$2=*&amp;b:unsigned char const * [line 239, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:5 4 succs:6 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:3 succs:7 8 exn: Instructions
+n$7=*&amp;u:unsigned long [line 239, column 21];
+n$8=*&amp;num_len:unsigned long [line 239, column 25];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:9 exn: Conditional true Branch
+PRUNE((n$7  &lt;  n$8), true); [line 239, column 21];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:9 succs:3 exn: Instructions
+n$3=*&amp;u:unsigned long [line 239, column 34];
+*&amp;u:unsigned long=(n$3 + 1) [line 239, column 34];
+n$4=*&amp;elt_len:unsigned long [line 239, column 45];
+n$5=*&amp;b:unsigned char const * [line 239, column 40];
+*&amp;b:unsigned char const *=(n$5 + n$4) [line 239, column 40];
+n$6=*&amp;b:unsigned char const * [line 239, column 40];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:2 exn: Conditional false Branch
+PRUNE(!(n$7  &lt;  n$8), false); [line 239, column 21];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE240">240</td><td class="line">//Test23: Work here Work here with --pulse-widen-threshold 3 --pulse-max-disjuncts 11 </td></tr>
+<tr><td class="num" id="LINE241">241</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE242">242</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE243">243</td><td class="line">		cttk_cond_copy(cttk_u64_eq(u, index), d, b, elt_len); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:7 succs:5 exn: Instructions
+n$9=*&amp;u:unsigned long [line 243, column 30];
+n$10=*&amp;index:unsigned long [line 243, column 33];
+n$11=_fun_cttk_u64_eq(n$9:unsigned long,n$10:unsigned long) [line 243, column 18];
+n$12=*&amp;d:unsigned char* [line 243, column 41];
+n$13=*&amp;b:unsigned char const * [line 243, column 44];
+n$14=*&amp;elt_len:unsigned long [line 243, column 47];
+n$15=_fun_cttk_cond_copy(n$11:unsigned int,n$12:unsigned char*,n$13:unsigned char const *,n$14:unsigned long) [line 243, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE244">244</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE245">245</td><td class="line">//Test24: Work here with --pulse-widen-threshold 3 --pulse-max-disjuncts 31 </td></tr>
+<tr><td class="num" id="LINE246">246</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE247">247</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE248">248</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_read.08c85d815704ca0973ec56c30b5afd55_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:8 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE249">249</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE250">250</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE251">251</td><td class="line">void <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:4 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_array_write.f242a626f25c6816c44def5b51488ef6.html">summary for cttk_array_write</a></td></tr>
+<tr><td class="num" id="LINE252">252</td><td class="line">cttk_array_write(unsigned char *a, size_t elt_len, size_t num_len, </td></tr>
+<tr><td class="num" id="LINE253">253</td><td class="line">	size_t index, const unsigned char *s) </td></tr>
+<tr><td class="num" id="LINE254">254</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE255">255</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE256">256</td><td class="line">	unsigned char *b; </td></tr>
+<tr><td class="num" id="LINE257">257</td><td class="line">//Test25: Work here </td></tr>
+<tr><td class="num" id="LINE258">258</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE259">259</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE260">260</td><td class="line">	for (u = 0, b = a; u &lt; num_len; u ++, b += elt_len) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:1 succs:3 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 260, column 7];
+n$0=*&amp;u:unsigned long [line 260, column 7];
+n$1=*&amp;a:unsigned char* [line 260, column 18];
+*&amp;b:unsigned char*=n$1 [line 260, column 14];
+n$2=*&amp;b:unsigned char* [line 260, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:5 4 succs:6 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:3 succs:7 8 exn: Instructions
+n$7=*&amp;u:unsigned long [line 260, column 21];
+n$8=*&amp;num_len:unsigned long [line 260, column 25];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:6 succs:9 exn: Conditional true Branch
+PRUNE((n$7  &lt;  n$8), true); [line 260, column 21];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:9 succs:3 exn: Instructions
+n$3=*&amp;u:unsigned long [line 260, column 34];
+*&amp;u:unsigned long=(n$3 + 1) [line 260, column 34];
+n$4=*&amp;elt_len:unsigned long [line 260, column 45];
+n$5=*&amp;b:unsigned char* [line 260, column 40];
+*&amp;b:unsigned char*=(n$5 + n$4) [line 260, column 40];
+n$6=*&amp;b:unsigned char* [line 260, column 40];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:6 succs:2 exn: Conditional false Branch
+PRUNE(!(n$7  &lt;  n$8), false); [line 260, column 21];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE261">261</td><td class="line">//Test26: Work here </td></tr>
+<tr><td class="num" id="LINE262">262</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE263">263</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE264">264</td><td class="line">		cttk_cond_copy(cttk_u64_eq(u, index), b, s, elt_len); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:7 succs:5 exn: Instructions
+n$9=*&amp;u:unsigned long [line 264, column 30];
+n$10=*&amp;index:unsigned long [line 264, column 33];
+n$11=_fun_cttk_u64_eq(n$9:unsigned long,n$10:unsigned long) [line 264, column 18];
+n$12=*&amp;b:unsigned char* [line 264, column 41];
+n$13=*&amp;s:unsigned char const * [line 264, column 44];
+n$14=*&amp;elt_len:unsigned long [line 264, column 47];
+n$15=_fun_cttk_cond_copy(n$11:unsigned int,n$12:unsigned char*,n$13:unsigned char const *,n$14:unsigned long) [line 264, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE265">265</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE266">266</td><td class="line">//Test27: Work here  --pulse-widen-threshold 3 --pulse-max-disjuncts 18 </td></tr>
+<tr><td class="num" id="LINE267">267</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE268">268</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE269">269</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_write.f242a626f25c6816c44def5b51488ef6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:8 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE270">270</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE271">271</td><td class="line">// from cttk.h </td></tr>
+<tr><td class="num" id="LINE272">272</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE273">273</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE274">274</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_neq0.3058fdbc318870f07b059c256a019bec_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:5 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_u32_neq0.3058fdbc318870f07b059c256a019bec.html">summary for cttk_u32_neq0</a></td></tr>
+<tr><td class="num" id="LINE275">275</td><td class="line">cttk_u32_neq0(uint32_t x) </td></tr>
+<tr><td class="num" id="LINE276">276</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE277">277</td><td class="line">        uint32_t q; </td></tr>
+<tr><td class="num" id="LINE278">278</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE279">279</td><td class="line">        q = x | -x; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_neq0.3058fdbc318870f07b059c256a019bec_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:1 succs:3 exn: Instructions
+n$3=*&amp;x:unsigned int [line 279, column 13];
+n$4=*&amp;x:unsigned int [line 279, column 18];
+*&amp;q:unsigned int=(n$3 | -n$4) [line 279, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE280">280</td><td class="line">//Test28: Work here </td></tr>
+<tr><td class="num" id="LINE281">281</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE282">282</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE283">283</td><td class="line">        return cttk_bool_of_u32((q | -q) &gt;&gt; 31); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_neq0.3058fdbc318870f07b059c256a019bec_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;q:unsigned int [line 283, column 34];
+n$1=*&amp;q:unsigned int [line 283, column 39];
+n$2=_fun_cttk_bool_of_u32(((n$0 | -n$1)  &gt;&gt;  31):unsigned int) [line 283, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_neq0.3058fdbc318870f07b059c256a019bec_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 283, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE284">284</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_neq0.3058fdbc318870f07b059c256a019bec_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE285">285</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE286">286</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE287">287</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_eq0.da9d200e77941abf899527826e6b7e6e_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_u32_eq0.da9d200e77941abf899527826e6b7e6e.html">summary for cttk_u32_eq0</a></td></tr>
+<tr><td class="num" id="LINE288">288</td><td class="line">cttk_u32_eq0(uint32_t x) </td></tr>
+<tr><td class="num" id="LINE289">289</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE290">290</td><td class="line">//Test29: Work here </td></tr>
+<tr><td class="num" id="LINE291">291</td><td class="line">				// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE292">292</td><td class="line">				// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE293">293</td><td class="line">        return cttk_not(cttk_u32_neq0(x)); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_eq0.da9d200e77941abf899527826e6b7e6e_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned int [line 293, column 39];
+n$1=_fun_cttk_u32_neq0(n$0:unsigned int) [line 293, column 25];
+n$2=_fun_cttk_not(n$1:unsigned int) [line 293, column 16];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_eq0.da9d200e77941abf899527826e6b7e6e_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 293, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE294">294</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_u32_eq0.da9d200e77941abf899527826e6b7e6e_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE295">295</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE296">296</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE297">297</td><td class="line">cttk_bool <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:14 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75.html">summary for cttk_array_eq</a></td></tr>
+<tr><td class="num" id="LINE298">298</td><td class="line">cttk_array_eq(const unsigned char *src1, const unsigned char *src2, size_t len) </td></tr>
+<tr><td class="num" id="LINE299">299</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE300">300</td><td class="line">  const unsigned char *buf1; </td></tr>
+<tr><td class="num" id="LINE301">301</td><td class="line">  const unsigned char *buf2; </td></tr>
+<tr><td class="num" id="LINE302">302</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE303">303</td><td class="line">	uint32_t r; </td></tr>
+<tr><td class="num" id="LINE304">304</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE305">305</td><td class="line">	r = 0; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:1 succs:13 exn: Instructions
+*&amp;r:unsigned int=(unsigned int)0 [line 305, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE306">306</td><td class="line">	buf1 = src1; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$14=*&amp;src1:unsigned char const * [line 306, column 9];
+*&amp;buf1:unsigned char const *=n$14 [line 306, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE307">307</td><td class="line">	buf2 = src2; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:6 exn: Instructions
+n$13=*&amp;src2:unsigned char const * [line 307, column 9];
+*&amp;buf2:unsigned char const *=n$13 [line 307, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE308">308</td><td class="line">//Test30: Work here </td></tr>
+<tr><td class="num" id="LINE309">309</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE310">310</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE311">311</td><td class="line">	for (u = 0; u &lt; len; u ++) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:12 succs:5 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 311, column 7];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$3=*&amp;u:unsigned long [line 311, column 14];
+n$4=*&amp;len:unsigned long [line 311, column 18];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:11 exn: Conditional true Branch
+PRUNE((n$3  &lt;  n$4), true); [line 311, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$2=*&amp;u:unsigned long [line 311, column 23];
+*&amp;u:unsigned long=(n$2 + 1) [line 311, column 23];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$3  &lt;  n$4), false); [line 311, column 14];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE312">312</td><td class="line">//Test31: Work here </td></tr>
+<tr><td class="num" id="LINE313">313</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE314">314</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE315">315</td><td class="line">		r |= buf1[u] ^ buf2[u]; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:9 succs:7 exn: Instructions
+n$5=*&amp;buf1:unsigned char const * [line 315, column 8];
+n$6=*&amp;u:unsigned long [line 315, column 13];
+n$7=*n$5[n$6]:unsigned char [line 315, column 8];
+n$8=*&amp;buf2:unsigned char const * [line 315, column 18];
+n$9=*&amp;u:unsigned long [line 315, column 23];
+n$10=*n$8[n$9]:unsigned char [line 315, column 18];
+n$11=*&amp;r:unsigned int [line 315, column 3];
+*&amp;r:unsigned int=(n$11 | (unsigned int)(n$7 ^ n$10)) [line 315, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE316">316</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE317">317</td><td class="line">//Test32: Work here with --pulse-widen-threshold 8 --pulse-max-disjuncts 13 </td></tr>
+<tr><td class="num" id="LINE318">318</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE319">319</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE320">320</td><td class="line">	return cttk_u32_eq0(r); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*&amp;r:unsigned int [line 320, column 22];
+n$1=_fun_cttk_u32_eq0(n$0:unsigned int) [line 320, column 9];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$1 [line 320, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE321">321</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_eq.ac3214bce6a61eda6afe241f70352d75_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE322">322</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE323">323</td><td class="line">/* see cttk.h */ </td></tr>
+<tr><td class="num" id="LINE324">324</td><td class="line">int32_t <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:17 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7.html">summary for cttk_array_cmp</a></td></tr>
+<tr><td class="num" id="LINE325">325</td><td class="line">cttk_array_cmp(const unsigned char *src1, const unsigned char *src2, size_t len) </td></tr>
+<tr><td class="num" id="LINE326">326</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE327">327</td><td class="line">  const unsigned char *buf1; </td></tr>
+<tr><td class="num" id="LINE328">328</td><td class="line">  const unsigned char *buf2; </td></tr>
+<tr><td class="num" id="LINE329">329</td><td class="line">	uint32_t r; </td></tr>
+<tr><td class="num" id="LINE330">330</td><td class="line">	size_t u; </td></tr>
+<tr><td class="num" id="LINE331">331</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE332">332</td><td class="line">	buf1 = src1; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:1 succs:16 exn: Instructions
+n$19=*&amp;src1:unsigned char const * [line 332, column 9];
+*&amp;buf1:unsigned char const *=n$19 [line 332, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE333">333</td><td class="line">	buf2 = src2; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$18=*&amp;src2:unsigned char const * [line 333, column 9];
+*&amp;buf2:unsigned char const *=n$18 [line 333, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE334">334</td><td class="line">	r = 0; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:6 exn: Instructions
+*&amp;r:unsigned int=(unsigned int)0 [line 334, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE335">335</td><td class="line">//Test33: Work here </td></tr>
+<tr><td class="num" id="LINE336">336</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE337">337</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE338">338</td><td class="line">	for (u = 0; u &lt; len; u ++) { <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:15 succs:5 exn: Instructions
+*&amp;u:unsigned long=(unsigned long)0 [line 338, column 7];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;u:unsigned long [line 338, column 14];
+n$3=*&amp;len:unsigned long [line 338, column 18];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:14 exn: Conditional true Branch
+PRUNE((n$2  &lt;  n$3), true); [line 338, column 14];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$1=*&amp;u:unsigned long [line 338, column 23];
+*&amp;u:unsigned long=(n$1 + 1) [line 338, column 23];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  n$3), false); [line 338, column 14];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE339">339</td><td class="line">		uint32_t z; </td></tr>
+<tr><td class="num" id="LINE340">340</td><td class="line">//Test34: Work here </td></tr>
+<tr><td class="num" id="LINE341">341</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE342">342</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE343">343</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE344">344</td><td class="line">		/* </td></tr>
+<tr><td class="num" id="LINE345">345</td><td class="line">		 * If the bytes are equal, then z is zero. </td></tr>
+<tr><td class="num" id="LINE346">346</td><td class="line">		 * If buf1[u] &gt; buf2[u], then z is in the 1..255 range. </td></tr>
+<tr><td class="num" id="LINE347">347</td><td class="line">		 * If buf1[u] &lt; buf2[u], then bits 8..31 of z are set to 1. </td></tr>
+<tr><td class="num" id="LINE348">348</td><td class="line">		 */ </td></tr>
+<tr><td class="num" id="LINE349">349</td><td class="line">		z = buf1[u] - buf2[u]; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:9 succs:13 exn: Instructions
+n$11=*&amp;buf1:unsigned char const * [line 349, column 7];
+n$12=*&amp;u:unsigned long [line 349, column 12];
+n$13=*n$11[n$12]:unsigned char [line 349, column 7];
+n$14=*&amp;buf2:unsigned char const * [line 349, column 17];
+n$15=*&amp;u:unsigned long [line 349, column 22];
+n$16=*n$14[n$15]:unsigned char [line 349, column 17];
+*&amp;z:unsigned int=(unsigned int)(n$13 - n$16) [line 349, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE350">350</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE351">351</td><td class="line">		/* </td></tr>
+<tr><td class="num" id="LINE352">352</td><td class="line">		 * Set bit 8 to 1 if bits 0..7 are not all zero. </td></tr>
+<tr><td class="num" id="LINE353">353</td><td class="line">		 */ </td></tr>
+<tr><td class="num" id="LINE354">354</td><td class="line">		z |= z + 0xFF; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$9=*&amp;z:unsigned int [line 354, column 8];
+n$10=*&amp;z:unsigned int [line 354, column 3];
+*&amp;z:unsigned int=(n$10 | (n$9 + (unsigned int)255)) [line 354, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE355">355</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE356">356</td><td class="line">		/* </td></tr>
+<tr><td class="num" id="LINE357">357</td><td class="line">		 * At that point: </td></tr>
+<tr><td class="num" id="LINE358">358</td><td class="line">		 *  - If buf1[u] == buf2[u], then z == 0xFF. </td></tr>
+<tr><td class="num" id="LINE359">359</td><td class="line">		 *  - If buf1[u] &lt; buf2[u], then bits 8..31 of z are all one. </td></tr>
+<tr><td class="num" id="LINE360">360</td><td class="line">		 *  - If buf1[u] &gt; buf2[u], then bit 8 is one, and bits 9..31 </td></tr>
+<tr><td class="num" id="LINE361">361</td><td class="line">		 *    are zero. </td></tr>
+<tr><td class="num" id="LINE362">362</td><td class="line">		 * We just need to shift the result to remove the low 8 bits, </td></tr>
+<tr><td class="num" id="LINE363">363</td><td class="line">		 * duplicating the sign bit as needed. </td></tr>
+<tr><td class="num" id="LINE364">364</td><td class="line">		 */ </td></tr>
+<tr><td class="num" id="LINE365">365</td><td class="line">		z = (z &gt;&gt; 8) | (z &amp; 0xFF000000); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$7=*&amp;z:unsigned int [line 365, column 8];
+n$8=*&amp;z:unsigned int [line 365, column 19];
+*&amp;z:unsigned int=((n$7  &gt;&gt;  8) | (n$8 & 4278190080)) [line 365, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE366">366</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE367">367</td><td class="line">		/* </td></tr>
+<tr><td class="num" id="LINE368">368</td><td class="line">		 * If r is 1 or -1 at this point, then its low bit is set, </td></tr>
+<tr><td class="num" id="LINE369">369</td><td class="line">		 * and &quot;(r &amp; 1) - 1&quot; will be 0; in that case, r remains </td></tr>
+<tr><td class="num" id="LINE370">370</td><td class="line">		 * unmodified. </td></tr>
+<tr><td class="num" id="LINE371">371</td><td class="line">		 * </td></tr>
+<tr><td class="num" id="LINE372">372</td><td class="line">		 * If r is 0, then &quot;(r &amp; 1) - 1&quot; will be -1, and r is set </td></tr>
+<tr><td class="num" id="LINE373">373</td><td class="line">		 * to the value of z (which is 0, 1 or -1). </td></tr>
+<tr><td class="num" id="LINE374">374</td><td class="line">		 */ </td></tr>
+<tr><td class="num" id="LINE375">375</td><td class="line">		r |= (uint32_t)((r &amp; 1) - 1) &amp; z; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:7 exn: Instructions
+n$4=*&amp;r:unsigned int [line 375, column 20];
+n$5=*&amp;z:unsigned int [line 375, column 34];
+n$6=*&amp;r:unsigned int [line 375, column 3];
+*&amp;r:unsigned int=(n$6 | (((n$4 & (unsigned int)1) - (unsigned int)1) & n$5)) [line 375, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE376">376</td><td class="line">//Test35: Work here </td></tr>
+<tr><td class="num" id="LINE377">377</td><td class="line">		// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE378">378</td><td class="line">		// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE379">379</td><td class="line">	} </td></tr>
+<tr><td class="num" id="LINE380">380</td><td class="line">//Test36: Work here with --pulse-widen-threshold 8 --pulse-max-disjuncts 13  </td></tr>
+<tr><td class="num" id="LINE381">381</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE382">382</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE383">383</td><td class="line">	return *(int32_t *)&amp;r; <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*(int*)&amp;r:int [line 383, column 9];
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 383, column 2];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE384">384</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/cttk_array_cmp.4193d7706d51dd7cdbf38f60c3c851b7_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE385">385</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE386">386</td><td class="line">void main_array_cmp(){ <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_cmp.c9ef260eb55e9f59dea9a98c5b0fe465_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/main_array_cmp.c9ef260eb55e9f59dea9a98c5b0fe465.html">summary for main_array_cmp</a></td></tr>
+<tr><td class="num" id="LINE387">387</td><td class="line">//Test37: work here </td></tr>
+<tr><td class="num" id="LINE388">388</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE389">389</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE390">390</td><td class="line">  unsigned char array1[8]; </td></tr>
+<tr><td class="num" id="LINE391">391</td><td class="line">  unsigned char array2[8]; </td></tr>
+<tr><td class="num" id="LINE392">392</td><td class="line">  cttk_array_cmp(array1,array2,8); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_cmp.c9ef260eb55e9f59dea9a98c5b0fe465_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_cttk_array_cmp(&amp;array1:unsigned char*,&amp;array2:unsigned char*,(unsigned long)8:unsigned long) [line 392, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE393">393</td><td class="line">//Test38: Work here with --pulse-widen-threshold 8 --pulse-max-disjuncts 13  </td></tr>
+<tr><td class="num" id="LINE394">394</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE395">395</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE396">396</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_cmp.c9ef260eb55e9f59dea9a98c5b0fe465_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE397">397</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE398">398</td><td class="line">void main_array_eq(){ <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_eq.0483c2999c8704dd024a495383e80754_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/main_array_eq.0483c2999c8704dd024a495383e80754.html">summary for main_array_eq</a></td></tr>
+<tr><td class="num" id="LINE399">399</td><td class="line">//Test39: work here </td></tr>
+<tr><td class="num" id="LINE400">400</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE401">401</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE402">402</td><td class="line">  unsigned char array1[8]; </td></tr>
+<tr><td class="num" id="LINE403">403</td><td class="line">  unsigned char array2[8]; </td></tr>
+<tr><td class="num" id="LINE404">404</td><td class="line">  cttk_array_eq(array1,array2,8); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_eq.0483c2999c8704dd024a495383e80754_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_cttk_array_eq(&amp;array1:unsigned char*,&amp;array2:unsigned char*,(unsigned long)8:unsigned long) [line 404, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE405">405</td><td class="line">//Test40: Work here with --pulse-widen-threshold 8 --pulse-max-disjuncts 13  </td></tr>
+<tr><td class="num" id="LINE406">406</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE407">407</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE408">408</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_eq.0483c2999c8704dd024a495383e80754_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE409">409</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE410">410</td><td class="line">void main_array_read(){ <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_read.899d61fde6dd081516b0ae6efe03c578_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/main_array_read.899d61fde6dd081516b0ae6efe03c578.html">summary for main_array_read</a></td></tr>
+<tr><td class="num" id="LINE411">411</td><td class="line">//Test41: work here </td></tr>
+<tr><td class="num" id="LINE412">412</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE413">413</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE414">414</td><td class="line">  unsigned char array1[8]; </td></tr>
+<tr><td class="num" id="LINE415">415</td><td class="line">  unsigned char array2[8]; </td></tr>
+<tr><td class="num" id="LINE416">416</td><td class="line">  cttk_array_read(array2,array1,3,2,1); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_read.899d61fde6dd081516b0ae6efe03c578_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_cttk_array_read(&amp;array2:unsigned char*,&amp;array1:unsigned char*,(unsigned long)3:unsigned long,(unsigned long)2:unsigned long,(unsigned long)1:unsigned long) [line 416, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE417">417</td><td class="line">//Test42: Work here with --pulse-widen-threshold 3 --pulse-max-disjuncts 31 </td></tr>
+<tr><td class="num" id="LINE418">418</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE419">419</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE420">420</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_read.899d61fde6dd081516b0ae6efe03c578_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE421">421</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE422">422</td><td class="line">void main_array_write(){ <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_write.1e69d1c2be213fb16690f8a36f9d28cc_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/main_array_write.1e69d1c2be213fb16690f8a36f9d28cc.html">summary for main_array_write</a></td></tr>
+<tr><td class="num" id="LINE423">423</td><td class="line">//Test43: work here </td></tr>
+<tr><td class="num" id="LINE424">424</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE425">425</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE426">426</td><td class="line">  unsigned char array1[8]; </td></tr>
+<tr><td class="num" id="LINE427">427</td><td class="line">  unsigned char array2[8]; </td></tr>
+<tr><td class="num" id="LINE428">428</td><td class="line">  cttk_array_write(array1,3,2,1,array2); <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_write.1e69d1c2be213fb16690f8a36f9d28cc_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_cttk_array_write(&amp;array1:unsigned char*,(unsigned long)3:unsigned long,(unsigned long)2:unsigned long,(unsigned long)1:unsigned long,&amp;array2:unsigned char*) [line 428, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE429">429</td><td class="line">//Test44: Work here with --pulse-widen-threshold 3 --pulse-max-disjuncts 18 </td></tr>
+<tr><td class="num" id="LINE430">430</td><td class="line">	// int *p = NULL;  // x is a null pointer </td></tr>
+<tr><td class="num" id="LINE431">431</td><td class="line">	// int blah = *p; </td></tr>
+<tr><td class="num" id="LINE432">432</td><td class="line">} <a href="./cttk_oram1_origin_withtests.c.e32ce3b0f01737c92529d2beafd98154/nodes/main_array_write.1e69d1c2be213fb16690f8a36f9d28cc_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE433">433</td><td class="line"> </td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>

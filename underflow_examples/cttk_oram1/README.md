@@ -6,8 +6,8 @@
 
 |Tool|Command Line|exec time|issues found|Debug File|
 |----------------|-------------------------------|-----------------------------|---------------------------|------|
-|Underflow|`./Underflow.sh ./examples/cttk_oram1.c`|91.56 s|3 insec top-level bugs & 2 conditional error|
-|Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/cttk_oram1.c`|133ms|No issues found|
+|Underflow|`./Underflow.sh ./examples/cttk_oram1.c`|91.56 s|3 insec top-level bugs & 2 conditional error|results-cttk_oram1.txt|
+|Pulse-x|`infer --pulse-isl --pulse-only --pulse-widen-threshold 8 --pulse-max-disjuncts 31 -- gcc -c -I./include/ ./examples/cttk_oram1.c`|133ms|No issues found|cttk_oram1.html|
 
 
 ./examples/cttk_oram1.c
