@@ -11,7 +11,7 @@
 |Underflow|`./Underflow.sh ./examples/ackermann.c`|72459ms|No Issues found|result-ackermann.txt|
 |Pulse-x|`infer --pulse-isl --pulse-only -- gcc -c -I./include/ ./examples/ackermann.c`|31.245ms|No issues found|ackermann.html|
 |Underflow|`./Underflow.sh ./examples/ackermann.c`|286ms|No Issues found|result-ackermann.txt|
-|Pulse-x|`infer --pulse-model-skip-pattern "LOW" --pulse-model-alloc-pattern "alloc" --pulse-widen-threshold 0 --pulse-max-disjuncts 1 --pulse-isl --pulse-only --debug -- gcc -c -I./include/ ./examples/ackermann.c `|245ms|1 NULLPTR_DEREFERENCE||
+|Pulse-x|`infer --pulse-model-skip-pattern "LOW" --pulse-model-alloc-pattern "alloc" --pulse-widen-threshold 0 --pulse-max-disjuncts 1 --pulse-isl --pulse-only --debug -- gcc -c -I./include/ ./examples/ackermann.c `|245ms|1 NULLPTR_DEREFERENCE|ackermann.html|
 
 
 Underflow
