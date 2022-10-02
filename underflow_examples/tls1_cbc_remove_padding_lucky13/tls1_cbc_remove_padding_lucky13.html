@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/tls1_cbc_remove_padding_lucky13_withtest.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// derived from: https://github.com/binsec/rel_bench/blob/main/src/ct/openssl_almeida/tls1_cbc_remove_padding_lucky13.c </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">#define NULL ((void *)0) </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">typedef unsigned long size_t; </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">typedef struct ssl3_record_st { </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">    unsigned int length; </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">    unsigned char *data; </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">    int type; </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">    unsigned char *input; </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">} SSL3_RECORD; </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">typedef struct ssl3_state_st { </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">    long flags; </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">    unsigned char * read_sequence; </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">} SSL3_STATE; </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">typedef struct evp_cipher_st { </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">    unsigned long flags; </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line">} EVP_CIPHER; </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">typedef struct evp_cipher_ctx_st { </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">  const EVP_CIPHER *cipher; </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">} EVP_CIPHER_CTX; </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">typedef struct ssl_st { </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">    char *expand; </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">    unsigned long options; </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line">    struct ssl3_state_st *s3; </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line">    EVP_CIPHER_CTX *enc_read_ctx; </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">    int slicing_cheat; </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">} SSL; </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">char * ZEROS(); </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">_(presumes true covers result |-&gt; 0 &amp;*&amp; (result + 1) |-&gt; 0 </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">                       &amp;*&amp; (result + 2) |-&gt; 0 &amp;*&amp; (result + 3) |-&gt; 0 </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">                       &amp;*&amp; (result + 4) |-&gt; 0 &amp;*&amp; (result + 5) |-&gt; 0 </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line">                         &amp;*&amp; (result + 6) |-&gt; 0 &amp;*&amp; (result + 7) |-&gt; 0) </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">int memcmp(char *a, char *b, size_t len); </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">int tls1_cbc_remove_padding(const SSL *s, SSL3_RECORD *rec,unsigned bs, unsigned mac_size); </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">// derived from: https://github.com/binsec/rel_bench/blob/main/src/ct/openssl_almeida/tls1_cbc_remove_padding_lucky13_wrapper.c </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">unsigned long LOW_INPUT_UL(); </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line">long LOW_INPUT_L(); </td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">int LOW_INPUT_I(); </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">unsigned int LOW_INPUT_UI(); </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">SSL3_STATE * alloc_SSL3_STATE(); </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">_(presumes true covers exists long f, unsigned char *r. </td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">  &amp;result-&gt;flags |-&gt; f &amp;*&amp; &amp;result-&gt;read_sequence |-&gt; r) </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">EVP_CIPHER * alloc_EVP_CIPHER(); </td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">_(presumes true covers exists long f. &amp;result-&gt;flags |-&gt; f) </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">EVP_CIPHER_CTX * alloc_EVP_CIPHER_CTX(); </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line">_(presumes true covers exists EVP_CIPHER *c. &amp;result-&gt;cipher |-&gt; c) </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">SSL * alloc_SSL(); </td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">_(presumes true covers exists char * e, unsigned long o, </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">  struct ssl3_state_st s, EVP_CIPHER_CTX *c, int sc. </td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">  &amp;result-&gt;expand |-&gt; e &amp;*&amp; &amp;result-&gt;options |-&gt; o &amp;*&amp; &amp;result-&gt;s3 |-&gt; s &amp;*&amp; </td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">  &amp;result-&gt;enc_read_ctx |-&gt; c &amp;*&amp; &amp;result-&gt;slicing_cheat |-&gt; sc) </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">SSL3_RECORD * alloc_SSL3_RECORD(); </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line">_(presumes true covers exists unsigned int l, unsigned char *d, int t, </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line">  unsigned char *i. &amp;result-&gt;length |-&gt; l &amp;*&amp; &amp;result-&gt;data |-&gt; d &amp;*&amp; </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">  &amp;result-&gt;type |-&gt; t &amp;*&amp; &amp;result-&gt;input |-&gt; i) </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">int main(){ <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:29 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/main.fad58de7366495db4650cfefac2fcd61.html">summary for main</a></td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">//Test1： Work </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">  // int blah = *p; // null pointer dereference   </td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">  unsigned long options;              // public </td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line">  long s3_flags;                      // public </td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">  unsigned long flags;                // public </td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">  int slicing_cheat;                  // public                   </td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">  unsigned char data[63];               // private (public address) </td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">  unsigned int length;                // public </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">  unsigned int block_size;            // public </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">  unsigned int mac_size;              // public </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">  unsigned char read_sequence[8];               // private (public address) </td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">  // Data is private by default </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">  // these lengths are all public </td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">  options = LOW_INPUT_UL(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node29.html"><span class='visited with_tooltip'>I_29<span class='tooltip'>node29 preds:1 succs:28 exn: Instructions
+n$37=_fun_LOW_INPUT_UL() [line 95, column 13];
+*&amp;options:unsigned long=n$37 [line 95, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">  s3_flags = LOW_INPUT_L(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node28.html"><span class='visited with_tooltip'>I_28<span class='tooltip'>node28 preds:29 succs:27 exn: Instructions
+n$36=_fun_LOW_INPUT_L() [line 96, column 14];
+*&amp;s3_flags:long=n$36 [line 96, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">  flags = LOW_INPUT_UL(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node27.html"><span class='visited with_tooltip'>I_27<span class='tooltip'>node27 preds:28 succs:26 exn: Instructions
+n$35=_fun_LOW_INPUT_UL() [line 97, column 11];
+*&amp;flags:unsigned long=n$35 [line 97, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line">  slicing_cheat = LOW_INPUT_I(); // stay away from struct hell <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node26.html"><span class='visited with_tooltip'>I_26<span class='tooltip'>node26 preds:27 succs:25 exn: Instructions
+n$34=_fun_LOW_INPUT_I() [line 98, column 19];
+*&amp;slicing_cheat:int=n$34 [line 98, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">  length = 63; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node25.html"><span class='visited with_tooltip'>I_25<span class='tooltip'>node25 preds:26 succs:24 exn: Instructions
+*&amp;length:unsigned int=(unsigned int)63 [line 99, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line">  block_size = LOW_INPUT_UI(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:25 succs:23 exn: Instructions
+n$33=_fun_LOW_INPUT_UI() [line 100, column 16];
+*&amp;block_size:unsigned int=n$33 [line 100, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line">  mac_size = LOW_INPUT_UI(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:24 succs:22 exn: Instructions
+n$32=_fun_LOW_INPUT_UI() [line 101, column 14];
+*&amp;mac_size:unsigned int=n$32 [line 101, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">  SSL3_STATE *ps3_obj = alloc_SSL3_STATE(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:23 succs:21 exn: Instructions
+VARIABLE_DECLARED(ps3_obj:ssl3_state_st*); [line 103, column 3];
+n$31=_fun_alloc_SSL3_STATE() [line 103, column 25];
+*&amp;ps3_obj:ssl3_state_st*=n$31 [line 103, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">  ps3_obj-&gt;flags = s3_flags; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:22 succs:20 exn: Instructions
+n$29=*&amp;ps3_obj:ssl3_state_st* [line 104, column 3];
+n$30=*&amp;s3_flags:long [line 104, column 20];
+*n$29.flags:long=n$30 [line 104, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line">  ps3_obj-&gt;read_sequence = read_sequence; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:21 succs:19 exn: Instructions
+n$28=*&amp;ps3_obj:ssl3_state_st* [line 105, column 3];
+*n$28.read_sequence:unsigned char*=&amp;read_sequence [line 105, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line">  EVP_CIPHER *pcipher = alloc_EVP_CIPHER(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+VARIABLE_DECLARED(pcipher:evp_cipher_st*); [line 107, column 3];
+n$27=_fun_alloc_EVP_CIPHER() [line 107, column 25];
+*&amp;pcipher:evp_cipher_st*=n$27 [line 107, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line">  pcipher-&gt;flags = flags; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+n$25=*&amp;pcipher:evp_cipher_st* [line 108, column 3];
+n$26=*&amp;flags:unsigned long [line 108, column 20];
+*n$25.flags:unsigned long=n$26 [line 108, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">  EVP_CIPHER_CTX *pcipher_ctx = alloc_EVP_CIPHER_CTX(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(pcipher_ctx:evp_cipher_ctx_st*); [line 110, column 3];
+n$24=_fun_alloc_EVP_CIPHER_CTX() [line 110, column 33];
+*&amp;pcipher_ctx:evp_cipher_ctx_st*=n$24 [line 110, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">  pcipher_ctx-&gt;cipher = pcipher; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$22=*&amp;pcipher_ctx:evp_cipher_ctx_st* [line 111, column 3];
+n$23=*&amp;pcipher:evp_cipher_st* [line 111, column 25];
+*n$22.cipher:evp_cipher_st const *=n$23 [line 111, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">//Test2： Work </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">  // int blah = *p; // null pointer dereference   </td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line">  char dummy_expand; </td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">  SSL *s = alloc_SSL(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+VARIABLE_DECLARED(s:ssl_st*); [line 118, column 3];
+n$21=_fun_alloc_SSL() [line 118, column 12];
+*&amp;s:ssl_st*=n$21 [line 118, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line">  // setting the expand field to non-zero deactivates non-constant-time if   </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line">  //s-&gt;expand = &amp;dummy_expand; </td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line">  s-&gt;expand = NULL; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+n$20=*&amp;s:ssl_st* [line 121, column 3];
+*n$20.expand:char*=null [line 121, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line">  s-&gt;options = options; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$18=*&amp;s:ssl_st* [line 122, column 3];
+n$19=*&amp;options:unsigned long [line 122, column 16];
+*n$18.options:unsigned long=n$19 [line 122, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line">  s-&gt;s3 = ps3_obj; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$16=*&amp;s:ssl_st* [line 123, column 3];
+n$17=*&amp;ps3_obj:ssl3_state_st* [line 123, column 11];
+*n$16.s3:ssl3_state_st*=n$17 [line 123, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line">  s-&gt;enc_read_ctx = pcipher_ctx; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:10 exn: Instructions
+n$14=*&amp;s:ssl_st* [line 124, column 3];
+n$15=*&amp;pcipher_ctx:evp_cipher_ctx_st* [line 124, column 21];
+*n$14.enc_read_ctx:evp_cipher_ctx_st*=n$15 [line 124, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">  s-&gt;slicing_cheat = slicing_cheat; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$12=*&amp;s:ssl_st* [line 125, column 3];
+n$13=*&amp;slicing_cheat:int [line 125, column 22];
+*n$12.slicing_cheat:int=n$13 [line 125, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">//Test3： Work </td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line">  char * rec_input; </td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">  SSL3_RECORD *rec = alloc_SSL3_RECORD(); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+VARIABLE_DECLARED(rec:ssl3_record_st*); [line 132, column 3];
+n$11=_fun_alloc_SSL3_RECORD() [line 132, column 22];
+*&amp;rec:ssl3_record_st*=n$11 [line 132, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">  rec-&gt;length = length; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$9=*&amp;rec:ssl3_record_st* [line 133, column 3];
+n$10=*&amp;length:unsigned int [line 133, column 17];
+*n$9.length:unsigned int=n$10 [line 133, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line">  rec-&gt;data = data; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$8=*&amp;rec:ssl3_record_st* [line 134, column 3];
+*n$8.data:unsigned char*=&amp;data [line 134, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">  rec-&gt;type = 0; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$7=*&amp;rec:ssl3_record_st* [line 135, column 3];
+*n$7.type:int=0 [line 135, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line">  rec-&gt;input = rec_input; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$5=*&amp;rec:ssl3_record_st* [line 136, column 3];
+n$6=*&amp;rec_input:char* [line 136, column 16];
+*n$5.input:unsigned char*=(unsigned char*)n$6 [line 136, column 3];
+</span></span></a>
+<div class="msg" style="margin-left:9ex">PULSE_UNINITIALIZED_VALUE  `rec_input` is read without initialization</div></td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">//Test4： Do not Work here </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line">  return tls1_cbc_remove_padding(s,rec,block_size,mac_size); <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;s:ssl_st* [line 142, column 34];
+n$1=*&amp;rec:ssl3_record_st* [line 142, column 36];
+n$2=*&amp;block_size:unsigned int [line 142, column 40];
+n$3=*&amp;mac_size:unsigned int [line 142, column 51];
+n$4=_fun_tls1_cbc_remove_padding(n$0:ssl_st*,n$1:ssl3_record_st*,n$2:unsigned int,n$3:unsigned int) [line 142, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$4 [line 142, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line">} <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/main.fad58de7366495db4650cfefac2fcd61_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">int memcmp(char *a, char *b, size_t len){ <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:15 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98.html">summary for memcmp</a></td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">//Test5： Work </td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE148">148</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE149">149</td><td class="line">  size_t i=0; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:1 succs:5 exn: Instructions
+VARIABLE_DECLARED(i:unsigned long); [line 149, column 3];
+*&amp;i:unsigned long=(unsigned long)0 [line 149, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE150">150</td><td class="line">  for (i=0; i&lt;len; i++){ <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:15 succs:4 exn: Instructions
+*&amp;i:unsigned long=(unsigned long)0 [line 150, column 8];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node4.html"><span class='visited with_tooltip'>J_4<span class='tooltip'>node4 preds:6 5 succs:7 exn: Join
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:4 succs:8 9 exn: Instructions
+n$1=*&amp;i:unsigned long [line 150, column 13];
+n$2=*&amp;len:unsigned long [line 150, column 15];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:7 succs:11 exn: Conditional true Branch
+PRUNE((n$1  &lt;  n$2), true); [line 150, column 13];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:10 succs:4 exn: Instructions
+n$0=*&amp;i:unsigned long [line 150, column 20];
+*&amp;i:unsigned long=(n$0 + 1) [line 150, column 20];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:7 succs:3 exn: Conditional false Branch
+PRUNE(!(n$1  &lt;  n$2), false); [line 150, column 13];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE151">151</td><td class="line">//Test6： Work </td></tr>
+<tr><td class="num" id="LINE152">152</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE153">153</td><td class="line">    // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE154">154</td><td class="line">    if (a[i] != b[i]){ <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:8 succs:12 13 exn: Instructions
+n$3=*&amp;a:char* [line 154, column 9];
+n$4=*&amp;i:unsigned long [line 154, column 11];
+n$5=*n$3[n$4]:char [line 154, column 9];
+n$6=*&amp;b:char* [line 154, column 17];
+n$7=*&amp;i:unsigned long [line 154, column 19];
+n$8=*n$6[n$7]:char [line 154, column 17];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:11 succs:10 exn: Conditional false Branch
+PRUNE(!(n$5 != n$8), false); [line 154, column 9];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node10.html"><span class='visited with_tooltip'>J_10<span class='tooltip'>node10 preds:13 succs:6 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:11 succs:14 exn: Conditional true Branch
+PRUNE((n$5 != n$8), true); [line 154, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE155">155</td><td class="line">//Test7： Do not work here, cause there is no value for the read sequence variable  </td></tr>
+<tr><td class="num" id="LINE156">156</td><td class="line">      // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE157">157</td><td class="line">      // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE158">158</td><td class="line">      return 1; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:12 succs:2 exn: Instructions
+*&amp;return:int=1 [line 158, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE159">159</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE160">160</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE161">161</td><td class="line">//Test8：  </td></tr>
+<tr><td class="num" id="LINE162">162</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE163">163</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE164">164</td><td class="line">  return 0; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:9 succs:2 exn: Instructions
+*&amp;return:int=0 [line 164, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE165">165</td><td class="line">} <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/memcmp.4287a4df4ae50ebfb8cb668ef27e7b98_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:14 3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE166">166</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE167">167</td><td class="line">int tls1_cbc_remove_padding(const SSL *s, <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:43 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e.html">summary for tls1_cbc_remove_padding</a></td></tr>
+<tr><td class="num" id="LINE168">168</td><td class="line">                            SSL3_RECORD *rec, </td></tr>
+<tr><td class="num" id="LINE169">169</td><td class="line">                            unsigned bs, unsigned mac_size) </td></tr>
+<tr><td class="num" id="LINE170">170</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE171">171</td><td class="line">  int ii, i, j; </td></tr>
+<tr><td class="num" id="LINE172">172</td><td class="line">  int l = rec-&gt;length; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node43.html"><span class='visited with_tooltip'>I_43<span class='tooltip'>node43 preds:1 succs:42 exn: Instructions
+VARIABLE_DECLARED(l:int); [line 172, column 3];
+n$58=*&amp;rec:ssl3_record_st* [line 172, column 11];
+n$59=*n$58.length:unsigned int [line 172, column 11];
+*&amp;l:int=n$59 [line 172, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE173">173</td><td class="line">  ii=i=rec-&gt;data[l-1]; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node42.html"><span class='visited with_tooltip'>I_42<span class='tooltip'>node42 preds:43 succs:41 exn: Instructions
+n$53=*&amp;rec:ssl3_record_st* [line 173, column 8];
+n$54=*n$53.data:unsigned char* [line 173, column 8];
+n$55=*&amp;l:int [line 173, column 18];
+n$56=*n$54[(n$55 - 1)]:unsigned char [line 173, column 8];
+*&amp;i:int=n$56 [line 173, column 6];
+n$57=*&amp;i:int [line 173, column 6];
+*&amp;ii:int=n$57 [line 173, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE174">174</td><td class="line">  i++; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node41.html"><span class='visited with_tooltip'>I_41<span class='tooltip'>node41 preds:42 succs:25 exn: Instructions
+n$52=*&amp;i:int [line 174, column 3];
+*&amp;i:int=(n$52 + 1) [line 174, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE175">175</td><td class="line">//Test9：Work here </td></tr>
+<tr><td class="num" id="LINE176">176</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE177">177</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE178">178</td><td class="line">  if ((s-&gt;options&amp;0x00000200)) <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node25.html"><span class='visited with_tooltip'>I_25<span class='tooltip'>node25 preds:41 succs:26 27 exn: Instructions
+n$31=*&amp;s:ssl_st const * [line 178, column 8];
+n$32=*n$31.options:unsigned long [line 178, column 8];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node26.html"><span class='visited with_tooltip'>C_26<span class='tooltip'>node26 preds:25 succs:34 exn: Conditional true Branch
+PRUNE((n$32 & (unsigned long)512), true); [line 178, column 8];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node27.html"><span class='visited with_tooltip'>C_27<span class='tooltip'>node27 preds:25 succs:24 exn: Conditional false Branch
+PRUNE(!(n$32 & (unsigned long)512), false); [line 178, column 8];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node24.html"><span class='visited with_tooltip'>J_24<span class='tooltip'>node24 preds:27 28 succs:20 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE179">179</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE180">180</td><td class="line">//Test10：Do not Work here </td></tr>
+<tr><td class="num" id="LINE181">181</td><td class="line">      // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE182">182</td><td class="line">      // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE183">183</td><td class="line">      if ((memcmp(s-&gt;s3-&gt;read_sequence, <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node34.html"><span class='visited with_tooltip'>I_34<span class='tooltip'>node34 preds:26 succs:35 36 exn: Instructions
+n$39=*&amp;s:ssl_st const * [line 183, column 19];
+n$40=*n$39.s3:ssl3_state_st* [line 183, column 19];
+n$41=*n$40.read_sequence:unsigned char* [line 183, column 19];
+n$42=_fun_ZEROS() [line 184, column 19];
+n$43=_fun_memcmp((char*)n$41:char*,n$42:char*,(unsigned long)8:unsigned long) [line 183, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node35.html"><span class='visited with_tooltip'>C_35<span class='tooltip'>node35 preds:34 succs:37 exn: Conditional true Branch
+PRUNE((n$43 == 0), true); [line 183, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node36.html"><span class='visited with_tooltip'>C_36<span class='tooltip'>node36 preds:34 succs:33 exn: Conditional false Branch
+PRUNE(!(n$43 == 0), false); [line 183, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node33.html"><span class='visited with_tooltip'>J_33<span class='tooltip'>node33 preds:39 36 40 succs:29 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE184">184</td><td class="line">                  ZEROS(),8) == 0) &amp;&amp; !(ii &amp; 1)) <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node37.html"><span class='visited with_tooltip'>I_37<span class='tooltip'>node37 preds:35 succs:38 39 exn: Instructions
+n$44=*&amp;ii:int [line 184, column 41];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node38.html"><span class='visited with_tooltip'>C_38<span class='tooltip'>node38 preds:37 succs:40 exn: Conditional true Branch
+PRUNE(!(n$44 & 1), true); [line 184, column 41];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node39.html"><span class='visited with_tooltip'>C_39<span class='tooltip'>node39 preds:37 succs:33 exn: Conditional false Branch
+PRUNE((n$44 & 1), false); [line 184, column 41];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE185">185</td><td class="line">        s-&gt;s3-&gt;flags|=0x0008; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node40.html"><span class='visited with_tooltip'>I_40<span class='tooltip'>node40 preds:38 succs:33 exn: Instructions
+n$45=*&amp;s:ssl_st const * [line 185, column 9];
+n$46=*n$45.s3:ssl3_state_st* [line 185, column 9];
+n$47=*n$46.flags:long [line 185, column 9];
+*n$46.flags:long=(n$47 | 8) [line 185, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE186">186</td><td class="line">      if (s-&gt;s3-&gt;flags &amp; 0x0008) <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node29.html"><span class='visited with_tooltip'>I_29<span class='tooltip'>node29 preds:33 succs:30 31 exn: Instructions
+n$33=*&amp;s:ssl_st const * [line 186, column 11];
+n$34=*n$33.s3:ssl3_state_st* [line 186, column 11];
+n$35=*n$34.flags:long [line 186, column 11];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node30.html"><span class='visited with_tooltip'>C_30<span class='tooltip'>node30 preds:29 succs:32 exn: Conditional true Branch
+PRUNE((n$35 & 8), true); [line 186, column 11];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node31.html"><span class='visited with_tooltip'>C_31<span class='tooltip'>node31 preds:29 succs:28 exn: Conditional false Branch
+PRUNE(!(n$35 & 8), false); [line 186, column 11];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node28.html"><span class='visited with_tooltip'>J_28<span class='tooltip'>node28 preds:31 32 succs:24 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE187">187</td><td class="line">        i--; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node32.html"><span class='visited with_tooltip'>I_32<span class='tooltip'>node32 preds:30 succs:28 exn: Instructions
+n$36=*&amp;i:int [line 187, column 9];
+*&amp;i:int=(n$36 - 1) [line 187, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE188">188</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE189">189</td><td class="line">//Test11：Do not Work here </td></tr>
+<tr><td class="num" id="LINE190">190</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE191">191</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE192">192</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE193">193</td><td class="line">  if (i + bs &gt; (int)(rec-&gt;length)) <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:24 succs:21 22 exn: Instructions
+n$25=*&amp;i:int [line 193, column 7];
+n$26=*&amp;bs:unsigned int [line 193, column 11];
+n$27=*&amp;rec:ssl3_record_st* [line 193, column 22];
+n$28=*n$27.length:int [line 193, column 21];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node21.html"><span class='visited with_tooltip'>C_21<span class='tooltip'>node21 preds:20 succs:23 exn: Conditional true Branch
+PRUNE((((unsigned int)n$25 + n$26)  &gt;  (unsigned int)n$28), true); [line 193, column 7];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node22.html"><span class='visited with_tooltip'>C_22<span class='tooltip'>node22 preds:20 succs:19 exn: Conditional false Branch
+PRUNE(!(((unsigned int)n$25 + n$26)  &gt;  (unsigned int)n$28), false); [line 193, column 7];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node19.html"><span class='visited with_tooltip'>J_19<span class='tooltip'>node19 preds:22 succs:9 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE194">194</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE195">195</td><td class="line">      return -1; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:21 succs:2 exn: Instructions
+*&amp;return:int=-1 [line 195, column 7];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE196">196</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE197">197</td><td class="line">  for (j=(int)(l-i); j&lt;(int)l; j++) <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:19 succs:8 exn: Instructions
+n$12=*&amp;l:int [line 197, column 16];
+n$13=*&amp;i:int [line 197, column 18];
+*&amp;j:int=(n$12 - n$13) [line 197, column 8];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node8.html"><span class='visited with_tooltip'>J_8<span class='tooltip'>node8 preds:10 9 succs:11 exn: Join
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:8 succs:12 13 exn: Instructions
+n$15=*&amp;j:int [line 197, column 22];
+n$16=*&amp;l:int [line 197, column 29];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:11 succs:15 exn: Conditional true Branch
+PRUNE((n$15  &lt;  n$16), true); [line 197, column 22];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:14 succs:8 exn: Instructions
+n$14=*&amp;j:int [line 197, column 32];
+*&amp;j:int=(n$14 + 1) [line 197, column 32];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:11 succs:7 exn: Conditional false Branch
+PRUNE(!(n$15  &lt;  n$16), false); [line 197, column 22];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE198">198</td><td class="line">    { </td></tr>
+<tr><td class="num" id="LINE199">199</td><td class="line">      if (rec-&gt;data[j] != ii) <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:12 succs:16 17 exn: Instructions
+n$17=*&amp;rec:ssl3_record_st* [line 199, column 11];
+n$18=*n$17.data:unsigned char* [line 199, column 11];
+n$19=*&amp;j:int [line 199, column 21];
+n$20=*n$18[n$19]:unsigned char [line 199, column 11];
+n$21=*&amp;ii:int [line 199, column 27];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node17.html"><span class='visited with_tooltip'>C_17<span class='tooltip'>node17 preds:15 succs:14 exn: Conditional false Branch
+PRUNE(!(n$20 != n$21), false); [line 199, column 11];
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node14.html"><span class='visited with_tooltip'>J_14<span class='tooltip'>node14 preds:17 succs:10 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node16.html"><span class='visited with_tooltip'>C_16<span class='tooltip'>node16 preds:15 succs:18 exn: Conditional true Branch
+PRUNE((n$20 != n$21), true); [line 199, column 11];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE200">200</td><td class="line">        { </td></tr>
+<tr><td class="num" id="LINE201">201</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE202">202</td><td class="line">     return -1; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:16 succs:2 exn: Instructions
+*&amp;return:int=-1 [line 202, column 6];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE203">203</td><td class="line">        } </td></tr>
+<tr><td class="num" id="LINE204">204</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE205">205</td><td class="line">  rec-&gt;length-=i; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:13 succs:6 exn: Instructions
+n$9=*&amp;rec:ssl3_record_st* [line 205, column 3];
+n$10=*&amp;i:int [line 205, column 16];
+n$11=*n$9.length:unsigned int [line 205, column 3];
+*n$9.length:unsigned int=(n$11 - (unsigned int)n$10) [line 205, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE206">206</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE207">207</td><td class="line">  rec-&gt;data += bs; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$6=*&amp;rec:ssl3_record_st* [line 207, column 3];
+n$7=*&amp;bs:unsigned int [line 207, column 16];
+n$8=*n$6.data:unsigned char* [line 207, column 3];
+*n$6.data:unsigned char*=(n$8 + n$7) [line 207, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE208">208</td><td class="line">  rec-&gt;input += bs; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+n$3=*&amp;rec:ssl3_record_st* [line 208, column 3];
+n$4=*&amp;bs:unsigned int [line 208, column 17];
+n$5=*n$3.input:unsigned char* [line 208, column 3];
+*n$3.input:unsigned char*=(n$5 + n$4) [line 208, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE209">209</td><td class="line">  rec-&gt;length -= bs; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$0=*&amp;rec:ssl3_record_st* [line 209, column 3];
+n$1=*&amp;bs:unsigned int [line 209, column 18];
+n$2=*n$0.length:unsigned int [line 209, column 3];
+*n$0.length:unsigned int=(n$2 - n$1) [line 209, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE210">210</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE211">211</td><td class="line">//Test12：Do not Work here </td></tr>
+<tr><td class="num" id="LINE212">212</td><td class="line">  // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE213">213</td><td class="line">  // int blah = *p; // null pointer dereference </td></tr>
+<tr><td class="num" id="LINE214">214</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE215">215</td><td class="line">  return 1; <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+*&amp;return:int=1 [line 215, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE216">216</td><td class="line">} <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:23 18 3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE217">217</td><td class="line"> </td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+<br>Uninitialized Value  `rec_input` is read without initialization <a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/nodes/node0.html">node0</a>(<a href="./tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8/../tls1_cbc_remove_padding_lucky13_withtest.c.ccb1e4867bb4346614e15898cf1d16b8.html#LINE136">136</a>)</body>
+</html>
