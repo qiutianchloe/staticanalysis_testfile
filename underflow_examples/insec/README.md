@@ -2,8 +2,8 @@
 
 |Tool|Command Line|exec time|issues found|Debug File|
 |----------------|-------------------------------|-----------------------------|---------------------------|---|
-|Underflow|`./Underflow.sh examples/insec.c `|6.224 s|1 top-level err & 1 conditional memory & 1 conditional insecr||
-|Pulse-x|`infer  --pulse-isl --pulse-only -- gcc -c -I../include/ ./examples/insec.c`|68.614ms|3 USE_AFTER_FREE issues found||
+|Underflow|`./Underflow.sh examples/insec.c `|6.224 s|1 top-level err & 1 conditional memory & 1 conditional insecr|results-insec.txt|
+|Pulse-x|`infer  --pulse-isl --pulse-only -- gcc -c -I../include/ ./examples/insec.c`|68.614ms|3 USE_AFTER_FREE issues found|pulse_insec.html|
 
 
 
