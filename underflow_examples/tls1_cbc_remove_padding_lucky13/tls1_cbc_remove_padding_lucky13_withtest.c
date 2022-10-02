@@ -128,7 +128,7 @@ int main(){
   // int *p = NULL;
   // int blah = *p; // null pointer dereference
 
-  char * rec_input;
+  char * rec_input = NULL;
   SSL3_RECORD *rec = alloc_SSL3_RECORD();
   rec->length = length;
   rec->data = data;
@@ -175,7 +175,8 @@ int tls1_cbc_remove_padding(const SSL *s,
 //Test9：Work here
   // int *p = NULL;
   // int blah = *p; // null pointer dereference
-  if ((s->options&0x00000200))
+
+  if (s->options&0x00000200)
     {
 //Test10：Do not Work here
       // int *p = NULL;
@@ -186,18 +187,30 @@ int tls1_cbc_remove_padding(const SSL *s,
       if (s->s3->flags & 0x0008)
         i--;
     }
-//Test11：Do not Work here
+// Test11：Work here!!!!!
   // int *p = NULL;
   // int blah = *p; // null pointer dereference
 
   if (i + bs > (int)(rec->length))
     {
+//Test 12: Do not find issues here but it works continue
+      // int *p = NULL;
+      // int blah = *p; // null pointer dereference
       return -1;
     }
+// Test13：Work here!!!!!
+  // int *p = NULL;
+  // int blah = *p; // null pointer dereference
   for (j=(int)(l-i); j<(int)l; j++)
     {
+//Test 14: Work here !!! hahhahahahah
+      // int *p = NULL;
+      // int blah = *p; // null pointer dereference
       if (rec->data[j] != ii)
         {
+//Test 15: Do not work here since the value is not true
+      // int *p = NULL;
+      // int blah = *p; // null pointer dereference
 
      return -1;
         }
@@ -208,7 +221,7 @@ int tls1_cbc_remove_padding(const SSL *s,
   rec->input += bs;
   rec->length -= bs;
 
-//Test12：Do not Work here
+//Test16：Work here!!!!
   // int *p = NULL;
   // int blah = *p; // null pointer dereference
 
