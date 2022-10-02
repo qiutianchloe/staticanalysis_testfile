@@ -1,0 +1,374 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/ct_sort.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">/* constant-time sort. From:  </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">   https://github.com/binsec/rel_bench/blob/main/src/ct/ct-sort/lib.c </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line">*/ </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line">/* https://github.com/imdea-software/verifying-constant-time/blob/master/examples/sort/sort.c */ </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">int sort2(int *out2, int *in2) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:19 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/sort2.769ac7c81bcac3751623fa5a17e6b6ac.html">summary for sort2</a></td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">  int a, b; </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line">  a = in2[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:1 succs:18 exn: Instructions
+n$19=*&amp;in2:int* [line 8, column 7];
+n$20=*n$19[0]:int [line 8, column 7];
+*&amp;a:int=n$20 [line 8, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line">  b = in2[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:11 exn: Instructions
+n$17=*&amp;in2:int* [line 9, column 7];
+n$18=*n$17[1]:int [line 9, column 7];
+*&amp;b:int=n$18 [line 9, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line">//Here! </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line">  if (a &lt; b) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:18 succs:12 13 exn: Instructions
+n$2=*&amp;a:int [line 11, column 7];
+n$3=*&amp;b:int [line 11, column 11];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node12.html"><span class='visited with_tooltip'>C_12<span class='tooltip'>node12 preds:11 succs:15 exn: Conditional true Branch
+PRUNE((n$2  &lt;  n$3), true); [line 11, column 7];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:11 succs:17 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  n$3), false); [line 11, column 7];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node10.html"><span class='visited with_tooltip'>J_10<span class='tooltip'>node10 preds:16 14 succs:4 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line">    out2[0] = in2[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:12 succs:14 exn: Instructions
+n$7=*&amp;out2:int* [line 12, column 5];
+n$8=*&amp;in2:int* [line 12, column 15];
+n$9=*n$8[0]:int [line 12, column 15];
+*n$7[0]:int=n$9 [line 12, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line">    out2[1] = in2[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:10 exn: Instructions
+n$4=*&amp;out2:int* [line 13, column 5];
+n$5=*&amp;in2:int* [line 13, column 15];
+n$6=*n$5[1]:int [line 13, column 15];
+*n$4[1]:int=n$6 [line 13, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line">  } else { </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line">    out2[0] = in2[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:13 succs:16 exn: Instructions
+n$13=*&amp;out2:int* [line 15, column 5];
+n$14=*&amp;in2:int* [line 15, column 15];
+n$15=*n$14[1]:int [line 15, column 15];
+*n$13[0]:int=n$15 [line 15, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line">    out2[1] = in2[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:10 exn: Instructions
+n$10=*&amp;out2:int* [line 16, column 5];
+n$11=*&amp;in2:int* [line 16, column 15];
+n$12=*n$11[0]:int [line 16, column 15];
+*n$10[1]:int=n$12 [line 16, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line">  return (a &lt; b); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:10 succs:5 6 exn: Instructions
+n$0=*&amp;a:int [line 18, column 11];
+n$1=*&amp;b:int [line 18, column 15];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node5.html"><span class='visited with_tooltip'>C_5<span class='tooltip'>node5 preds:4 succs:7 exn: Conditional true Branch
+PRUNE((n$0  &lt;  n$1), true); [line 18, column 11];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:5 succs:3 exn: Instructions
+*&amp;return:int=1 [line 18, column 11];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:4 succs:8 exn: Conditional false Branch
+PRUNE(!(n$0  &lt;  n$1), false); [line 18, column 11];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:6 succs:3 exn: Instructions
+*&amp;return:int=0 [line 18, column 11];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node3.html"><span class='visited with_tooltip'>J_3<span class='tooltip'>node3 preds:8 7 succs:9 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:3 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2.769ac7c81bcac3751623fa5a17e6b6ac_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:9 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line">void sort3(int *conds, int *out3, int *in3) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:8 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/sort3.da4a52d2a1f0422edd7640724fda8380.html">summary for sort3</a></td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line">  conds[0] = sort2(out3,in3); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:1 succs:7 exn: Instructions
+n$17=*&amp;conds:int* [line 22, column 3];
+n$18=*&amp;out3:int* [line 22, column 20];
+n$19=*&amp;in3:int* [line 22, column 25];
+n$20=_fun_sort2(n$18:int*,n$19:int*) [line 22, column 14];
+*n$17[0]:int=n$20 [line 22, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line">  in3[1] = out3[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$14=*&amp;in3:int* [line 23, column 3];
+n$15=*&amp;out3:int* [line 23, column 12];
+n$16=*n$15[1]:int [line 23, column 12];
+*n$14[1]:int=n$16 [line 23, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line">  conds[1] = sort2(out3+1,in3+1); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$10=*&amp;conds:int* [line 24, column 3];
+n$11=*&amp;out3:int* [line 24, column 20];
+n$12=*&amp;in3:int* [line 24, column 27];
+n$13=_fun_sort2((n$11 + 1):int*,(n$12 + 1):int*) [line 24, column 14];
+*n$10[1]:int=n$13 [line 24, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line">  in3[0] = out3[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+n$7=*&amp;in3:int* [line 25, column 3];
+n$8=*&amp;out3:int* [line 25, column 12];
+n$9=*n$8[0]:int [line 25, column 12];
+*n$7[0]:int=n$9 [line 25, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line">  in3[1] = out3[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$4=*&amp;in3:int* [line 26, column 3];
+n$5=*&amp;out3:int* [line 26, column 12];
+n$6=*n$5[1]:int [line 26, column 12];
+*n$4[1]:int=n$6 [line 26, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line">  conds[2] = sort2(out3,in3); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+n$0=*&amp;conds:int* [line 27, column 3];
+n$1=*&amp;out3:int* [line 27, column 20];
+n$2=*&amp;in3:int* [line 27, column 25];
+n$3=_fun_sort2(n$1:int*,n$2:int*) [line 27, column 14];
+*n$0[2]:int=n$3 [line 27, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3.da4a52d2a1f0422edd7640724fda8380_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line">/* https://github.com/imdea-software/verifying-constant-time/blob/master/examples/sort/sort_multiplex.c */ </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line">void sort2_multiplex(int *out2, int *in2) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:7 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b.html">summary for sort2_multiplex</a></td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line">  signed char c; </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line">  c = (in2[0] &lt; in2[1]) - 1; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:1 succs:8 9 exn: Instructions
+n$16=*&amp;in2:int* [line 34, column 8];
+n$17=*n$16[0]:int [line 34, column 8];
+n$18=*&amp;in2:int* [line 34, column 17];
+n$19=*n$18[1]:int [line 34, column 17];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node8.html"><span class='visited with_tooltip'>C_8<span class='tooltip'>node8 preds:7 succs:10 exn: Conditional true Branch
+PRUNE((n$17  &lt;  n$19), true); [line 34, column 8];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:8 succs:6 exn: Instructions
+*&amp;0$?%__sil_tmpSIL_temp_conditional___n$15:int=1 [line 34, column 8];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:7 succs:11 exn: Conditional false Branch
+PRUNE(!(n$17  &lt;  n$19), false); [line 34, column 8];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:9 succs:6 exn: Instructions
+*&amp;0$?%__sil_tmpSIL_temp_conditional___n$15:int=0 [line 34, column 8];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node6.html"><span class='visited with_tooltip'>J_6<span class='tooltip'>node6 preds:11 10 succs:12 exn: Join
+END_BRANCHES;
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:6 succs:5 exn: Instructions
+n$20=*&amp;0$?%__sil_tmpSIL_temp_conditional___n$15:int [line 34, column 8];
+*&amp;c:signed char=(n$20 - 1) [line 34, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line">  out2[0] = (~c &amp; in2[0]) | (c &amp; in2[1]); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:12 succs:4 exn: Instructions
+n$8=*&amp;out2:int* [line 35, column 3];
+n$9=*&amp;c:signed char [line 35, column 15];
+n$10=*&amp;in2:int* [line 35, column 19];
+n$11=*n$10[0]:int [line 35, column 19];
+n$12=*&amp;c:signed char [line 35, column 30];
+n$13=*&amp;in2:int* [line 35, column 34];
+n$14=*n$13[1]:int [line 35, column 34];
+*n$8[0]:int=((~n$9 & n$11) | (n$12 & n$14)) [line 35, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line">  out2[1] = (~c &amp; in2[1]) | (c &amp; in2[0]); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$1=*&amp;out2:int* [line 36, column 3];
+n$2=*&amp;c:signed char [line 36, column 15];
+n$3=*&amp;in2:int* [line 36, column 19];
+n$4=*n$3[1]:int [line 36, column 19];
+n$5=*&amp;c:signed char [line 36, column 30];
+n$6=*&amp;in2:int* [line 36, column 34];
+n$7=*n$6[0]:int [line 36, column 34];
+*n$1[1]:int=((~n$2 & n$4) | (n$5 & n$7)) [line 36, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line">  return; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_multiplex.39fe026a92c3dc11eb75af59d4811b1b_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line">void sort3_multiplex(int *out3, int *in3) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:8 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038.html">summary for sort3_multiplex</a></td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line">  sort2_multiplex(out3,in3); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:1 succs:7 exn: Instructions
+n$15=*&amp;out3:int* [line 41, column 19];
+n$16=*&amp;in3:int* [line 41, column 24];
+n$17=_fun_sort2_multiplex(n$15:int*,n$16:int*) [line 41, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line">  in3[1] = out3[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$12=*&amp;in3:int* [line 42, column 3];
+n$13=*&amp;out3:int* [line 42, column 12];
+n$14=*n$13[1]:int [line 42, column 12];
+*n$12[1]:int=n$14 [line 42, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line">  sort2_multiplex(out3+1,in3+1); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$9=*&amp;out3:int* [line 43, column 19];
+n$10=*&amp;in3:int* [line 43, column 26];
+n$11=_fun_sort2_multiplex((n$9 + 1):int*,(n$10 + 1):int*) [line 43, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line">  in3[0] = out3[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+n$6=*&amp;in3:int* [line 44, column 3];
+n$7=*&amp;out3:int* [line 44, column 12];
+n$8=*n$7[0]:int [line 44, column 12];
+*n$6[0]:int=n$8 [line 44, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line">  in3[1] = out3[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$3=*&amp;in3:int* [line 45, column 3];
+n$4=*&amp;out3:int* [line 45, column 12];
+n$5=*n$4[1]:int [line 45, column 12];
+*n$3[1]:int=n$5 [line 45, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line">  sort2_multiplex(out3,in3); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+n$0=*&amp;out3:int* [line 46, column 19];
+n$1=*&amp;in3:int* [line 46, column 24];
+n$2=_fun_sort2_multiplex(n$0:int*,n$1:int*) [line 46, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_multiplex.afec3354273e4a85b7ec3b1a92c3a038_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line">/* https://github.com/imdea-software/verifying-constant-time/blob/master/examples/sort/sort_negative.c */ </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line">void sort2_negative(int *out2, int *in2) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:13 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a.html">summary for sort2_negative</a></td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line">  int a, b; </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">  a = in2[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:1 succs:12 exn: Instructions
+n$18=*&amp;in2:int* [line 52, column 7];
+n$19=*n$18[0]:int [line 52, column 7];
+*&amp;a:int=n$19 [line 52, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line">  b = in2[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:5 exn: Instructions
+n$16=*&amp;in2:int* [line 53, column 7];
+n$17=*n$16[1]:int [line 53, column 7];
+*&amp;b:int=n$17 [line 53, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">//Here! </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">  if (a &lt; b) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:12 succs:6 7 exn: Instructions
+n$1=*&amp;a:int [line 55, column 7];
+n$2=*&amp;b:int [line 55, column 11];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node6.html"><span class='visited with_tooltip'>C_6<span class='tooltip'>node6 preds:5 succs:9 exn: Conditional true Branch
+PRUNE((n$1  &lt;  n$2), true); [line 55, column 7];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node7.html"><span class='visited with_tooltip'>C_7<span class='tooltip'>node7 preds:5 succs:11 exn: Conditional false Branch
+PRUNE(!(n$1  &lt;  n$2), false); [line 55, column 7];
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node4.html"><span class='visited with_tooltip'>J_4<span class='tooltip'>node4 preds:10 8 succs:3 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">    out2[0] = in2[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:6 succs:8 exn: Instructions
+n$6=*&amp;out2:int* [line 56, column 5];
+n$7=*&amp;in2:int* [line 56, column 15];
+n$8=*n$7[0]:int [line 56, column 15];
+*n$6[0]:int=n$8 [line 56, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line">    out2[1] = in2[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:4 exn: Instructions
+n$3=*&amp;out2:int* [line 57, column 5];
+n$4=*&amp;in2:int* [line 57, column 15];
+n$5=*n$4[1]:int [line 57, column 15];
+*n$3[1]:int=n$5 [line 57, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">  } else { </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line">    out2[0] = in2[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:7 succs:10 exn: Instructions
+n$12=*&amp;out2:int* [line 59, column 5];
+n$13=*&amp;in2:int* [line 59, column 15];
+n$14=*n$13[1]:int [line 59, column 15];
+*n$12[0]:int=n$14 [line 59, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line">    out2[1] = in2[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:4 exn: Instructions
+n$9=*&amp;out2:int* [line 60, column 5];
+n$10=*&amp;in2:int* [line 60, column 15];
+n$11=*n$10[0]:int [line 60, column 15];
+*n$9[1]:int=n$11 [line 60, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line">  } </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line">  return; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort2_negative.6bdd5f762b024dd711a7fc9b5198792a_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line">void sort3_negative(int *out3, int *in3) { <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:8 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/sort3_negative.06adbc3293d9740caf8d95ddfd47f598.html">summary for sort3_negative</a></td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line">  sort2_negative(out3,in3); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:1 succs:7 exn: Instructions
+n$15=*&amp;out3:int* [line 66, column 18];
+n$16=*&amp;in3:int* [line 66, column 23];
+n$17=_fun_sort2_negative(n$15:int*,n$16:int*) [line 66, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line">  in3[1] = out3[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$12=*&amp;in3:int* [line 67, column 3];
+n$13=*&amp;out3:int* [line 67, column 12];
+n$14=*n$13[1]:int [line 67, column 12];
+*n$12[1]:int=n$14 [line 67, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line">  sort2_negative(out3+1,in3+1); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$9=*&amp;out3:int* [line 68, column 18];
+n$10=*&amp;in3:int* [line 68, column 25];
+n$11=_fun_sort2_negative((n$9 + 1):int*,(n$10 + 1):int*) [line 68, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line">  in3[0] = out3[0]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:4 exn: Instructions
+n$6=*&amp;in3:int* [line 69, column 3];
+n$7=*&amp;out3:int* [line 69, column 12];
+n$8=*n$7[0]:int [line 69, column 12];
+*n$6[0]:int=n$8 [line 69, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line">  in3[1] = out3[1]; <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:5 succs:3 exn: Instructions
+n$3=*&amp;in3:int* [line 70, column 3];
+n$4=*&amp;out3:int* [line 70, column 12];
+n$5=*n$4[1]:int [line 70, column 12];
+*n$3[1]:int=n$5 [line 70, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line">  sort2_negative(out3,in3); <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:4 succs:2 exn: Instructions
+n$0=*&amp;out3:int* [line 71, column 18];
+n$1=*&amp;in3:int* [line 71, column 23];
+n$2=_fun_sort2_negative(n$0:int*,n$1:int*) [line 71, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/sort3_negative.06adbc3293d9740caf8d95ddfd47f598_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">void main_sort3(){ <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3.381a5eced2990dba5257b4447f5f3c0c_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/main_sort3.381a5eced2990dba5257b4447f5f3c0c.html">summary for main_sort3</a></td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line">  int a[3]; </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line">  int c[3]; </td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line">  int s[3]; </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line">  sort3(c,s,a);   <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3.381a5eced2990dba5257b4447f5f3c0c_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_sort3(&amp;c:int*,&amp;s:int*,&amp;a:int*) [line 80, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3.381a5eced2990dba5257b4447f5f3c0c_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">void main_sort3_multiplex(){ <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3_multiplex.b6f6325de01094b3b3bc2ebb1d81caf0_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/main_sort3_multiplex.b6f6325de01094b3b3bc2ebb1d81caf0.html">summary for main_sort3_multiplex</a></td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line">  int a[3]; </td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line">  int s[3]; </td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">  sort3_multiplex(s,a);   <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3_multiplex.b6f6325de01094b3b3bc2ebb1d81caf0_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_sort3_multiplex(&amp;s:int*,&amp;a:int*) [line 87, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3_multiplex.b6f6325de01094b3b3bc2ebb1d81caf0_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line">void main_sort3_negative(){ <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3_negative.d7775fb6811b030b14d23595d72640b6_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/main_sort3_negative.d7775fb6811b030b14d23595d72640b6.html">summary for main_sort3_negative</a></td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">  int a[3]; </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line">  int s[3]; </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">  sort3_negative(s,a);   <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3_negative.d7775fb6811b030b14d23595d72640b6_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:2 exn: Instructions
+n$0=_fun_sort3_negative(&amp;s:int*,&amp;a:int*) [line 94, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">} <a href="./ct_sort.c.f108355e2e47cf37c4a1a2c140c63f10/nodes/main_sort3_negative.d7775fb6811b030b14d23595d72640b6_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:3 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+</body>
+</html>
