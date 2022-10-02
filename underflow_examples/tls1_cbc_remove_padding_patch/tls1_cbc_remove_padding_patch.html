@@ -1,0 +1,961 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+body { background-color:#fff; color:#000; font-family:Helvetica, sans-serif; font-size:10pt }
+h1 { font-size:14pt }
+.code { border-collapse:collapse; width:100%; font-family: "Andale Mono", monospace; font-size:10pt; line-height: 1.2em }
+.color_black { color: black }
+.color_blue { color: blue }
+.color_green { color: green }
+.color_orange { color: orange }
+.color_red { color: red }
+.line { border-left: 3px solid #ccc; padding-left: 1ex; white-space: pre; }
+.msg { background-color:#fff8b4; color:#000; float:left; font-family:Helvetica, sans-serif; font-size: smaller; font-weight: bold; margin-bottom:10px; margin-top:10px; max-width:60em; padding:0.5em 1ex 0.5em 1ex; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; white-space: pre-wrap; word-wrap: break-word; }
+.num { background-color:#eee; color:#444; font-size: smaller; padding-right:2ex; text-align:right; width:2.5em; }
+.dangling { background-color:white; color: gray; }
+.visited { background-color:LemonChiffon; color: darkmagenta; }
+.tooltip { display: none; background-color:#FFF0F0; border: 2px solid #F00; font-weight: normal; left:10em; padding: 2px; position: absolute; top: -1em; -webkit-border-radius:5px; -webkit-box-shadow:1px 1px 7px #000; z-index: 1}
+.with_tooltip { position: relative; }
+.with_tooltip:hover .tooltip, .visited:hover .tooltip { display: block; }
+</style>
+</head>
+<body>
+<center><h1>File examples/tls1_cbc_remove_padding_patch_withtest.c </h1></center>
+<table class="code">
+<tr><td class="num" id="LINE1">1</td><td class="line">// derived from: https://github.com/binsec/rel_bench/blob/main/src/ct/openssl_almeida/tls1_cbc_remove_padding_patch.c </td></tr>
+<tr><td class="num" id="LINE2">2</td><td class="line">// with the contents of ct_openssl_utility.c manually transcluded here </td></tr>
+<tr><td class="num" id="LINE3">3</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE4">4</td><td class="line">typedef unsigned long size_t; </td></tr>
+<tr><td class="num" id="LINE5">5</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE6">6</td><td class="line">/* crypto/constant_time_locl.h */ </td></tr>
+<tr><td class="num" id="LINE7">7</td><td class="line">/*- </td></tr>
+<tr><td class="num" id="LINE8">8</td><td class="line"> * Utilities for constant-time cryptography. </td></tr>
+<tr><td class="num" id="LINE9">9</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE10">10</td><td class="line"> * Author: Emilia Kasper (emilia@openssl.org) </td></tr>
+<tr><td class="num" id="LINE11">11</td><td class="line"> * Based on previous work by Bodo Moeller, Emilia Kasper, Adam Langley </td></tr>
+<tr><td class="num" id="LINE12">12</td><td class="line"> * (Google). </td></tr>
+<tr><td class="num" id="LINE13">13</td><td class="line"> * ==================================================================== </td></tr>
+<tr><td class="num" id="LINE14">14</td><td class="line"> * Copyright (c) 2014 The OpenSSL Project.  All rights reserved. </td></tr>
+<tr><td class="num" id="LINE15">15</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE16">16</td><td class="line"> * Redistribution and use in source and binary forms, with or without </td></tr>
+<tr><td class="num" id="LINE17">17</td><td class="line"> * modification, are permitted provided that the following conditions </td></tr>
+<tr><td class="num" id="LINE18">18</td><td class="line"> * are met: </td></tr>
+<tr><td class="num" id="LINE19">19</td><td class="line"> * 1. Redistributions of source code must retain the copyright </td></tr>
+<tr><td class="num" id="LINE20">20</td><td class="line"> *    notice, this list of conditions and the following disclaimer. </td></tr>
+<tr><td class="num" id="LINE21">21</td><td class="line"> * 2. Redistributions in binary form must reproduce the above copyright </td></tr>
+<tr><td class="num" id="LINE22">22</td><td class="line"> *    notice, this list of conditions and the following disclaimer in the </td></tr>
+<tr><td class="num" id="LINE23">23</td><td class="line"> *    documentation and/or other materials provided with the distribution. </td></tr>
+<tr><td class="num" id="LINE24">24</td><td class="line"> * 3. All advertising materials mentioning features or use of this software </td></tr>
+<tr><td class="num" id="LINE25">25</td><td class="line"> *    must display the following acknowledgement: </td></tr>
+<tr><td class="num" id="LINE26">26</td><td class="line"> *    &quot;This product includes cryptographic software written by </td></tr>
+<tr><td class="num" id="LINE27">27</td><td class="line"> *     Eric Young (eay@cryptsoft.com)&quot; </td></tr>
+<tr><td class="num" id="LINE28">28</td><td class="line"> *    The word 'cryptographic' can be left out if the rouines from the library </td></tr>
+<tr><td class="num" id="LINE29">29</td><td class="line"> *    being used are not cryptographic related :-). </td></tr>
+<tr><td class="num" id="LINE30">30</td><td class="line"> * 4. If you include any Windows specific code (or a derivative thereof) from </td></tr>
+<tr><td class="num" id="LINE31">31</td><td class="line"> *    the apps directory (application code) you must include an acknowledgement: </td></tr>
+<tr><td class="num" id="LINE32">32</td><td class="line"> *    &quot;This product includes software written by Tim Hudson (tjh@cryptsoft.com)&quot; </td></tr>
+<tr><td class="num" id="LINE33">33</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE34">34</td><td class="line"> * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND </td></tr>
+<tr><td class="num" id="LINE35">35</td><td class="line"> * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE </td></tr>
+<tr><td class="num" id="LINE36">36</td><td class="line"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE </td></tr>
+<tr><td class="num" id="LINE37">37</td><td class="line"> * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE </td></tr>
+<tr><td class="num" id="LINE38">38</td><td class="line"> * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL </td></tr>
+<tr><td class="num" id="LINE39">39</td><td class="line"> * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS </td></tr>
+<tr><td class="num" id="LINE40">40</td><td class="line"> * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) </td></tr>
+<tr><td class="num" id="LINE41">41</td><td class="line"> * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT </td></tr>
+<tr><td class="num" id="LINE42">42</td><td class="line"> * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY </td></tr>
+<tr><td class="num" id="LINE43">43</td><td class="line"> * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF </td></tr>
+<tr><td class="num" id="LINE44">44</td><td class="line"> * SUCH DAMAGE. </td></tr>
+<tr><td class="num" id="LINE45">45</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE46">46</td><td class="line"> * The licence and distribution terms for any publically available version or </td></tr>
+<tr><td class="num" id="LINE47">47</td><td class="line"> * derivative of this code cannot be changed.  i.e. this code cannot simply be </td></tr>
+<tr><td class="num" id="LINE48">48</td><td class="line"> * copied and put under another distribution licence </td></tr>
+<tr><td class="num" id="LINE49">49</td><td class="line"> * [including the GNU Public Licence.] </td></tr>
+<tr><td class="num" id="LINE50">50</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE51">51</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE52">52</td><td class="line">#ifndef HEADER_CONSTANT_TIME_LOCL_H </td></tr>
+<tr><td class="num" id="LINE53">53</td><td class="line"># define HEADER_CONSTANT_TIME_LOCL_H </td></tr>
+<tr><td class="num" id="LINE54">54</td><td class="line">#include &quot;underflow.h&quot; </td></tr>
+<tr><td class="num" id="LINE55">55</td><td class="line">#define NULL ((void*)0)  </td></tr>
+<tr><td class="num" id="LINE56">56</td><td class="line">//# include &quot;e_os.h&quot;              /* For 'inline' */ </td></tr>
+<tr><td class="num" id="LINE57">57</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE58">58</td><td class="line">/*- </td></tr>
+<tr><td class="num" id="LINE59">59</td><td class="line"> * The boolean methods return a bitmask of all ones (0xff...f) for true </td></tr>
+<tr><td class="num" id="LINE60">60</td><td class="line"> * and 0 for false. This is useful for choosing a value based on the result </td></tr>
+<tr><td class="num" id="LINE61">61</td><td class="line"> * of a conditional in constant time. For example, </td></tr>
+<tr><td class="num" id="LINE62">62</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE63">63</td><td class="line"> * if (a &lt; b) { </td></tr>
+<tr><td class="num" id="LINE64">64</td><td class="line"> *   c = a; </td></tr>
+<tr><td class="num" id="LINE65">65</td><td class="line"> * } else { </td></tr>
+<tr><td class="num" id="LINE66">66</td><td class="line"> *   c = b; </td></tr>
+<tr><td class="num" id="LINE67">67</td><td class="line"> * } </td></tr>
+<tr><td class="num" id="LINE68">68</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE69">69</td><td class="line"> * can be written as </td></tr>
+<tr><td class="num" id="LINE70">70</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE71">71</td><td class="line"> * unsigned int lt = constant_time_lt(a, b); </td></tr>
+<tr><td class="num" id="LINE72">72</td><td class="line"> * c = constant_time_select(lt, a, b); </td></tr>
+<tr><td class="num" id="LINE73">73</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE74">74</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE75">75</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE76">76</td><td class="line"> * Returns the given value with the MSB copied to all the other </td></tr>
+<tr><td class="num" id="LINE77">77</td><td class="line"> * bits. Uses the fact that arithmetic shift shifts-in the sign bit. </td></tr>
+<tr><td class="num" id="LINE78">78</td><td class="line"> * However, this is not ensured by the C standard so you may need to </td></tr>
+<tr><td class="num" id="LINE79">79</td><td class="line"> * replace this with something else on odd CPUs. </td></tr>
+<tr><td class="num" id="LINE80">80</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE81">81</td><td class="line">static unsigned int constant_time_msb(unsigned int a); </td></tr>
+<tr><td class="num" id="LINE82">82</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE83">83</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE84">84</td><td class="line"> * Returns 0xff..f if a &lt; b and 0 otherwise. </td></tr>
+<tr><td class="num" id="LINE85">85</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE86">86</td><td class="line">static unsigned int constant_time_lt(unsigned int a, unsigned int b); </td></tr>
+<tr><td class="num" id="LINE87">87</td><td class="line">/* Convenience method for getting an 8-bit mask. */ </td></tr>
+<tr><td class="num" id="LINE88">88</td><td class="line">static unsigned char constant_time_lt_8(unsigned int a, </td></tr>
+<tr><td class="num" id="LINE89">89</td><td class="line">                                               unsigned int b); </td></tr>
+<tr><td class="num" id="LINE90">90</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE91">91</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE92">92</td><td class="line"> * Returns 0xff..f if a &gt;= b and 0 otherwise. </td></tr>
+<tr><td class="num" id="LINE93">93</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE94">94</td><td class="line">static unsigned int constant_time_ge(unsigned int a, unsigned int b); </td></tr>
+<tr><td class="num" id="LINE95">95</td><td class="line">/* Convenience method for getting an 8-bit mask. */ </td></tr>
+<tr><td class="num" id="LINE96">96</td><td class="line">static unsigned char constant_time_ge_8(unsigned int a, </td></tr>
+<tr><td class="num" id="LINE97">97</td><td class="line">                                               unsigned int b); </td></tr>
+<tr><td class="num" id="LINE98">98</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE99">99</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE100">100</td><td class="line"> * Returns 0xff..f if a == 0 and 0 otherwise. </td></tr>
+<tr><td class="num" id="LINE101">101</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE102">102</td><td class="line">static unsigned int constant_time_is_zero(unsigned int a); </td></tr>
+<tr><td class="num" id="LINE103">103</td><td class="line">/* Convenience method for getting an 8-bit mask. */ </td></tr>
+<tr><td class="num" id="LINE104">104</td><td class="line">static unsigned char constant_time_is_zero_8(unsigned int a); </td></tr>
+<tr><td class="num" id="LINE105">105</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE106">106</td><td class="line">/* </td></tr>
+<tr><td class="num" id="LINE107">107</td><td class="line"> * Returns 0xff..f if a == b and 0 otherwise. </td></tr>
+<tr><td class="num" id="LINE108">108</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE109">109</td><td class="line">static unsigned int constant_time_eq(unsigned int a, unsigned int b); </td></tr>
+<tr><td class="num" id="LINE110">110</td><td class="line">/* Convenience method for getting an 8-bit mask. */ </td></tr>
+<tr><td class="num" id="LINE111">111</td><td class="line">static unsigned char constant_time_eq_8(unsigned int a, </td></tr>
+<tr><td class="num" id="LINE112">112</td><td class="line">                                               unsigned int b); </td></tr>
+<tr><td class="num" id="LINE113">113</td><td class="line">/* Signed integers. */ </td></tr>
+<tr><td class="num" id="LINE114">114</td><td class="line">static unsigned int constant_time_eq_int(int a, int b); </td></tr>
+<tr><td class="num" id="LINE115">115</td><td class="line">/* Convenience method for getting an 8-bit mask. */ </td></tr>
+<tr><td class="num" id="LINE116">116</td><td class="line">static unsigned char constant_time_eq_int_8(int a, int b); </td></tr>
+<tr><td class="num" id="LINE117">117</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE118">118</td><td class="line">/*- </td></tr>
+<tr><td class="num" id="LINE119">119</td><td class="line"> * Returns (mask &amp; a) | (~mask &amp; b). </td></tr>
+<tr><td class="num" id="LINE120">120</td><td class="line"> * </td></tr>
+<tr><td class="num" id="LINE121">121</td><td class="line"> * When |mask| is all 1s or all 0s (as returned by the methods above), </td></tr>
+<tr><td class="num" id="LINE122">122</td><td class="line"> * the select methods return either |a| (if |mask| is nonzero) or |b| </td></tr>
+<tr><td class="num" id="LINE123">123</td><td class="line"> * (if |mask| is zero). </td></tr>
+<tr><td class="num" id="LINE124">124</td><td class="line"> */ </td></tr>
+<tr><td class="num" id="LINE125">125</td><td class="line">static unsigned int constant_time_select(unsigned int mask, </td></tr>
+<tr><td class="num" id="LINE126">126</td><td class="line">                                                unsigned int a, </td></tr>
+<tr><td class="num" id="LINE127">127</td><td class="line">                                                unsigned int b); </td></tr>
+<tr><td class="num" id="LINE128">128</td><td class="line">/* Convenience method for unsigned chars. */ </td></tr>
+<tr><td class="num" id="LINE129">129</td><td class="line">static unsigned char constant_time_select_8(unsigned char mask, </td></tr>
+<tr><td class="num" id="LINE130">130</td><td class="line">                                                   unsigned char a, </td></tr>
+<tr><td class="num" id="LINE131">131</td><td class="line">                                                   unsigned char b); </td></tr>
+<tr><td class="num" id="LINE132">132</td><td class="line">/* Convenience method for signed integers. */ </td></tr>
+<tr><td class="num" id="LINE133">133</td><td class="line">static int constant_time_select_int(unsigned int mask, int a, int b); </td></tr>
+<tr><td class="num" id="LINE134">134</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE135">135</td><td class="line">static unsigned int constant_time_msb(unsigned int a) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_msb%236bd1de4297fa491620c7befc1dc05077.ae49b881810e786ef2bf11cfbdac5021_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_msb%236bd1de4297fa491620c7befc1dc05077.ae49b881810e786ef2bf11cfbdac5021.html">summary for constant_time_msb</a></td></tr>
+<tr><td class="num" id="LINE136">136</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE137">137</td><td class="line">//Test1： Work </td></tr>
+<tr><td class="num" id="LINE138">138</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE139">139</td><td class="line">    // int blah = *p; // null pointer dereference   </td></tr>
+<tr><td class="num" id="LINE140">140</td><td class="line">    //return 0 - (a &gt;&gt; (sizeof(a) * 8 - 1)); </td></tr>
+<tr><td class="num" id="LINE141">141</td><td class="line">    return 0 - (a &gt;&gt; (4 * 8 - 1));   <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_msb%236bd1de4297fa491620c7befc1dc05077.ae49b881810e786ef2bf11cfbdac5021_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 141, column 17];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_msb%236bd1de4297fa491620c7befc1dc05077.ae49b881810e786ef2bf11cfbdac5021_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=((unsigned int)0 - (n$0  &gt;&gt;  ((4 * 8) - 1))) [line 141, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE142">142</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_msb%236bd1de4297fa491620c7befc1dc05077.ae49b881810e786ef2bf11cfbdac5021_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE143">143</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE144">144</td><td class="line">static unsigned int constant_time_lt(unsigned int a, unsigned int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt%236bd1de4297fa491620c7befc1dc05077.4e043f6ae585a1c10a5db59efed26581_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_lt%236bd1de4297fa491620c7befc1dc05077.4e043f6ae585a1c10a5db59efed26581.html">summary for constant_time_lt</a></td></tr>
+<tr><td class="num" id="LINE145">145</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE146">146</td><td class="line">    return constant_time_msb(a ^ ((a ^ b) | ((a - b) ^ b))); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt%236bd1de4297fa491620c7befc1dc05077.4e043f6ae585a1c10a5db59efed26581_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 146, column 30];
+n$1=*&amp;a:unsigned int [line 146, column 36];
+n$2=*&amp;b:unsigned int [line 146, column 40];
+n$3=*&amp;a:unsigned int [line 146, column 47];
+n$4=*&amp;b:unsigned int [line 146, column 51];
+n$5=*&amp;b:unsigned int [line 146, column 56];
+n$6=_fun_constant_time_msb((n$0 ^ ((n$1 ^ n$2) | ((n$3 - n$4) ^ n$5))):unsigned int) [line 146, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt%236bd1de4297fa491620c7befc1dc05077.4e043f6ae585a1c10a5db59efed26581_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$6 [line 146, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE147">147</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt%236bd1de4297fa491620c7befc1dc05077.4e043f6ae585a1c10a5db59efed26581_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE148">148</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE149">149</td><td class="line">static unsigned char constant_time_lt_8(unsigned int a, unsigned int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt_8%236bd1de4297fa491620c7befc1dc05077.3a85680b64629a3ef809cd847cd743ce_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_lt_8%236bd1de4297fa491620c7befc1dc05077.3a85680b64629a3ef809cd847cd743ce.html">summary for constant_time_lt_8</a></td></tr>
+<tr><td class="num" id="LINE150">150</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE151">151</td><td class="line">    return (unsigned char)(constant_time_lt(a, b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt_8%236bd1de4297fa491620c7befc1dc05077.3a85680b64629a3ef809cd847cd743ce_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 151, column 45];
+n$1=*&amp;b:unsigned int [line 151, column 48];
+n$2=_fun_constant_time_lt(n$0:unsigned int,n$1:unsigned int) [line 151, column 28];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt_8%236bd1de4297fa491620c7befc1dc05077.3a85680b64629a3ef809cd847cd743ce_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)n$2 [line 151, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE152">152</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_lt_8%236bd1de4297fa491620c7befc1dc05077.3a85680b64629a3ef809cd847cd743ce_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE153">153</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE154">154</td><td class="line">static unsigned int constant_time_ge(unsigned int a, unsigned int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge%236bd1de4297fa491620c7befc1dc05077.d02eaff5996c97e930051fea401fbc47_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_ge%236bd1de4297fa491620c7befc1dc05077.d02eaff5996c97e930051fea401fbc47.html">summary for constant_time_ge</a></td></tr>
+<tr><td class="num" id="LINE155">155</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE156">156</td><td class="line">    return ~constant_time_lt(a, b); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge%236bd1de4297fa491620c7befc1dc05077.d02eaff5996c97e930051fea401fbc47_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 156, column 30];
+n$1=*&amp;b:unsigned int [line 156, column 33];
+n$2=_fun_constant_time_lt(n$0:unsigned int,n$1:unsigned int) [line 156, column 13];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge%236bd1de4297fa491620c7befc1dc05077.d02eaff5996c97e930051fea401fbc47_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=~n$2 [line 156, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE157">157</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge%236bd1de4297fa491620c7befc1dc05077.d02eaff5996c97e930051fea401fbc47_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE158">158</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE159">159</td><td class="line">static unsigned char constant_time_ge_8(unsigned int a, unsigned int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge_8%236bd1de4297fa491620c7befc1dc05077.c29c645e5aa400a31d1f4702976e58b5_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_ge_8%236bd1de4297fa491620c7befc1dc05077.c29c645e5aa400a31d1f4702976e58b5.html">summary for constant_time_ge_8</a></td></tr>
+<tr><td class="num" id="LINE160">160</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE161">161</td><td class="line">    return (unsigned char)(constant_time_ge(a, b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge_8%236bd1de4297fa491620c7befc1dc05077.c29c645e5aa400a31d1f4702976e58b5_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 161, column 45];
+n$1=*&amp;b:unsigned int [line 161, column 48];
+n$2=_fun_constant_time_ge(n$0:unsigned int,n$1:unsigned int) [line 161, column 28];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge_8%236bd1de4297fa491620c7befc1dc05077.c29c645e5aa400a31d1f4702976e58b5_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)n$2 [line 161, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE162">162</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_ge_8%236bd1de4297fa491620c7befc1dc05077.c29c645e5aa400a31d1f4702976e58b5_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE163">163</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE164">164</td><td class="line">static unsigned int constant_time_is_zero(unsigned int a) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero%236bd1de4297fa491620c7befc1dc05077.27964df0701ec1af33da26f612f9ec10_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_is_zero%236bd1de4297fa491620c7befc1dc05077.27964df0701ec1af33da26f612f9ec10.html">summary for constant_time_is_zero</a></td></tr>
+<tr><td class="num" id="LINE165">165</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE166">166</td><td class="line">    return constant_time_msb(~a &amp; (a - 1)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero%236bd1de4297fa491620c7befc1dc05077.27964df0701ec1af33da26f612f9ec10_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 166, column 31];
+n$1=*&amp;a:unsigned int [line 166, column 36];
+n$2=_fun_constant_time_msb((~n$0 & (n$1 - (unsigned int)1)):unsigned int) [line 166, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero%236bd1de4297fa491620c7befc1dc05077.27964df0701ec1af33da26f612f9ec10_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 166, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE167">167</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero%236bd1de4297fa491620c7befc1dc05077.27964df0701ec1af33da26f612f9ec10_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE168">168</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE169">169</td><td class="line">static unsigned char constant_time_is_zero_8(unsigned int a) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero_8%236bd1de4297fa491620c7befc1dc05077.17c67b66a3e9a67049a38f0f80da8194_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_is_zero_8%236bd1de4297fa491620c7befc1dc05077.17c67b66a3e9a67049a38f0f80da8194.html">summary for constant_time_is_zero_8</a></td></tr>
+<tr><td class="num" id="LINE170">170</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE171">171</td><td class="line">    return (unsigned char)(constant_time_is_zero(a)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero_8%236bd1de4297fa491620c7befc1dc05077.17c67b66a3e9a67049a38f0f80da8194_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 171, column 50];
+n$1=_fun_constant_time_is_zero(n$0:unsigned int) [line 171, column 28];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero_8%236bd1de4297fa491620c7befc1dc05077.17c67b66a3e9a67049a38f0f80da8194_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)n$1 [line 171, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE172">172</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_is_zero_8%236bd1de4297fa491620c7befc1dc05077.17c67b66a3e9a67049a38f0f80da8194_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE173">173</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE174">174</td><td class="line">static unsigned int constant_time_eq(unsigned int a, unsigned int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq%236bd1de4297fa491620c7befc1dc05077.d440a2ea2e382bdca39faf1962ac9c24_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_eq%236bd1de4297fa491620c7befc1dc05077.d440a2ea2e382bdca39faf1962ac9c24.html">summary for constant_time_eq</a></td></tr>
+<tr><td class="num" id="LINE175">175</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE176">176</td><td class="line">    return constant_time_is_zero(a ^ b); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq%236bd1de4297fa491620c7befc1dc05077.d440a2ea2e382bdca39faf1962ac9c24_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 176, column 34];
+n$1=*&amp;b:unsigned int [line 176, column 38];
+n$2=_fun_constant_time_is_zero((n$0 ^ n$1):unsigned int) [line 176, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq%236bd1de4297fa491620c7befc1dc05077.d440a2ea2e382bdca39faf1962ac9c24_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 176, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE177">177</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq%236bd1de4297fa491620c7befc1dc05077.d440a2ea2e382bdca39faf1962ac9c24_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE178">178</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE179">179</td><td class="line">static unsigned char constant_time_eq_8(unsigned int a, unsigned int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_8%236bd1de4297fa491620c7befc1dc05077.cf8f871d8b485f48cf845a38f2f8cf2d_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_eq_8%236bd1de4297fa491620c7befc1dc05077.cf8f871d8b485f48cf845a38f2f8cf2d.html">summary for constant_time_eq_8</a></td></tr>
+<tr><td class="num" id="LINE180">180</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE181">181</td><td class="line">    return (unsigned char)(constant_time_eq(a, b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_8%236bd1de4297fa491620c7befc1dc05077.cf8f871d8b485f48cf845a38f2f8cf2d_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 181, column 45];
+n$1=*&amp;b:unsigned int [line 181, column 48];
+n$2=_fun_constant_time_eq(n$0:unsigned int,n$1:unsigned int) [line 181, column 28];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_8%236bd1de4297fa491620c7befc1dc05077.cf8f871d8b485f48cf845a38f2f8cf2d_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)n$2 [line 181, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE182">182</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_8%236bd1de4297fa491620c7befc1dc05077.cf8f871d8b485f48cf845a38f2f8cf2d_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE183">183</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE184">184</td><td class="line">static unsigned int constant_time_eq_int(int a, int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int%236bd1de4297fa491620c7befc1dc05077.182c60c5454180de843fdb94c41ef4f7_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_eq_int%236bd1de4297fa491620c7befc1dc05077.182c60c5454180de843fdb94c41ef4f7.html">summary for constant_time_eq_int</a></td></tr>
+<tr><td class="num" id="LINE185">185</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE186">186</td><td class="line">    return constant_time_eq((unsigned)(a), (unsigned)(b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int%236bd1de4297fa491620c7befc1dc05077.182c60c5454180de843fdb94c41ef4f7_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 186, column 39];
+n$1=*&amp;b:unsigned int [line 186, column 54];
+n$2=_fun_constant_time_eq((unsigned int)n$0:unsigned int,(unsigned int)n$1:unsigned int) [line 186, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int%236bd1de4297fa491620c7befc1dc05077.182c60c5454180de843fdb94c41ef4f7_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=n$2 [line 186, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE187">187</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int%236bd1de4297fa491620c7befc1dc05077.182c60c5454180de843fdb94c41ef4f7_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE188">188</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE189">189</td><td class="line">static unsigned char constant_time_eq_int_8(int a, int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int_8%236bd1de4297fa491620c7befc1dc05077.35c4f573014cef682963ea877d90f289_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_eq_int_8%236bd1de4297fa491620c7befc1dc05077.35c4f573014cef682963ea877d90f289.html">summary for constant_time_eq_int_8</a></td></tr>
+<tr><td class="num" id="LINE190">190</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE191">191</td><td class="line">    return constant_time_eq_8((unsigned)(a), (unsigned)(b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int_8%236bd1de4297fa491620c7befc1dc05077.35c4f573014cef682963ea877d90f289_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;a:unsigned int [line 191, column 41];
+n$1=*&amp;b:unsigned int [line 191, column 56];
+n$2=_fun_constant_time_eq_8((unsigned int)n$0:unsigned int,(unsigned int)n$1:unsigned int) [line 191, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int_8%236bd1de4297fa491620c7befc1dc05077.35c4f573014cef682963ea877d90f289_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=n$2 [line 191, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE192">192</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_eq_int_8%236bd1de4297fa491620c7befc1dc05077.35c4f573014cef682963ea877d90f289_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE193">193</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE194">194</td><td class="line">static unsigned int constant_time_select(unsigned int mask, <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select%236bd1de4297fa491620c7befc1dc05077.4772ce86f989252bf8001d35cf7f6c02_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_select%236bd1de4297fa491620c7befc1dc05077.4772ce86f989252bf8001d35cf7f6c02.html">summary for constant_time_select</a></td></tr>
+<tr><td class="num" id="LINE195">195</td><td class="line">                                                unsigned int a, </td></tr>
+<tr><td class="num" id="LINE196">196</td><td class="line">                                                unsigned int b) </td></tr>
+<tr><td class="num" id="LINE197">197</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE198">198</td><td class="line">    return (mask &amp; a) | (~mask &amp; b); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select%236bd1de4297fa491620c7befc1dc05077.4772ce86f989252bf8001d35cf7f6c02_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;mask:unsigned int [line 198, column 13];
+n$1=*&amp;a:unsigned int [line 198, column 20];
+n$2=*&amp;mask:unsigned int [line 198, column 27];
+n$3=*&amp;b:unsigned int [line 198, column 34];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select%236bd1de4297fa491620c7befc1dc05077.4772ce86f989252bf8001d35cf7f6c02_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned int=((n$0 & n$1) | (~n$2 & n$3)) [line 198, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE199">199</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select%236bd1de4297fa491620c7befc1dc05077.4772ce86f989252bf8001d35cf7f6c02_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE200">200</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE201">201</td><td class="line">static unsigned char constant_time_select_8(unsigned char mask, <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_8%236bd1de4297fa491620c7befc1dc05077.346397cd8177332b5b3979adf0bd7c4f_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_select_8%236bd1de4297fa491620c7befc1dc05077.346397cd8177332b5b3979adf0bd7c4f.html">summary for constant_time_select_8</a></td></tr>
+<tr><td class="num" id="LINE202">202</td><td class="line">                                                   unsigned char a, </td></tr>
+<tr><td class="num" id="LINE203">203</td><td class="line">                                                   unsigned char b) </td></tr>
+<tr><td class="num" id="LINE204">204</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE205">205</td><td class="line">    return (unsigned char)(constant_time_select(mask, a, b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_8%236bd1de4297fa491620c7befc1dc05077.346397cd8177332b5b3979adf0bd7c4f_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;mask:unsigned char [line 205, column 49];
+n$1=*&amp;a:unsigned char [line 205, column 55];
+n$2=*&amp;b:unsigned char [line 205, column 58];
+n$3=_fun_constant_time_select((unsigned int)n$0:unsigned int,(unsigned int)n$1:unsigned int,(unsigned int)n$2:unsigned int) [line 205, column 28];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_8%236bd1de4297fa491620c7befc1dc05077.346397cd8177332b5b3979adf0bd7c4f_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:unsigned char=(unsigned char)n$3 [line 205, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE206">206</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_8%236bd1de4297fa491620c7befc1dc05077.346397cd8177332b5b3979adf0bd7c4f_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE207">207</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE208">208</td><td class="line">static int constant_time_select_int(unsigned int mask, int a, int b) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_int%236bd1de4297fa491620c7befc1dc05077.a1688f7d3521a1676898475b831d03ba_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:3 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/constant_time_select_int%236bd1de4297fa491620c7befc1dc05077.a1688f7d3521a1676898475b831d03ba.html">summary for constant_time_select_int</a></td></tr>
+<tr><td class="num" id="LINE209">209</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE210">210</td><td class="line">    return (int)(constant_time_select(mask, (unsigned)(a), (unsigned)(b))); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_int%236bd1de4297fa491620c7befc1dc05077.a1688f7d3521a1676898475b831d03ba_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:1 succs:4 exn: Instructions
+n$0=*&amp;mask:unsigned int [line 210, column 39];
+n$1=*&amp;a:unsigned int [line 210, column 55];
+n$2=*&amp;b:unsigned int [line 210, column 70];
+n$3=_fun_constant_time_select(n$0:unsigned int,(unsigned int)n$1:unsigned int,(unsigned int)n$2:unsigned int) [line 210, column 18];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_int%236bd1de4297fa491620c7befc1dc05077.a1688f7d3521a1676898475b831d03ba_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$3 [line 210, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE211">211</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/constant_time_select_int%236bd1de4297fa491620c7befc1dc05077.a1688f7d3521a1676898475b831d03ba_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE212">212</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE213">213</td><td class="line">#endif                          /* HEADER_CONSTANT_TIME_LOCL_H */ </td></tr>
+<tr><td class="num" id="LINE214">214</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE215">215</td><td class="line">typedef struct ssl3_record_st { </td></tr>
+<tr><td class="num" id="LINE216">216</td><td class="line">    unsigned int length; </td></tr>
+<tr><td class="num" id="LINE217">217</td><td class="line">    unsigned char *data; </td></tr>
+<tr><td class="num" id="LINE218">218</td><td class="line">    int type; </td></tr>
+<tr><td class="num" id="LINE219">219</td><td class="line">    unsigned char *input; </td></tr>
+<tr><td class="num" id="LINE220">220</td><td class="line">} SSL3_RECORD; </td></tr>
+<tr><td class="num" id="LINE221">221</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE222">222</td><td class="line">typedef struct ssl3_state_st { </td></tr>
+<tr><td class="num" id="LINE223">223</td><td class="line">    long flags; </td></tr>
+<tr><td class="num" id="LINE224">224</td><td class="line">    unsigned char *read_sequence; </td></tr>
+<tr><td class="num" id="LINE225">225</td><td class="line">} SSL3_STATE; </td></tr>
+<tr><td class="num" id="LINE226">226</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE227">227</td><td class="line">typedef struct evp_cipher_st { </td></tr>
+<tr><td class="num" id="LINE228">228</td><td class="line">    unsigned long flags; </td></tr>
+<tr><td class="num" id="LINE229">229</td><td class="line">} EVP_CIPHER; </td></tr>
+<tr><td class="num" id="LINE230">230</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE231">231</td><td class="line">typedef struct evp_cipher_ctx_st { </td></tr>
+<tr><td class="num" id="LINE232">232</td><td class="line">    const EVP_CIPHER *cipher; </td></tr>
+<tr><td class="num" id="LINE233">233</td><td class="line">} EVP_CIPHER_CTX; </td></tr>
+<tr><td class="num" id="LINE234">234</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE235">235</td><td class="line">typedef struct ssl_st { </td></tr>
+<tr><td class="num" id="LINE236">236</td><td class="line">    char *expand; </td></tr>
+<tr><td class="num" id="LINE237">237</td><td class="line">    unsigned long options; </td></tr>
+<tr><td class="num" id="LINE238">238</td><td class="line">    struct ssl3_state_st *s3; </td></tr>
+<tr><td class="num" id="LINE239">239</td><td class="line">    EVP_CIPHER_CTX *enc_read_ctx; </td></tr>
+<tr><td class="num" id="LINE240">240</td><td class="line">    int slicing_cheat; </td></tr>
+<tr><td class="num" id="LINE241">241</td><td class="line">} SSL; </td></tr>
+<tr><td class="num" id="LINE242">242</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE243">243</td><td class="line">char * ZEROS(); </td></tr>
+<tr><td class="num" id="LINE244">244</td><td class="line">_(presumes true covers result |-&gt; 0 &amp;*&amp; (result + 1) |-&gt; 0 </td></tr>
+<tr><td class="num" id="LINE245">245</td><td class="line">                       &amp;*&amp; (result + 2) |-&gt; 0 &amp;*&amp; (result + 3) |-&gt; 0 </td></tr>
+<tr><td class="num" id="LINE246">246</td><td class="line">                       &amp;*&amp; (result + 4) |-&gt; 0 &amp;*&amp; (result + 5) |-&gt; 0 </td></tr>
+<tr><td class="num" id="LINE247">247</td><td class="line">                         &amp;*&amp; (result + 6) |-&gt; 0 &amp;*&amp; (result + 7) |-&gt; 0) </td></tr>
+<tr><td class="num" id="LINE248">248</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE249">249</td><td class="line">int CRYPTO_memcmp(const unsigned char *in_a, const char *in_b, size_t len) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:15 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178.html">summary for CRYPTO_memcmp</a></td></tr>
+<tr><td class="num" id="LINE250">250</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE251">251</td><td class="line">//Test2： Work </td></tr>
+<tr><td class="num" id="LINE252">252</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE253">253</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE254">254</td><td class="line">    size_t i=0; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:1 succs:14 exn: Instructions
+VARIABLE_DECLARED(i:unsigned long); [line 254, column 5];
+*&amp;i:unsigned long=(unsigned long)0 [line 254, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE255">255</td><td class="line">    const unsigned char *a = in_a; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+VARIABLE_DECLARED(a:unsigned char const *); [line 255, column 5];
+n$13=*&amp;in_a:unsigned char const * [line 255, column 30];
+*&amp;a:unsigned char const *=n$13 [line 255, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE256">256</td><td class="line">    const char *b = in_b; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+VARIABLE_DECLARED(b:char const *); [line 256, column 5];
+n$12=*&amp;in_b:char const * [line 256, column 21];
+*&amp;b:char const *=n$12 [line 256, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE257">257</td><td class="line">    unsigned char x = 0; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:6 exn: Instructions
+VARIABLE_DECLARED(x:unsigned char); [line 257, column 5];
+*&amp;x:unsigned char=(unsigned char)0 [line 257, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE258">258</td><td class="line">//Test3： Work </td></tr>
+<tr><td class="num" id="LINE259">259</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE260">260</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE261">261</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE262">262</td><td class="line">    for (i = 0; i &lt; len; i++){ <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:12 succs:5 exn: Instructions
+*&amp;i:unsigned long=(unsigned long)0 [line 262, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node5.html"><span class='visited with_tooltip'>J_5<span class='tooltip'>node5 preds:7 6 succs:8 exn: Join
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:5 succs:9 10 exn: Instructions
+n$2=*&amp;i:unsigned long [line 262, column 17];
+n$3=*&amp;len:unsigned long [line 262, column 21];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node9.html"><span class='visited with_tooltip'>C_9<span class='tooltip'>node9 preds:8 succs:11 exn: Conditional true Branch
+PRUNE((n$2  &lt;  n$3), true); [line 262, column 17];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:11 succs:5 exn: Instructions
+n$1=*&amp;i:unsigned long [line 262, column 26];
+*&amp;i:unsigned long=(n$1 + 1) [line 262, column 26];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node10.html"><span class='visited with_tooltip'>C_10<span class='tooltip'>node10 preds:8 succs:3 exn: Conditional false Branch
+PRUNE(!(n$2  &lt;  n$3), false); [line 262, column 17];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE263">263</td><td class="line">//Test4： Do not Work if the if statement exist for call function  </td></tr>
+<tr><td class="num" id="LINE264">264</td><td class="line">        // int *o = NULL; </td></tr>
+<tr><td class="num" id="LINE265">265</td><td class="line">        // int blah = *o; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE266">266</td><td class="line">        x |= a[i] ^ b[i]; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:9 succs:7 exn: Instructions
+n$4=*&amp;a:unsigned char const * [line 266, column 14];
+n$5=*&amp;i:unsigned long [line 266, column 16];
+n$6=*n$4[n$5]:unsigned char [line 266, column 14];
+n$7=*&amp;b:char const * [line 266, column 21];
+n$8=*&amp;i:unsigned long [line 266, column 23];
+n$9=*n$7[n$8]:char [line 266, column 21];
+n$10=*&amp;x:unsigned char [line 266, column 9];
+*&amp;x:unsigned char=(n$10 | (n$6 ^ n$9)) [line 266, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE267">267</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE268">268</td><td class="line">//Test5： Do not Work if the if statement exist for call function, but --pulse-widen-threshold 8 --pulse-max-disjuncts 13 for changing len directly to 8 </td></tr>
+<tr><td class="num" id="LINE269">269</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE270">270</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE271">271</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE272">272</td><td class="line">    return x; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:10 succs:4 exn: Instructions
+n$0=*&amp;x:unsigned char [line 272, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$0 [line 272, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE273">273</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/CRYPTO_memcmp.965e841b366773c52a4162ad1a02e178_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE274">274</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE275">275</td><td class="line">int tls1_cbc_remove_padding(const SSL *s, <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:71 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e.html">summary for tls1_cbc_remove_padding</a></td></tr>
+<tr><td class="num" id="LINE276">276</td><td class="line">                            SSL3_RECORD *rec, </td></tr>
+<tr><td class="num" id="LINE277">277</td><td class="line">                            unsigned block_size, unsigned mac_size) </td></tr>
+<tr><td class="num" id="LINE278">278</td><td class="line">{ </td></tr>
+<tr><td class="num" id="LINE279">279</td><td class="line">    unsigned padding_length, good, to_check, i; </td></tr>
+<tr><td class="num" id="LINE280">280</td><td class="line">    const unsigned overhead = 1 + mac_size; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node71.html"><span class='visited with_tooltip'>I_71<span class='tooltip'>node71 preds:1 succs:55 exn: Instructions
+VARIABLE_DECLARED(overhead:unsigned int const ); [line 280, column 5];
+n$102=*&amp;mac_size:unsigned int [line 280, column 35];
+*&amp;overhead:unsigned int=((unsigned int)1 + n$102) [line 280, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE281">281</td><td class="line">    //int some = s-&gt;slicing_cheat&gt;1;  </td></tr>
+<tr><td class="num" id="LINE282">282</td><td class="line">//Test6： Work </td></tr>
+<tr><td class="num" id="LINE283">283</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE284">284</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE285">285</td><td class="line">    if ((s-&gt;slicing_cheat&amp;1)) { <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node55.html"><span class='visited with_tooltip'>I_55<span class='tooltip'>node55 preds:71 succs:56 57 exn: Instructions
+n$79=*&amp;s:ssl_st const * [line 285, column 10];
+n$80=*n$79.slicing_cheat:int [line 285, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node56.html"><span class='visited with_tooltip'>C_56<span class='tooltip'>node56 preds:55 succs:62 exn: Conditional true Branch
+PRUNE((n$80 & 1), true); [line 285, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node57.html"><span class='visited with_tooltip'>C_57<span class='tooltip'>node57 preds:55 succs:67 exn: Conditional false Branch
+PRUNE(!(n$80 & 1), false); [line 285, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node54.html"><span class='visited with_tooltip'>J_54<span class='tooltip'>node54 preds:66 58 succs:53 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE286">286</td><td class="line">//Test7： Do not Work if the if statement exist for call function  </td></tr>
+<tr><td class="num" id="LINE287">287</td><td class="line">        // int *o = NULL; </td></tr>
+<tr><td class="num" id="LINE288">288</td><td class="line">        // int blah = *o; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE289">289</td><td class="line">        if (overhead + block_size &gt; rec-&gt;length) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node62.html"><span class='visited with_tooltip'>I_62<span class='tooltip'>node62 preds:56 succs:63 64 exn: Instructions
+n$90=*&amp;overhead:unsigned int [line 289, column 13];
+n$91=*&amp;block_size:unsigned int [line 289, column 24];
+n$92=*&amp;rec:ssl3_record_st* [line 289, column 37];
+n$93=*n$92.length:unsigned int [line 289, column 37];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node63.html"><span class='visited with_tooltip'>C_63<span class='tooltip'>node63 preds:62 succs:65 exn: Conditional true Branch
+PRUNE(((n$90 + n$91)  &gt;  n$93), true); [line 289, column 13];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node64.html"><span class='visited with_tooltip'>C_64<span class='tooltip'>node64 preds:62 succs:61 exn: Conditional false Branch
+PRUNE(!((n$90 + n$91)  &gt;  n$93), false); [line 289, column 13];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node61.html"><span class='visited with_tooltip'>J_61<span class='tooltip'>node61 preds:64 succs:60 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE290">290</td><td class="line">            return 0; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node65.html"><span class='visited with_tooltip'>I_65<span class='tooltip'>node65 preds:63 succs:2 exn: Instructions
+*&amp;return:int=0 [line 290, column 13];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE291">291</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE292">292</td><td class="line">        rec-&gt;data += block_size; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node60.html"><span class='visited with_tooltip'>I_60<span class='tooltip'>node60 preds:61 succs:59 exn: Instructions
+n$87=*&amp;rec:ssl3_record_st* [line 292, column 9];
+n$88=*&amp;block_size:unsigned int [line 292, column 22];
+n$89=*n$87.data:unsigned char* [line 292, column 9];
+*n$87.data:unsigned char*=(n$89 + n$88) [line 292, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE293">293</td><td class="line">        rec-&gt;input += block_size; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node59.html"><span class='visited with_tooltip'>I_59<span class='tooltip'>node59 preds:60 succs:58 exn: Instructions
+n$84=*&amp;rec:ssl3_record_st* [line 293, column 9];
+n$85=*&amp;block_size:unsigned int [line 293, column 23];
+n$86=*n$84.input:unsigned char* [line 293, column 9];
+*n$84.input:unsigned char*=(n$86 + n$85) [line 293, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE294">294</td><td class="line">        rec-&gt;length -= block_size; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node58.html"><span class='visited with_tooltip'>I_58<span class='tooltip'>node58 preds:59 succs:54 exn: Instructions
+n$81=*&amp;rec:ssl3_record_st* [line 294, column 9];
+n$82=*&amp;block_size:unsigned int [line 294, column 24];
+n$83=*n$81.length:unsigned int [line 294, column 9];
+*n$81.length:unsigned int=(n$83 - n$82) [line 294, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE295">295</td><td class="line">    } else if (overhead &gt; rec-&gt;length) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node67.html"><span class='visited with_tooltip'>I_67<span class='tooltip'>node67 preds:57 succs:68 69 exn: Instructions
+n$96=*&amp;overhead:unsigned int [line 295, column 16];
+n$97=*&amp;rec:ssl3_record_st* [line 295, column 27];
+n$98=*n$97.length:unsigned int [line 295, column 27];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node68.html"><span class='visited with_tooltip'>C_68<span class='tooltip'>node68 preds:67 succs:70 exn: Conditional true Branch
+PRUNE((n$96  &gt;  n$98), true); [line 295, column 16];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node69.html"><span class='visited with_tooltip'>C_69<span class='tooltip'>node69 preds:67 succs:66 exn: Conditional false Branch
+PRUNE(!(n$96  &gt;  n$98), false); [line 295, column 16];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node66.html"><span class='visited with_tooltip'>J_66<span class='tooltip'>node66 preds:69 succs:54 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE296">296</td><td class="line">        return 0; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node70.html"><span class='visited with_tooltip'>I_70<span class='tooltip'>node70 preds:68 succs:2 exn: Instructions
+*&amp;return:int=0 [line 296, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE297">297</td><td class="line">    padding_length = rec-&gt;data[rec-&gt;length - 1]; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node53.html"><span class='visited with_tooltip'>I_53<span class='tooltip'>node53 preds:54 succs:32 exn: Instructions
+n$74=*&amp;rec:ssl3_record_st* [line 297, column 22];
+n$75=*n$74.data:unsigned char* [line 297, column 22];
+n$76=*&amp;rec:ssl3_record_st* [line 297, column 32];
+n$77=*n$76.length:unsigned int [line 297, column 32];
+n$78=*n$75[(n$77 - (unsigned int)1)]:unsigned char [line 297, column 22];
+*&amp;padding_length:unsigned int=(unsigned int)n$78 [line 297, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE298">298</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE299">299</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE300">300</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE301">301</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE302">302</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE303">303</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE304">304</td><td class="line">    if ((s-&gt;options &amp; 0x00000200) &amp;&amp; !s-&gt;expand) { <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node32.html"><span class='visited with_tooltip'>I_32<span class='tooltip'>node32 preds:53 succs:33 34 exn: Instructions
+n$50=*&amp;s:ssl_st const * [line 304, column 10];
+n$51=*n$50.options:unsigned long [line 304, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node33.html"><span class='visited with_tooltip'>C_33<span class='tooltip'>node33 preds:32 succs:35 36 exn: Conditional true Branch
+PRUNE((n$51 & (unsigned long)512), true); [line 304, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node35.html"><span class='visited with_tooltip'>C_35<span class='tooltip'>node35 preds:33 succs:46 exn: Conditional true Branch
+n$52=*&amp;s:ssl_st const * [line 304, column 39];
+n$53=*n$52.expand:char* [line 304, column 39];
+PRUNE(!n$53, true); [line 304, column 39];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node36.html"><span class='visited with_tooltip'>C_36<span class='tooltip'>node36 preds:33 succs:31 exn: Conditional false Branch
+n$52=*&amp;s:ssl_st const * [line 304, column 39];
+n$53=*n$52.expand:char* [line 304, column 39];
+PRUNE(n$53, false); [line 304, column 39];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node34.html"><span class='visited with_tooltip'>C_34<span class='tooltip'>node34 preds:32 succs:31 exn: Conditional false Branch
+PRUNE(!(n$51 & (unsigned long)512), false); [line 304, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node31.html"><span class='visited with_tooltip'>J_31<span class='tooltip'>node31 preds:36 34 37 succs:26 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE305">305</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE306">306</td><td class="line">        if ((CRYPTO_memcmp(s-&gt;s3-&gt;read_sequence, ZEROS(), 8) == 0) &amp;&amp; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node46.html"><span class='visited with_tooltip'>I_46<span class='tooltip'>node46 preds:35 succs:47 48 exn: Instructions
+n$61=*&amp;s:ssl_st const * [line 306, column 28];
+n$62=*n$61.s3:ssl3_state_st* [line 306, column 28];
+n$63=*n$62.read_sequence:unsigned char* [line 306, column 28];
+n$64=_fun_ZEROS() [line 306, column 50];
+n$65=_fun_CRYPTO_memcmp(n$63:unsigned char*,n$64:char*,(unsigned long)8:unsigned long) [line 306, column 14];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node47.html"><span class='visited with_tooltip'>C_47<span class='tooltip'>node47 preds:46 succs:49 exn: Conditional true Branch
+PRUNE((n$65 == 0), true); [line 306, column 14];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node48.html"><span class='visited with_tooltip'>C_48<span class='tooltip'>node48 preds:46 succs:45 exn: Conditional false Branch
+PRUNE(!(n$65 == 0), false); [line 306, column 14];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node45.html"><span class='visited with_tooltip'>J_45<span class='tooltip'>node45 preds:51 48 52 succs:38 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE307">307</td><td class="line">            !(padding_length &amp; 1)) { <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node49.html"><span class='visited with_tooltip'>I_49<span class='tooltip'>node49 preds:47 succs:50 51 exn: Instructions
+n$66=*&amp;padding_length:unsigned int [line 307, column 15];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node50.html"><span class='visited with_tooltip'>C_50<span class='tooltip'>node50 preds:49 succs:52 exn: Conditional true Branch
+PRUNE(!(n$66 & (unsigned int)1), true); [line 307, column 15];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node51.html"><span class='visited with_tooltip'>C_51<span class='tooltip'>node51 preds:49 succs:45 exn: Conditional false Branch
+PRUNE((n$66 & (unsigned int)1), false); [line 307, column 15];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE308">308</td><td class="line">            s-&gt;s3-&gt;flags |= 0x0008; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node52.html"><span class='visited with_tooltip'>I_52<span class='tooltip'>node52 preds:50 succs:45 exn: Instructions
+n$67=*&amp;s:ssl_st const * [line 308, column 13];
+n$68=*n$67.s3:ssl3_state_st* [line 308, column 13];
+n$69=*n$68.flags:long [line 308, column 13];
+*n$68.flags:long=(n$69 | 8) [line 308, column 13];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE309">309</td><td class="line">        } </td></tr>
+<tr><td class="num" id="LINE310">310</td><td class="line">        if ((s-&gt;s3-&gt;flags &amp; 0x0008) &amp;&amp; padding_length &gt; 0) { <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node38.html"><span class='visited with_tooltip'>I_38<span class='tooltip'>node38 preds:45 succs:39 40 exn: Instructions
+n$54=*&amp;s:ssl_st const * [line 310, column 14];
+n$55=*n$54.s3:ssl3_state_st* [line 310, column 14];
+n$56=*n$55.flags:long [line 310, column 14];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node39.html"><span class='visited with_tooltip'>C_39<span class='tooltip'>node39 preds:38 succs:41 exn: Conditional true Branch
+PRUNE((n$56 & 8), true); [line 310, column 14];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node41.html"><span class='visited with_tooltip'>I_41<span class='tooltip'>node41 preds:39 succs:42 43 exn: Instructions
+n$57=*&amp;padding_length:unsigned int [line 310, column 40];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node42.html"><span class='visited with_tooltip'>C_42<span class='tooltip'>node42 preds:41 succs:44 exn: Conditional true Branch
+PRUNE((n$57  &gt;  (unsigned int)0), true); [line 310, column 40];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node43.html"><span class='visited with_tooltip'>C_43<span class='tooltip'>node43 preds:41 succs:37 exn: Conditional false Branch
+PRUNE(!(n$57  &gt;  (unsigned int)0), false); [line 310, column 40];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node40.html"><span class='visited with_tooltip'>C_40<span class='tooltip'>node40 preds:38 succs:37 exn: Conditional false Branch
+PRUNE(!(n$56 & 8), false); [line 310, column 14];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node37.html"><span class='visited with_tooltip'>J_37<span class='tooltip'>node37 preds:43 40 44 succs:31 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE311">311</td><td class="line">            padding_length--; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node44.html"><span class='visited with_tooltip'>I_44<span class='tooltip'>node44 preds:42 succs:37 exn: Instructions
+n$58=*&amp;padding_length:unsigned int [line 311, column 13];
+*&amp;padding_length:unsigned int=(n$58 - 1) [line 311, column 13];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE312">312</td><td class="line">        } </td></tr>
+<tr><td class="num" id="LINE313">313</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE314">314</td><td class="line">    if (((s-&gt;enc_read_ctx-&gt;cipher)-&gt;flags) &amp; 0x200000) { <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node26.html"><span class='visited with_tooltip'>I_26<span class='tooltip'>node26 preds:31 succs:27 28 exn: Instructions
+n$41=*&amp;s:ssl_st const * [line 314, column 11];
+n$42=*n$41.enc_read_ctx:evp_cipher_ctx_st* [line 314, column 11];
+n$43=*n$42.cipher:evp_cipher_st const * [line 314, column 10];
+n$44=*n$43.flags:unsigned long [line 314, column 9];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node27.html"><span class='visited with_tooltip'>C_27<span class='tooltip'>node27 preds:26 succs:30 exn: Conditional true Branch
+PRUNE((n$44 & (unsigned long)2097152), true); [line 314, column 9];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node28.html"><span class='visited with_tooltip'>C_28<span class='tooltip'>node28 preds:26 succs:25 exn: Conditional false Branch
+PRUNE(!(n$44 & (unsigned long)2097152), false); [line 314, column 9];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node25.html"><span class='visited with_tooltip'>J_25<span class='tooltip'>node25 preds:28 succs:24 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE315">315</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE316">316</td><td class="line">        rec-&gt;length -= padding_length + 1; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node30.html"><span class='visited with_tooltip'>I_30<span class='tooltip'>node30 preds:27 succs:29 exn: Instructions
+n$45=*&amp;rec:ssl3_record_st* [line 316, column 9];
+n$46=*&amp;padding_length:unsigned int [line 316, column 24];
+n$47=*n$45.length:unsigned int [line 316, column 9];
+*n$45.length:unsigned int=(n$47 - (n$46 + (unsigned int)1)) [line 316, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE317">317</td><td class="line">        return 1; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node29.html"><span class='visited with_tooltip'>I_29<span class='tooltip'>node29 preds:30 succs:2 exn: Instructions
+*&amp;return:int=1 [line 317, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE318">318</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE319">319</td><td class="line">    good = constant_time_ge(rec-&gt;length, overhead + padding_length); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:25 succs:23 exn: Instructions
+n$36=*&amp;rec:ssl3_record_st* [line 319, column 29];
+n$37=*n$36.length:unsigned int [line 319, column 29];
+n$38=*&amp;overhead:unsigned int [line 319, column 42];
+n$39=*&amp;padding_length:unsigned int [line 319, column 53];
+n$40=_fun_constant_time_ge(n$37:unsigned int,(n$38 + n$39):unsigned int) [line 319, column 12];
+*&amp;good:unsigned int=n$40 [line 319, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE320">320</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE321">321</td><td class="line">    to_check = 255; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:24 succs:19 exn: Instructions
+*&amp;to_check:unsigned int=(unsigned int)255 [line 321, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE322">322</td><td class="line">    if (to_check &gt; rec-&gt;length - 1) <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:23 succs:20 21 exn: Instructions
+n$29=*&amp;to_check:unsigned int [line 322, column 9];
+n$30=*&amp;rec:ssl3_record_st* [line 322, column 20];
+n$31=*n$30.length:unsigned int [line 322, column 20];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node20.html"><span class='visited with_tooltip'>C_20<span class='tooltip'>node20 preds:19 succs:22 exn: Conditional true Branch
+PRUNE((n$29  &gt;  (n$31 - (unsigned int)1)), true); [line 322, column 9];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node21.html"><span class='visited with_tooltip'>C_21<span class='tooltip'>node21 preds:19 succs:18 exn: Conditional false Branch
+PRUNE(!(n$29  &gt;  (n$31 - (unsigned int)1)), false); [line 322, column 9];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node18.html"><span class='visited with_tooltip'>J_18<span class='tooltip'>node18 preds:21 22 succs:10 exn: Join
+END_BRANCHES;
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE323">323</td><td class="line">        to_check = rec-&gt;length - 1; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:20 succs:18 exn: Instructions
+n$32=*&amp;rec:ssl3_record_st* [line 323, column 20];
+n$33=*n$32.length:unsigned int [line 323, column 20];
+*&amp;to_check:unsigned int=(n$33 - (unsigned int)1) [line 323, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE324">324</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE325">325</td><td class="line">    for (i = 0; i &lt; to_check; i++) { <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:18 succs:9 exn: Instructions
+*&amp;i:unsigned int=(unsigned int)0 [line 325, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node9.html"><span class='visited with_tooltip'>J_9<span class='tooltip'>node9 preds:11 10 succs:12 exn: Join
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:9 succs:13 14 exn: Instructions
+n$13=*&amp;i:unsigned int [line 325, column 17];
+n$14=*&amp;to_check:unsigned int [line 325, column 21];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node13.html"><span class='visited with_tooltip'>C_13<span class='tooltip'>node13 preds:12 succs:17 exn: Conditional true Branch
+PRUNE((n$13  &lt;  n$14), true); [line 325, column 17];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:15 succs:9 exn: Instructions
+n$12=*&amp;i:unsigned int [line 325, column 31];
+*&amp;i:unsigned int=(n$12 + 1) [line 325, column 31];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node14.html"><span class='visited with_tooltip'>C_14<span class='tooltip'>node14 preds:12 succs:8 exn: Conditional false Branch
+PRUNE(!(n$13  &lt;  n$14), false); [line 325, column 17];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE326">326</td><td class="line">        unsigned char mask = constant_time_ge_8(padding_length, i); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:13 succs:16 exn: Instructions
+VARIABLE_DECLARED(mask:unsigned char); [line 326, column 9];
+n$25=*&amp;padding_length:unsigned int [line 326, column 49];
+n$26=*&amp;i:unsigned int [line 326, column 65];
+n$27=_fun_constant_time_ge_8(n$25:unsigned int,n$26:unsigned int) [line 326, column 30];
+*&amp;mask:unsigned char=n$27 [line 326, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE327">327</td><td class="line">        unsigned char b = rec-&gt;data[rec-&gt;length - 1 - i]; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+VARIABLE_DECLARED(b:unsigned char); [line 327, column 9];
+n$19=*&amp;rec:ssl3_record_st* [line 327, column 27];
+n$20=*n$19.data:unsigned char* [line 327, column 27];
+n$21=*&amp;rec:ssl3_record_st* [line 327, column 37];
+n$22=*n$21.length:unsigned int [line 327, column 37];
+n$23=*&amp;i:unsigned int [line 327, column 55];
+n$24=*n$20[((n$22 - (unsigned int)1) - n$23)]:unsigned char [line 327, column 27];
+*&amp;b:unsigned char=n$24 [line 327, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE328">328</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE329">329</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE330">330</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE331">331</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE332">332</td><td class="line">        good &amp;= ~(mask &amp; (padding_length ^ b)); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:11 exn: Instructions
+n$15=*&amp;mask:unsigned char [line 332, column 19];
+n$16=*&amp;padding_length:unsigned int [line 332, column 27];
+n$17=*&amp;b:unsigned char [line 332, column 44];
+n$18=*&amp;good:unsigned int [line 332, column 9];
+*&amp;good:unsigned int=(n$18 & ~((unsigned int)n$15 & (n$16 ^ (unsigned int)n$17))) [line 332, column 9];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE333">333</td><td class="line">    } </td></tr>
+<tr><td class="num" id="LINE334">334</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE335">335</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE336">336</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE337">337</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE338">338</td><td class="line">    good = constant_time_eq(0xff, good &amp; 0xff); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:14 succs:7 exn: Instructions
+n$10=*&amp;good:unsigned int [line 338, column 35];
+n$11=_fun_constant_time_eq((unsigned int)255:unsigned int,(n$10 & (unsigned int)255):unsigned int) [line 338, column 12];
+*&amp;good:unsigned int=n$11 [line 338, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE339">339</td><td class="line">    padding_length = good &amp; (padding_length + 1); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$8=*&amp;good:unsigned int [line 339, column 22];
+n$9=*&amp;padding_length:unsigned int [line 339, column 30];
+*&amp;padding_length:unsigned int=(n$8 & (n$9 + (unsigned int)1)) [line 339, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE340">340</td><td class="line">    rec-&gt;length -= padding_length; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$5=*&amp;rec:ssl3_record_st* [line 340, column 5];
+n$6=*&amp;padding_length:unsigned int [line 340, column 20];
+n$7=*n$5.length:unsigned int [line 340, column 5];
+*n$5.length:unsigned int=(n$7 - n$6) [line 340, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE341">341</td><td class="line">    rec-&gt;type |= padding_length &lt;&lt; 8; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$2=*&amp;rec:ssl3_record_st* [line 341, column 5];
+n$3=*&amp;padding_length:unsigned int [line 341, column 18];
+n$4=*n$2.type:int [line 341, column 5];
+*n$2.type:int=(n$4 | (n$3  &lt;&lt;  8)) [line 341, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE342">342</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE343">343</td><td class="line">    return constant_time_select_int(good, 1, -1); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;good:unsigned int [line 343, column 37];
+n$1=_fun_constant_time_select_int(n$0:unsigned int,1:int,-1:int) [line 343, column 12];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$1 [line 343, column 5];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE344">344</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/tls1_cbc_remove_padding.8bf305e824123d01f9a389143d61102e_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:70 65 29 4 succs: exn: Exit
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE345">345</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE346">346</td><td class="line">// derived from: https://github.com/binsec/rel_bench/blob/main/src/ct/openssl_almeida/tls1_cbc_remove_padding_patch_wrapper.c </td></tr>
+<tr><td class="num" id="LINE347">347</td><td class="line">   </td></tr>
+<tr><td class="num" id="LINE348">348</td><td class="line">unsigned long LOW_INPUT_UL(); </td></tr>
+<tr><td class="num" id="LINE349">349</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE350">350</td><td class="line">long LOW_INPUT_L(); </td></tr>
+<tr><td class="num" id="LINE351">351</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE352">352</td><td class="line">int LOW_INPUT_I(); </td></tr>
+<tr><td class="num" id="LINE353">353</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE354">354</td><td class="line">unsigned int LOW_INPUT_UI(); </td></tr>
+<tr><td class="num" id="LINE355">355</td><td class="line">_(presumes true covers result :: low) </td></tr>
+<tr><td class="num" id="LINE356">356</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE357">357</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE358">358</td><td class="line">SSL3_STATE * alloc_SSL3_STATE(); </td></tr>
+<tr><td class="num" id="LINE359">359</td><td class="line">_(presumes true covers exists long f, unsigned char *r. </td></tr>
+<tr><td class="num" id="LINE360">360</td><td class="line">  &amp;result-&gt;flags |-&gt; f &amp;*&amp; &amp;result-&gt;read_sequence |-&gt; r) </td></tr>
+<tr><td class="num" id="LINE361">361</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE362">362</td><td class="line">EVP_CIPHER * alloc_EVP_CIPHER(); </td></tr>
+<tr><td class="num" id="LINE363">363</td><td class="line">_(presumes true covers exists long f. &amp;result-&gt;flags |-&gt; f) </td></tr>
+<tr><td class="num" id="LINE364">364</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE365">365</td><td class="line">EVP_CIPHER_CTX * alloc_EVP_CIPHER_CTX(); </td></tr>
+<tr><td class="num" id="LINE366">366</td><td class="line">_(presumes true covers exists EVP_CIPHER *c. &amp;result-&gt;cipher |-&gt; c) </td></tr>
+<tr><td class="num" id="LINE367">367</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE368">368</td><td class="line">SSL * alloc_SSL(); </td></tr>
+<tr><td class="num" id="LINE369">369</td><td class="line">_(presumes true covers exists char * e, unsigned long o, </td></tr>
+<tr><td class="num" id="LINE370">370</td><td class="line">  struct ssl3_state_st s, EVP_CIPHER_CTX *c, int sc. </td></tr>
+<tr><td class="num" id="LINE371">371</td><td class="line">  &amp;result-&gt;expand |-&gt; e &amp;*&amp; &amp;result-&gt;options |-&gt; o &amp;*&amp; &amp;result-&gt;s3 |-&gt; s &amp;*&amp; </td></tr>
+<tr><td class="num" id="LINE372">372</td><td class="line">  &amp;result-&gt;enc_read_ctx |-&gt; c &amp;*&amp; &amp;result-&gt;slicing_cheat |-&gt; sc) </td></tr>
+<tr><td class="num" id="LINE373">373</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE374">374</td><td class="line">SSL3_RECORD * alloc_SSL3_RECORD(); </td></tr>
+<tr><td class="num" id="LINE375">375</td><td class="line">_(presumes true covers exists unsigned int l, unsigned char *d, int t, </td></tr>
+<tr><td class="num" id="LINE376">376</td><td class="line">  unsigned char *i. &amp;result-&gt;length |-&gt; l &amp;*&amp; &amp;result-&gt;data |-&gt; d &amp;*&amp; </td></tr>
+<tr><td class="num" id="LINE377">377</td><td class="line">  &amp;result-&gt;type |-&gt; t &amp;*&amp; &amp;result-&gt;input |-&gt; i) </td></tr>
+<tr><td class="num" id="LINE378">378</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE379">379</td><td class="line">int main(){ <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node1.html"><span class='visited with_tooltip'>S_1<span class='tooltip'>node1 preds: succs:29 exn: Start
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/main.fad58de7366495db4650cfefac2fcd61.html">summary for main</a></td></tr>
+<tr><td class="num" id="LINE380">380</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE381">381</td><td class="line">  unsigned long options;              // public </td></tr>
+<tr><td class="num" id="LINE382">382</td><td class="line">  long s3_flags;                      // public </td></tr>
+<tr><td class="num" id="LINE383">383</td><td class="line">  unsigned long flags;                // public </td></tr>
+<tr><td class="num" id="LINE384">384</td><td class="line">  int slicing_cheat;                  // public                   </td></tr>
+<tr><td class="num" id="LINE385">385</td><td class="line">  unsigned char data[63];               // private (public address) </td></tr>
+<tr><td class="num" id="LINE386">386</td><td class="line">  unsigned int length;                // public </td></tr>
+<tr><td class="num" id="LINE387">387</td><td class="line">  unsigned int block_size;            // public </td></tr>
+<tr><td class="num" id="LINE388">388</td><td class="line">  unsigned int mac_size;              // public </td></tr>
+<tr><td class="num" id="LINE389">389</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE390">390</td><td class="line">  unsigned char read_sequence[8];               // private (public address) </td></tr>
+<tr><td class="num" id="LINE391">391</td><td class="line">//Test7： Work </td></tr>
+<tr><td class="num" id="LINE392">392</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE393">393</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE394">394</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE395">395</td><td class="line">  // Data is private by default </td></tr>
+<tr><td class="num" id="LINE396">396</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE397">397</td><td class="line">  // these lengths are all public </td></tr>
+<tr><td class="num" id="LINE398">398</td><td class="line">  options = LOW_INPUT_UL(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node29.html"><span class='visited with_tooltip'>I_29<span class='tooltip'>node29 preds:1 succs:28 exn: Instructions
+n$37=_fun_LOW_INPUT_UL() [line 398, column 13];
+*&amp;options:unsigned long=n$37 [line 398, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE399">399</td><td class="line">  s3_flags = LOW_INPUT_L(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node28.html"><span class='visited with_tooltip'>I_28<span class='tooltip'>node28 preds:29 succs:27 exn: Instructions
+n$36=_fun_LOW_INPUT_L() [line 399, column 14];
+*&amp;s3_flags:long=n$36 [line 399, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE400">400</td><td class="line">  flags = LOW_INPUT_UL(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node27.html"><span class='visited with_tooltip'>I_27<span class='tooltip'>node27 preds:28 succs:26 exn: Instructions
+n$35=_fun_LOW_INPUT_UL() [line 400, column 11];
+*&amp;flags:unsigned long=n$35 [line 400, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE401">401</td><td class="line">  slicing_cheat = LOW_INPUT_I(); // stay away from struct hell <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node26.html"><span class='visited with_tooltip'>I_26<span class='tooltip'>node26 preds:27 succs:25 exn: Instructions
+n$34=_fun_LOW_INPUT_I() [line 401, column 19];
+*&amp;slicing_cheat:int=n$34 [line 401, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE402">402</td><td class="line">  length = 63; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node25.html"><span class='visited with_tooltip'>I_25<span class='tooltip'>node25 preds:26 succs:24 exn: Instructions
+*&amp;length:unsigned int=(unsigned int)63 [line 402, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE403">403</td><td class="line">  block_size = LOW_INPUT_UI(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node24.html"><span class='visited with_tooltip'>I_24<span class='tooltip'>node24 preds:25 succs:23 exn: Instructions
+n$33=_fun_LOW_INPUT_UI() [line 403, column 16];
+*&amp;block_size:unsigned int=n$33 [line 403, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE404">404</td><td class="line">  mac_size = LOW_INPUT_UI(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node23.html"><span class='visited with_tooltip'>I_23<span class='tooltip'>node23 preds:24 succs:22 exn: Instructions
+n$32=_fun_LOW_INPUT_UI() [line 404, column 14];
+*&amp;mac_size:unsigned int=n$32 [line 404, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE405">405</td><td class="line">//Test8：work </td></tr>
+<tr><td class="num" id="LINE406">406</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE407">407</td><td class="line">    // int blah = *p; // null pointer dereference  </td></tr>
+<tr><td class="num" id="LINE408">408</td><td class="line">  SSL3_STATE *ps3_obj = alloc_SSL3_STATE(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node22.html"><span class='visited with_tooltip'>I_22<span class='tooltip'>node22 preds:23 succs:21 exn: Instructions
+VARIABLE_DECLARED(ps3_obj:ssl3_state_st*); [line 408, column 3];
+n$31=_fun_alloc_SSL3_STATE() [line 408, column 25];
+*&amp;ps3_obj:ssl3_state_st*=n$31 [line 408, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE409">409</td><td class="line">  ps3_obj-&gt;flags = s3_flags; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node21.html"><span class='visited with_tooltip'>I_21<span class='tooltip'>node21 preds:22 succs:20 exn: Instructions
+n$29=*&amp;ps3_obj:ssl3_state_st* [line 409, column 3];
+n$30=*&amp;s3_flags:long [line 409, column 20];
+*n$29.flags:long=n$30 [line 409, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE410">410</td><td class="line">  ps3_obj-&gt;read_sequence = read_sequence; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node20.html"><span class='visited with_tooltip'>I_20<span class='tooltip'>node20 preds:21 succs:19 exn: Instructions
+n$28=*&amp;ps3_obj:ssl3_state_st* [line 410, column 3];
+*n$28.read_sequence:unsigned char*=&amp;read_sequence [line 410, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE411">411</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE412">412</td><td class="line">  EVP_CIPHER *pcipher = alloc_EVP_CIPHER(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node19.html"><span class='visited with_tooltip'>I_19<span class='tooltip'>node19 preds:20 succs:18 exn: Instructions
+VARIABLE_DECLARED(pcipher:evp_cipher_st*); [line 412, column 3];
+n$27=_fun_alloc_EVP_CIPHER() [line 412, column 25];
+*&amp;pcipher:evp_cipher_st*=n$27 [line 412, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE413">413</td><td class="line">  pcipher-&gt;flags = flags; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node18.html"><span class='visited with_tooltip'>I_18<span class='tooltip'>node18 preds:19 succs:17 exn: Instructions
+n$25=*&amp;pcipher:evp_cipher_st* [line 413, column 3];
+n$26=*&amp;flags:unsigned long [line 413, column 20];
+*n$25.flags:unsigned long=n$26 [line 413, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE414">414</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE415">415</td><td class="line">  EVP_CIPHER_CTX *pcipher_ctx = alloc_EVP_CIPHER_CTX(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node17.html"><span class='visited with_tooltip'>I_17<span class='tooltip'>node17 preds:18 succs:16 exn: Instructions
+VARIABLE_DECLARED(pcipher_ctx:evp_cipher_ctx_st*); [line 415, column 3];
+n$24=_fun_alloc_EVP_CIPHER_CTX() [line 415, column 33];
+*&amp;pcipher_ctx:evp_cipher_ctx_st*=n$24 [line 415, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE416">416</td><td class="line">  pcipher_ctx-&gt;cipher = pcipher; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node16.html"><span class='visited with_tooltip'>I_16<span class='tooltip'>node16 preds:17 succs:15 exn: Instructions
+n$22=*&amp;pcipher_ctx:evp_cipher_ctx_st* [line 416, column 3];
+n$23=*&amp;pcipher:evp_cipher_st* [line 416, column 25];
+*n$22.cipher:evp_cipher_st const *=n$23 [line 416, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE417">417</td><td class="line">//Test9：work </td></tr>
+<tr><td class="num" id="LINE418">418</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE419">419</td><td class="line">    // int blah = *p; // null pointer dereference    </td></tr>
+<tr><td class="num" id="LINE420">420</td><td class="line">  char dummy_expand; </td></tr>
+<tr><td class="num" id="LINE421">421</td><td class="line">  SSL *s = alloc_SSL(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node15.html"><span class='visited with_tooltip'>I_15<span class='tooltip'>node15 preds:16 succs:14 exn: Instructions
+VARIABLE_DECLARED(s:ssl_st*); [line 421, column 3];
+n$21=_fun_alloc_SSL() [line 421, column 12];
+*&amp;s:ssl_st*=n$21 [line 421, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE422">422</td><td class="line">  // setting the expand field to non-zero deactivates non-constant-time if   </td></tr>
+<tr><td class="num" id="LINE423">423</td><td class="line">  //s-&gt;expand = &amp;dummy_expand; </td></tr>
+<tr><td class="num" id="LINE424">424</td><td class="line">  s-&gt;expand = NULL; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node14.html"><span class='visited with_tooltip'>I_14<span class='tooltip'>node14 preds:15 succs:13 exn: Instructions
+n$20=*&amp;s:ssl_st* [line 424, column 3];
+*n$20.expand:char*=null [line 424, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE425">425</td><td class="line">  s-&gt;options = options; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node13.html"><span class='visited with_tooltip'>I_13<span class='tooltip'>node13 preds:14 succs:12 exn: Instructions
+n$18=*&amp;s:ssl_st* [line 425, column 3];
+n$19=*&amp;options:unsigned long [line 425, column 16];
+*n$18.options:unsigned long=n$19 [line 425, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE426">426</td><td class="line">  s-&gt;s3 = ps3_obj; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node12.html"><span class='visited with_tooltip'>I_12<span class='tooltip'>node12 preds:13 succs:11 exn: Instructions
+n$16=*&amp;s:ssl_st* [line 426, column 3];
+n$17=*&amp;ps3_obj:ssl3_state_st* [line 426, column 11];
+*n$16.s3:ssl3_state_st*=n$17 [line 426, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE427">427</td><td class="line">  s-&gt;enc_read_ctx = pcipher_ctx; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node11.html"><span class='visited with_tooltip'>I_11<span class='tooltip'>node11 preds:12 succs:10 exn: Instructions
+n$14=*&amp;s:ssl_st* [line 427, column 3];
+n$15=*&amp;pcipher_ctx:evp_cipher_ctx_st* [line 427, column 21];
+*n$14.enc_read_ctx:evp_cipher_ctx_st*=n$15 [line 427, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE428">428</td><td class="line">  s-&gt;slicing_cheat = slicing_cheat; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node10.html"><span class='visited with_tooltip'>I_10<span class='tooltip'>node10 preds:11 succs:9 exn: Instructions
+n$12=*&amp;s:ssl_st* [line 428, column 3];
+n$13=*&amp;slicing_cheat:int [line 428, column 22];
+*n$12.slicing_cheat:int=n$13 [line 428, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE429">429</td><td class="line">//Test10：work </td></tr>
+<tr><td class="num" id="LINE430">430</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE431">431</td><td class="line">    // int blah = *p; // null pointer dereference    </td></tr>
+<tr><td class="num" id="LINE432">432</td><td class="line">  char * rec_input; </td></tr>
+<tr><td class="num" id="LINE433">433</td><td class="line">  SSL3_RECORD *rec = alloc_SSL3_RECORD(); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node9.html"><span class='visited with_tooltip'>I_9<span class='tooltip'>node9 preds:10 succs:8 exn: Instructions
+VARIABLE_DECLARED(rec:ssl3_record_st*); [line 433, column 3];
+n$11=_fun_alloc_SSL3_RECORD() [line 433, column 22];
+*&amp;rec:ssl3_record_st*=n$11 [line 433, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE434">434</td><td class="line">  rec-&gt;length = length; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node8.html"><span class='visited with_tooltip'>I_8<span class='tooltip'>node8 preds:9 succs:7 exn: Instructions
+n$9=*&amp;rec:ssl3_record_st* [line 434, column 3];
+n$10=*&amp;length:unsigned int [line 434, column 17];
+*n$9.length:unsigned int=n$10 [line 434, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE435">435</td><td class="line">  rec-&gt;data = data; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node7.html"><span class='visited with_tooltip'>I_7<span class='tooltip'>node7 preds:8 succs:6 exn: Instructions
+n$8=*&amp;rec:ssl3_record_st* [line 435, column 3];
+*n$8.data:unsigned char*=&amp;data [line 435, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE436">436</td><td class="line">  rec-&gt;type = 0; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node6.html"><span class='visited with_tooltip'>I_6<span class='tooltip'>node6 preds:7 succs:5 exn: Instructions
+n$7=*&amp;rec:ssl3_record_st* [line 436, column 3];
+*n$7.type:int=0 [line 436, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE437">437</td><td class="line">  rec-&gt;input = rec_input; <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node5.html"><span class='visited with_tooltip'>I_5<span class='tooltip'>node5 preds:6 succs:3 exn: Instructions
+n$5=*&amp;rec:ssl3_record_st* [line 437, column 3];
+n$6=*&amp;rec_input:char* [line 437, column 16];
+*n$5.input:unsigned char*=(unsigned char*)n$6 [line 437, column 3];
+</span></span></a>
+<div class="msg" style="margin-left:9ex">PULSE_UNINITIALIZED_VALUE  `rec_input` is read without initialization</div></td></tr>
+<tr><td class="num" id="LINE438">438</td><td class="line">//Test11：work </td></tr>
+<tr><td class="num" id="LINE439">439</td><td class="line">    // int *p = NULL; </td></tr>
+<tr><td class="num" id="LINE440">440</td><td class="line">    // int blah = *p; // null pointer dereference      </td></tr>
+<tr><td class="num" id="LINE441">441</td><td class="line"> </td></tr>
+<tr><td class="num" id="LINE442">442</td><td class="line">  return tls1_cbc_remove_padding(s,rec,block_size,mac_size); <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node3.html"><span class='visited with_tooltip'>I_3<span class='tooltip'>node3 preds:5 succs:4 exn: Instructions
+n$0=*&amp;s:ssl_st* [line 442, column 34];
+n$1=*&amp;rec:ssl3_record_st* [line 442, column 36];
+n$2=*&amp;block_size:unsigned int [line 442, column 40];
+n$3=*&amp;mac_size:unsigned int [line 442, column 51];
+n$4=_fun_tls1_cbc_remove_padding(n$0:ssl_st*,n$1:ssl3_record_st*,n$2:unsigned int,n$3:unsigned int) [line 442, column 10];
+</span></span></a> <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node4.html"><span class='visited with_tooltip'>I_4<span class='tooltip'>node4 preds:3 succs:2 exn: Instructions
+*&amp;return:int=n$4 [line 442, column 3];
+</span></span></a></td></tr>
+<tr><td class="num" id="LINE443">443</td><td class="line">} <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/main.fad58de7366495db4650cfefac2fcd61_node2.html"><span class='visited with_tooltip'>E_2<span class='tooltip'>node2 preds:4 succs: exn: Exit
+</span></span></a></td></tr>
+</table>
+
+<hr width="100%">
+INFO DURING FOOTPRINT
+
+<hr width="100%">
+ADVICE DURING FOOTPRINT
+
+<hr width="100%">
+WARNING DURING FOOTPRINT
+
+<hr width="100%">
+ERROR DURING FOOTPRINT
+<br>Uninitialized Value  `rec_input` is read without initialization <a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/nodes/node0.html">node0</a>(<a href="./tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024/../tls1_cbc_remove_padding_patch_withtest.c.6affbcb763748f724e645929920be024.html#LINE437">437</a>)</body>
+</html>
