@@ -114,8 +114,7 @@ void testlong(){
 //Test19: Do not work here
   // int *p = NULL;  // x is a null pointer
   // int blah = *p;
-  _(assert ylow == 0xFFFFFFFF)
- _(assert yhigh == 0xEFFFFFFF)
+
 //Test20: 
   // int *p = NULL;  // x is a null pointer
   // int blah = *p;

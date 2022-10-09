@@ -178,9 +178,6 @@ int tls1_cbc_remove_padding(const SSL *s,
 
   if (s->options&0x00000200)
     {
-//Test10：Do not Work here
-      // int *p = NULL;
-      // int blah = *p; // null pointer dereference
       if ((memcmp(s->s3->read_sequence,
                   ZEROS(),8) == 0) && !(ii & 1))
         s->s3->flags|=0x0008;
